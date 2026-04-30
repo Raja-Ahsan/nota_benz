@@ -1,1 +1,114 @@
 @import "tailwindcss";
+
+@theme {
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:root {
+    --primary-color: #10e0ff;
+    --secondary-color: #28a4ba;
+    --white-color: #ffffff;
+    --white-text: #ffffff;
+    --text-color: #333333;
+}
+
+body {
+    background-color: var(--white-color);
+}
+
+
+.container {
+    @apply mx-auto  px-10  md:px-30;
+}
+
+.desktop-nav-link {
+    @apply text-[16px] font-semibold uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)] ;
+}
+
+
+.mobile-nav-link {
+    @apply block border-b border-white/10 py-3 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)];
+}
+
+.desktop-nav-button {
+    @apply hidden shrink-0 border border-[var(--primary-color)] px-6 py-1 text-[16px] font-semibold uppercase tracking-wider text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)] lg:inline-flex;
+}
+
+.btn {
+    @apply inline-flex items-center justify-center border border-[var(--primary-color)] px-8 py-3.5 text-center md:text-[12px] text-[10px] ;
+}
+    
+.btn-primary {
+    @apply bg-[var(--primary-color)] text-[#050505] font-bold uppercase tracking-wide transition-opacity ;
+}
+
+.secondary-btn {
+    @apply bg-transparent text-white/65 font-bold uppercase tracking-wide transition-colors hover:text-white ;
+}
+
+.social-icon {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full border-2 border-[var(--primary-color)] transition-opacity hover:opacity-80;
+}
+
+
+.footer-title {
+    @apply text-[12px] font-bold uppercase tracking-[2.78px] text-[var(--text-color)];
+}
+
+.footer-link {
+    @apply text-[13px] font-normal transition-colors hover:text-[var(--primary-color)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)];
+}
+
+.footer-ul {
+    @apply mt-4 space-y-2;
+}
+
+.footer-bottom-link {
+    @apply text-[11px] text-[var(--text-color)] transition-colors hover:text-[var(--primary-color)] font-normal ;
+}
+
+@media (max-width: 500px) {
+    .btn {
+        max-width: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 0 auto;
+    }
+}
+
+/* Home: infinite horizontal ticker (duplicate track = 50% translate loop) */
+@keyframes home-ticker-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.home-ticker-track {
+    display: flex;
+    width: max-content;
+    animation: home-ticker-scroll 80s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-ticker-track {
+        animation: none;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .home-ticker-track > div:last-child {
+        display: none;
+    }
+}tify-content: center;
+    }
+
+    .home-ticker-track > div:last-child {
+        display: none;
+    }
+}
