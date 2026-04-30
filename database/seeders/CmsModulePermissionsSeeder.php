@@ -19,20 +19,20 @@ class CmsModulePermissionsSeeder extends Seeder
         $permissions = [
             'admin' => [
                 'admin.dashboard' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-
                 'users-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-
+                'users.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'packages-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-                // 'packages.index' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
-                // 'packages.create' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
+                'products-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
+                'products.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
+                'products.create' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
+                'variations.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
+                'variations.create' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
 
             ],
 
             'user' => [
                 'admin.dashboard' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
-
-                'users-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 0, 'is_delete' => 0],
-
+                'users-module' => ['is_view' => 0, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
                 'packages-module' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
             ],
         ];

@@ -57,8 +57,10 @@
                     <li class="sidebar-list">
                         <i class="fa-solid fa-thumbtack"></i>
                         <a
-                            href="{{Route::has($module->route_name) ? route($module->route_name) : '#' }}"
-                            class="sidebar-link sidebar-title  {{$hasChildren ? '' : 'link-nav'}}">
+                            href="{{ $hasChildren ? '#' : (Route::has($module->route_name) ? route($module->route_name) : '#') }}"
+                            class="sidebar-link sidebar-title  {{$hasChildren ? '' : 'link-nav'}}"
+                            @if($hasChildren) aria-expanded="false" @endif
+                        >
                             <span class="theme-icons">
                                 <i class="{{ $module->icon }}"></i>
                             </span>

@@ -22,9 +22,12 @@ class RoleMiddleware
             return redirect('/');
         }
 
-        // role check (multiple roles support)
+        $roles = collect($roles)
+            ->flatMap(fn($role) => explode('|', $role))
+            ->toArray();
+
         if (!in_array($user->role, $roles)) {
-            abort(403); // unauthorized
+            abort(403);
         }
 
         return $next($request);

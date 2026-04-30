@@ -58,9 +58,9 @@
 
 <title>
     @hasSection('title')
-    @yield('title') || Diy PayRoll 
+    @yield('title') || Nota Benz 
     @else
-    Dashboard | Diy PayRoll 
+    Dashboard | Nota Benz 
     @endif
 
     @hasSection('page_heading')
