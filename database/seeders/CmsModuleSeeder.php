@@ -24,7 +24,7 @@ class CmsModuleSeeder extends Seeder
         ]);
 
         $users = CmsModule::firstOrCreate([
-            'route_name' => 'users-module',
+            'route_name' => 'users.index',
         ], [
             'name' => 'Users',
             'icon' => 'fa-solid fa-users',

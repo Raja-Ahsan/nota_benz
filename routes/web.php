@@ -18,11 +18,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
 
-// admin routes
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
 
-// auth user routes 
+Route::prefix('admin')->middleware(['auth', 'role:admin|user'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
