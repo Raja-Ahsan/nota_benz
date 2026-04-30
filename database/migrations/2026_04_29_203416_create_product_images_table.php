@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('image');
             $table->boolean('is_primary')->default(false);
             $table->integer('sort_order')->default(0);
-            $table->foreignId('variant_id')->nullable()->constrained('product_variants')->cascadeOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

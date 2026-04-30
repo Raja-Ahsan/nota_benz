@@ -1,4 +1,4 @@
-@section('title', 'All Variations')
+@section('title', 'All Categories')
 @extends('layouts.admin.master')
 @section('content')
 <div class="container-fluid user-list-wrapper">
@@ -7,28 +7,22 @@
             <div class="card">
                 <div class="card-header card-no-border text-end">
                     <div class="card-header-right-icon">
-                        <a class="btn btn-primary f-w-500" href="{{ route('products.create') }}"><i
-                                class="fa-solid fa-plus pe-2"></i>Add
-                            Product</a>
                     </div>
                 </div>
                 <div class="card-body pt-0 px-0">
                     <div class="list-product user-list-table">
                         <div class="table-responsive custom-scrollbar">
-                            <table class="table" id="variations-table">
+                            <table class="table" id="categories-table">
                                 <thead>
                                     <tr>
                                         <th>
                                             <span class="c-o-light f-w-600">Name</span>
                                         </th>
                                         <th>
-                                            <span class="c-o-light f-w-600">SKU</span>
+                                            <span class="c-o-light f-w-600">Slug</span>
                                         </th>
                                         <th>
-                                            <span class="c-o-light f-w-600">Price</span>
-                                        </th>
-                                        <th>
-                                            <span class="c-o-light f-w-600">Stock</span>
+                                            <span class="c-o-light f-w-600">Status</span>
                                         </th>
                                         <th>
                                             <span class="c-o-light f-w-600">Actions</span>
@@ -36,22 +30,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($variants as $variant)
+                                    @forelse ($categories as $category)
                                     <tr class="product-removes inbox-data">
-
-                                        {{-- Product Name --}}
-                                        <td>{{ $variant->product->name ?? 'N/A' }}</td>
-
-                                        {{-- SKU --}}
-                                        <td>{{ $variant->sku }}</td>
-
-                                        {{-- Price --}}
-                                        <td>{{ $variant->price ?? 'N/A' }}</td>
-
-                                        {{-- Stock --}}
-                                        <td>{{ $variant->stock ?? 'N/A' }}</td>
-
-                                        {{-- Actions --}}
+                                        <td>{{ $category->name }}</td>
+                                        <td>
+                                            <p>{{ $category->slug }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ $category->status }}</p>
+                                        </td>
                                         <td>
                                             <div class="common-align gap-2 justify-content-start">
                                                 <a class="square-white" href="#!">
@@ -62,8 +49,8 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
-                                            <h3 class="pt-5">No Variations Found</h3>
+                                        <td colspan="4" class="text-center">
+                                            <h3 class="pt-5">No @yield('title', 'Categories') Found</h3>
                                         </td>
                                     </tr>
                                     @endforelse
@@ -78,13 +65,13 @@
 </div>
 @push('scripts')
 <script>
-    var table = $('#variations-table').DataTable({
+    var table = $('#categories-table').DataTable({
         order: [
-            [4, 'desc']
+            [0, 'desc']
         ],
         columnDefs: [{
             orderable: false,
-            targets: 4
+            targets: 3
         }]
     });
 </script>

@@ -12,6 +12,8 @@ class CmsModuleSeeder extends Seeder
      *
      * Uses updateOrCreate (not only firstOrCreate) so re-seeding repairs wrong parent_id
      * from old data where child route_names were left as top-level rows.
+     *
+     * Sidebar: only index / "all" listing routes — never create routes; add buttons live on those pages.
      */
     public function run(): void
     {
@@ -71,10 +73,10 @@ class CmsModuleSeeder extends Seeder
         );
 
         CmsModule::updateOrCreate(
-            ['route_name' => 'products.index'],
+            ['route_name' => 'product-categories.index'],
             [
-                'name' => 'All Products',
-                'icon' => 'fa-solid fa-list-ul',
+                'name' => 'All Categories',
+                'icon' => 'fa-solid fa-tags',
                 'sort_order' => 1,
                 'status' => 'active',
                 'parent_id' => $products->id,
@@ -82,10 +84,10 @@ class CmsModuleSeeder extends Seeder
         );
 
         CmsModule::updateOrCreate(
-            ['route_name' => 'products.create'],
+            ['route_name' => 'products.index'],
             [
-                'name' => 'Create Product',
-                'icon' => 'fa-solid fa-circle-plus',
+                'name' => 'All Products',
+                'icon' => 'fa-solid fa-list-ul',
                 'sort_order' => 2,
                 'status' => 'active',
                 'parent_id' => $products->id,
@@ -93,7 +95,7 @@ class CmsModuleSeeder extends Seeder
         );
 
         CmsModule::updateOrCreate(
-            ['route_name' => 'variations.index'],
+            ['route_name' => 'product-variations.index'],
             [
                 'name' => 'All Variations',
                 'icon' => 'fa-solid fa-list-ul',
@@ -114,22 +116,14 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-        CmsModule::updateOrCreate(
-            ['route_name' => 'packages.create'],
-            [
-                'name' => 'Add Package',
-                'icon' => 'fa-solid fa-circle-plus',
-                'sort_order' => 2,
-                'status' => 'active',
-                'parent_id' => $packages->id,
-            ]
-        );
-
         $allowed = [
             'admin.dashboard',
             'users-module', 'users.index',
-            'products-module', 'products.index', 'variations.index', 
-            'packages-module', 'packages.index', 'packages.create',
+            'products-module',
+            'product-categories.index',
+            'products.index',
+            'product-variations.index',
+            'packages-module', 'packages.index',
         ];
 
         CmsModule::query()

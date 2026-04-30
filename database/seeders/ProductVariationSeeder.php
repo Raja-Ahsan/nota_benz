@@ -5,55 +5,75 @@ namespace Database\Seeders;
 use App\Models\AttributeValue;
 use App\Models\Product;
 use App\Models\ProductAttribute;
+use App\Models\ProductCategory;
 use App\Models\ProductVariant;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\ProductType;
 
 class ProductVariationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * Inserts demo product + variants only when no variants exist yet.
      */
     public function run(): void
     {
-        $product = Product::create([
-            'name' => 'T-Shirt',
-            'description' => 'Premium cotton t-shirt',
-            'created_by' => 1,
-        ]);
+        $productType = ProductType::where('slug', 'variable')->first();
 
-        // 🔥 Attributes
-        $color = ProductAttribute::create([
-            'product_id' => $product->id,
-            'name' => 'Color'
-        ]);
+        if (! $productType) {
+            throw new \Exception('Variable product type not found. Run ProductTypeSeeder first.');
+        }
 
-        $size = ProductAttribute::create([
-            'product_id' => $product->id,
-            'name' => 'Size'
-        ]);
+        $category = ProductCategory::query()
+            ->where('slug', 'demo-clothing')
+            ->first();
 
-        // 🔥 Attribute Values
-        $red  = AttributeValue::create(['attribute_id' => $color->id, 'value' => 'Red']);
-        $blue = AttributeValue::create(['attribute_id' => $color->id, 'value' => 'Blue']);
+        if (! $category) {
+            $this->call(ProductCategorySeeder::class);
+            $category = ProductCategory::query()
+                ->where('slug', 'demo-clothing')
+                ->firstOrFail();
+        }
 
-        $m = AttributeValue::create(['attribute_id' => $size->id, 'value' => 'M']);
-        $l = AttributeValue::create(['attribute_id' => $size->id, 'value' => 'L']);
-
-        // 🔥 Variant 1 (Red + M)
-        $variant1 = ProductVariant::firstOrCreate(
-            ['sku' => 'TSH-RED-M'], // 🔥 ONLY UNIQUE FIELD
+        $product = Product::updateOrCreate(
             [
-                'product_id' => $product->id,
-                'category_id' => 1,
-                'price' => 1000,
-                'stock' => 10,
+                'name' => 'T-Shirt (Demo)',
+                'category_id' => $category->id,
+            ],
+            [
+                'description' => 'Premium cotton t-shirt — demo seed',
+                'product_type_id' => $productType->id,
                 'created_by' => 1,
             ]
         );
 
-        $variant1->attributeValues()->attach([$red->id, $m->id]);
+        $color = ProductAttribute::firstOrCreate(
+            ['product_id' => $product->id, 'name' => 'Color'],
+            ['created_by' => 1]
+        );
+
+        $size = ProductAttribute::firstOrCreate(
+            ['product_id' => $product->id, 'name' => 'Size'],
+            ['created_by' => 1]
+        );
+
+        $red = AttributeValue::firstOrCreate(
+            ['attribute_id' => $color->id, 'value' => 'Red'],
+            ['created_by' => 1]
+        );
+        $blue = AttributeValue::firstOrCreate(
+            ['attribute_id' => $color->id, 'value' => 'Blue'],
+            ['created_by' => 1]
+        );
+
+        $m = AttributeValue::firstOrCreate(
+            ['attribute_id' => $size->id, 'value' => 'M'],
+            ['created_by' => 1]
+        );
+        $l = AttributeValue::firstOrCreate(
+            ['attribute_id' => $size->id, 'value' => 'L'],
+            ['created_by' => 1]
+        );
     }
 }

@@ -8,12 +8,18 @@ class Product extends Model
 {
     protected $guarded = ['id'];
 
-    public function variants() {
-        return $this->hasMany(ProductVariant::class, 'product_id');
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 
     public function images()
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function productType()
+    {
+        return $this->belongsTo(ProductType::class, 'product_type');
     }
 }

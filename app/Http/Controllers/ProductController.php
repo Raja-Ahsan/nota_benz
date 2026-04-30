@@ -9,10 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with([
-            'variants.attributeValues.productAttribute',
-            'images'
-        ])->latest()->get();
+        $products = Product::latest()->get();
         return view('screens.admin.products.index', get_defined_vars());
     }
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductVariationController;
 use App\Http\Controllers\ProductController;
 
@@ -27,13 +28,15 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     
+    Route::get('/categories', [ProductCategoryController::class, 'index'])->name('product-categories.index');
+
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 
-    Route::get('/variations', [ProductVariationController::class, 'index'])->name('variations.index');
-    Route::get('/variations/create', [ProductVariationController::class, 'create'])->name('variations.create');
-    Route::post('/variations', [ProductVariationController::class, 'store'])->name('variations.store');
+    Route::get('/variations', [ProductVariationController::class, 'index'])->name('product-variations.index');
+    Route::get('/variations/create', [ProductVariationController::class, 'create'])->name('product-variations.create');
+    Route::post('/variations', [ProductVariationController::class, 'store'])->name('product-variations.store');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {

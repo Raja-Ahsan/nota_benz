@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('product_categories')->onDelete('cascade');
             $table->string('name');
+            $table->foreignId('product_type_id')->constrained('product_types')->cascadeOnDelete();
+            $table->decimal('price', 10, 2)->default(0);
             $table->text('description')->nullable();
+            $table->string('status')->default('active');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

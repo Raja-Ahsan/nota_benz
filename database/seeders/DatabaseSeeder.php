@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CmsModuleSeeder::class,
             CmsModulePermissionsSeeder::class,
+            ProductTypeSeeder::class,
+            ProductCategorySeeder::class,
             ProductVariationSeeder::class,
         ]);
     }
