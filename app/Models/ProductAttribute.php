@@ -8,9 +8,8 @@ class ProductAttribute extends Model
 {
     protected $guarded = ['id'];
 
-    public function values()
+    public function items()
     {
-        return $this->hasMany(AttributeValue::class, 'attribute_id');
+        return $this->hasMany(ProductAttributeItem::class, 'product_attribute_id');
     }
-    
 }

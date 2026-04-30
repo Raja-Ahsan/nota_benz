@@ -7,9 +7,8 @@
             <div class="card">
                 <div class="card-header card-no-border text-end">
                     <div class="card-header-right-icon">
-                        <a class="btn btn-primary f-w-500" href="{{ route('products.create') }}"><i
-                                class="fa-solid fa-plus pe-2"></i>Add
-                            Product</a>
+                        <a class="btn btn-primary f-w-500" href="{{ route('product-variations.create') }}"><i
+                                class="fa-solid fa-plus pe-2"></i>Create variation</a>
                     </div>
                 </div>
                 <div class="card-body pt-0 px-0">
@@ -18,52 +17,21 @@
                             <table class="table" id="variations-table">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            <span class="c-o-light f-w-600">Name</span>
-                                        </th>
-                                        <th>
-                                            <span class="c-o-light f-w-600">SKU</span>
-                                        </th>
-                                        <th>
-                                            <span class="c-o-light f-w-600">Price</span>
-                                        </th>
-                                        <th>
-                                            <span class="c-o-light f-w-600">Stock</span>
-                                        </th>
-                                        <th>
-                                            <span class="c-o-light f-w-600">Actions</span>
-                                        </th>
+                                        <th><span class="c-o-light f-w-600">Name</span></th>
+                                        <th><span class="c-o-light f-w-600">Created</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($variants as $variant)
-                                    <tr class="product-removes inbox-data">
-
-                                        {{-- Product Name --}}
-                                        <td>{{ $variant->product->name ?? 'N/A' }}</td>
-
-                                        {{-- SKU --}}
-                                        <td>{{ $variant->sku }}</td>
-
-                                        {{-- Price --}}
-                                        <td>{{ $variant->price ?? 'N/A' }}</td>
-
-                                        {{-- Stock --}}
-                                        <td>{{ $variant->stock ?? 'N/A' }}</td>
-
-                                        {{-- Actions --}}
-                                        <td>
-                                            <div class="common-align gap-2 justify-content-start">
-                                                <a class="square-white" href="#!">
-                                                    <span><i class="fa-solid fa-eye"></i></span>
-                                                </a>
-                                            </div>
-                                        </td>
+                                    @forelse ($variations as $v)
+                                    <tr class="inbox-data">
+                                        <td>{{ $v->name }}</td>
+                                        <td>{{ $v->created_at?->format('Y-m-d H:i') ?? '—' }}</td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
-                                            <h3 class="pt-5">No Variations Found</h3>
+                                        <td colspan="2" class="text-center">
+                                            <h3 class="pt-5">No variations found</h3>
+                                            <p class="text-muted pb-4">Create variation definitions first, then use them on variable products.</p>
                                         </td>
                                     </tr>
                                     @endforelse
@@ -77,16 +45,12 @@
     </div>
 </div>
 @push('scripts')
+@if ($variations->isNotEmpty())
 <script>
-    var table = $('#variations-table').DataTable({
-        order: [
-            [4, 'desc']
-        ],
-        columnDefs: [{
-            orderable: false,
-            targets: 4
-        }]
+    $('#variations-table').DataTable({
+        order: [[0, 'asc']]
     });
 </script>
+@endif
 @endpush
 @endsection

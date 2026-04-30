@@ -22,13 +22,16 @@
                                             <span class="c-o-light f-w-600">Name</span>
                                         </th>
                                         <th>
-                                            <span class="c-o-light f-w-600">SKU</span>
+                                            <span class="c-o-light f-w-600">Category</span>
+                                        </th>
+                                        <th>
+                                            <span class="c-o-light f-w-600">Type</span>
                                         </th>
                                         <th>
                                             <span class="c-o-light f-w-600">Price</span>
                                         </th>
                                         <th>
-                                            <span class="c-o-light f-w-600">Stock</span>
+                                            <span class="c-o-light f-w-600">Status</span>
                                         </th>
                                         <th>
                                             <span class="c-o-light f-w-600">Actions</span>
@@ -38,34 +41,33 @@
                                 <tbody>
                                     @forelse ($products as $product)
                                     <tr class="product-removes inbox-data">
-                                        <td>{{$product->name}}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->category?->name ?? '—' }}</td>
+                                        <td>{{ $product->productType?->name ?? '—' }}</td>
                                         <td>
-                                            @foreach ($product->variants as $variant)
-                                            <p>{{$variant->sku}}</p>
-                                            @endforeach
+                                            @if ($product->productType?->slug === 'variable')
+                                                <span class="text-muted">—</span>
+                                            @else
+                                                {{ number_format((float) $product->price, 2) }}
+                                            @endif
                                         </td>
-                                        <td>
-                                            @foreach ($product->variants as $variant)
-                                            <p>{{$variant->price ?? 'N/A'}}</p>
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($product->variants as $variant)
-                                            <p>{{$variant->stock ?? 'N/A'}}</p>
-                                            @endforeach
-                                        </td>
+                                        <td>{{ $product->status }}</td>
                                         <td>
                                             <div class="common-align gap-2 justify-content-start">
-                                                {{-- <a class="square-white" href="add-user.html">
-                                                            <span><i class="fa-solid fa-pen"></i></span>
-                                                        </a>
-                                                        <a class="square-white trash-7" href="#!">
-                                                            <span><i class="fa-solid fa-trash"></i></span>
-                                                        </a> --}}
-                                                {{-- add view icon --}}
-                                                <a class="square-white" href="#!">
+                                                <a class="square-white" href="{{ route('products.show', $product) }}" title="View">
                                                     <span><i class="fa-solid fa-eye"></i></span>
                                                 </a>
+                                                <a class="square-white" href="{{ route('products.edit', $product) }}" title="Edit">
+                                                    <span><i class="fa-solid fa-pen"></i></span>
+                                                </a>
+                                                <form action="{{ route('products.destroy', $product) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="square-white border-0 js-product-delete"
+                                                        title="Delete">
+                                                        <span><i class="fa-solid fa-trash"></i></span>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -87,15 +89,17 @@
 </div>
 @push('scripts')
 <script>
-    var table = $('#users-table').DataTable({
+    $('#users-table').DataTable({
         order: [
-            [4, 'desc']
+            [0, 'desc']
         ],
         columnDefs: [{
             orderable: false,
-            targets: 4
-        }]
+            targets: 5
+        }],
     });
+
+    ajaxDelete('.js-product-delete', 'tr');
 </script>
 @endpush
 @endsection

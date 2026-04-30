@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             CmsModulePermissionsSeeder::class,
             ProductTypeSeeder::class,
             ProductCategorySeeder::class,
-            ProductVariationSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

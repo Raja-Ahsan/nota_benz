@@ -19,7 +19,7 @@ body {
 
 
 .container {
-    @apply mx-auto  px-10  md:px-30;
+    @apply mx-auto px-[15px];
 }
 
 .desktop-nav-link {
@@ -67,6 +67,15 @@ body {
 .footer-bottom-link {
     @apply text-[11px] text-[var(--text-color)] transition-colors hover:text-[var(--primary-color)] font-normal ;
 }
+.quote-banner {
+    background: 
+        linear-gradient(180deg, rgba(26, 26, 26, 0.8) 0%, rgba(26, 26, 26, 0.6) 48.49%, rgba(26, 26, 26, 0.8) 100%),
+        url('../../public/assets/images/pen.png');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
 @media (max-width: 500px) {
     .btn {
@@ -104,5 +113,159 @@ body {
 
     .home-ticker-track > div:last-child {
         display: none;
+    }
+}
+
+/* Reusable full-bleed quote banner (image + overlay + centered quote) */
+.quote-banner {
+    @apply relative isolate w-full overflow-hidden;
+}
+
+
+
+.quote-banner__overlay {
+    @apply absolute inset-0 -z-10 bg-black/55;
+}
+
+.quote-banner__inner {
+    @apply relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center justify-center px-6 py-20 text-center sm:px-8 sm:py-24 md:py-28 lg:py-36;
+}
+
+.quote-banner__quote {
+    @apply m-0 max-w-3xl space-y-6;
+}
+
+.quote-banner__text {
+    @apply font-serif text-2xl font-normal italic leading-snug text-white sm:text-3xl md:text-4xl lg:text-[2.75rem] lg:leading-tight;
+}
+
+.quote-banner__attribution {
+    @apply font-sans text-xs font-semibold uppercase tracking-widest text-cyan-400 sm:text-sm;
+}
+
+/* Stories from the Field — featured posts grid (reusable block) */
+.stories-field {
+    @apply bg-white py-14 sm:py-16 md:py-20 lg:py-24;
+}
+
+.stories-field__inner {
+    @apply container;
+}
+
+.stories-field__header {
+    @apply mb-10 flex flex-col gap-8 sm:mb-12 md:flex-row md:items-end md:justify-between md:gap-6;
+}
+
+.stories-field__intro {
+    @apply max-w-2xl space-y-3;
+}
+
+.stories-field__kicker {
+    @apply flex flex-wrap items-baseline gap-2 font-sans text-sm md:text-base;
+}
+
+.stories-field__kicker-scene {
+    @apply font-semibold uppercase tracking-widest text-[var(--secondary-color)];
+}
+
+.stories-field__kicker-rest {
+    @apply font-serif font-medium italic tracking-wide text-[var(--text-color)]/75;
+}
+
+.stories-field__title {
+    @apply font-serif text-[2rem] font-bold leading-[1.1] tracking-tight text-[var(--text-color)] sm:text-4xl md:text-5xl lg:text-6xl;
+}
+
+.stories-field__title-line {
+    @apply block;
+}
+
+.stories-field__title-line--accent {
+    @apply font-serif font-bold italic text-[var(--secondary-color)];
+}
+
+.stories-field__all-link {
+    @apply inline-flex items-center gap-1 self-start font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--text-color)] transition-colors hover:text-[var(--secondary-color)] md:self-auto md:text-xs;
+}
+
+.stories-field__grid {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-2 md:gap-5;
+}
+
+.stories-field__card {
+    @apply relative isolate flex min-h-[280px] flex-col overflow-hidden rounded-sm shadow-sm md:min-h-0;
+}
+
+.stories-field__card--feature {
+    @apply min-h-[360px] md:col-span-2 md:row-span-2 md:min-h-[520px];
+}
+
+.stories-field__card--compact {
+    @apply min-h-[260px];
+}
+
+.stories-field__card-media {
+    @apply absolute inset-0 -z-20 scale-100 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-out will-change-transform;
+    background-image: var(--stories-field-card-bg);
+}
+
+.stories-field__card-overlay {
+    @apply absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/45 to-black/10;
+}
+
+.stories-field__card-body {
+    @apply relative z-10 mt-auto flex w-full flex-col gap-3 p-6 sm:p-8;
+}
+
+.stories-field__card--compact .stories-field__card-body {
+    @apply p-5 sm:p-6;
+}
+
+.stories-field__category {
+    @apply m-0 flex items-center gap-2 font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--secondary-color)] sm:text-[11px];
+}
+
+.stories-field__category::before {
+    content: "";
+    @apply block h-px w-5 shrink-0 bg-[var(--secondary-color)] sm:w-6;
+}
+
+.stories-field__category-label {
+    @apply leading-none;
+}
+
+.stories-field__card-title {
+    @apply max-w-xl font-serif text-2xl font-bold leading-snug text-white sm:text-3xl md:text-4xl lg:text-[2.35rem] lg:leading-tight;
+}
+
+.stories-field__card-title--sm {
+    @apply max-w-none text-xl sm:text-2xl md:text-[1.65rem] md:leading-snug;
+}
+
+.stories-field__card-meta-row {
+    @apply flex flex-wrap items-end justify-between gap-3 border-t border-white/10 pt-4;
+}
+
+.stories-field__meta {
+    @apply m-0 font-sans text-xs text-white/85 md:text-sm;
+}
+
+.stories-field__read-link {
+    @apply font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--secondary-color)] transition-opacity hover:opacity-80 sm:text-[11px];
+}
+
+@media (hover: hover) {
+    .stories-field__card:hover .stories-field__card-media {
+        @apply scale-105;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stories-field__card-media {
+        @apply transition-none;
+    }
+
+    .stories-field__card:hover .stories-field__card-media {
+        @apply scale-100;
     }
 }

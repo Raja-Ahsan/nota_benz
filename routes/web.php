@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProductCategoryController;
-use App\Http\Controllers\Admin\ProductVariationController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductAttributeController;
 
 Route::get('/', function () {
     return view('screens.web.home.index');
@@ -33,17 +33,21 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product:slug}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product:slug}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product:slug}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 
-    Route::get('/variations', [ProductVariationController::class, 'index'])->name('product-variations.index');
-    Route::get('/variations/create', [ProductVariationController::class, 'create'])->name('product-variations.create');
-    Route::post('/variations', [ProductVariationController::class, 'store'])->name('product-variations.store');
+    Route::get('/product-variations', [ProductAttributeController::class, 'index'])->name('product-variations.index');
+    Route::get('/product-variations/create', [ProductAttributeController::class, 'create'])->name('product-variations.create');
+    Route::post('/product-variations', [ProductAttributeController::class, 'store'])->name('product-variations.store');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin|user'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
 

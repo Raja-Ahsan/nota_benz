@@ -98,7 +98,7 @@ class CmsModuleSeeder extends Seeder
             ['route_name' => 'product-variations.index'],
             [
                 'name' => 'All Variations',
-                'icon' => 'fa-solid fa-list-ul',
+                'icon' => 'fa-solid fa-sliders',
                 'sort_order' => 3,
                 'status' => 'active',
                 'parent_id' => $products->id,
