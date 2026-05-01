@@ -93,7 +93,7 @@
     ];
     @endphp
     <section
-        class="home-ticker overflow-hidden bg-[#28A4BA] py-3 shadow-inner sm:py-3.5"
+        class="home-ticker overflow-hidden bg-secondary py-4 shadow-inner"
         aria-label="{{ __('Tagline scroll') }}">
         <div class="home-ticker-track" role="presentation">
             @foreach (['a', 'b'] as $copy)
@@ -102,7 +102,7 @@
                 @if ($copy==='b' ) aria-hidden="true" @endif>
                 @foreach ($tickerWords as $i => $word)
                 @if ($i > 0)
-                <span class="text-[var(--primary-color)]" aria-hidden="true">·</span>
+                <span class="text-[28px] leading-none text-primary" aria-hidden="true">•</span>
                 @endif
                 <span>{{ $word }}</span>
                 @endforeach
@@ -114,8 +114,8 @@
     @php
     $storySlides = [
     [
-    'kicker_line' => '— ' . __('CHAPTER I') . ' — ',
-    'kicker_title' => __('The Origin'),
+    'kicker_line' => '— ' . __('CHAPTER I') ,
+    'kicker_title' => ' — ' . __('The Origin'),
     'line1' => __('Born from a '),
     'em' => __('single desire'),
     'line2' => __(' — to be undeniable.'),
@@ -127,11 +127,11 @@
     she was a writer. Between continents and contradictions, she
     found her voice — precise, poetic, and uncompromising.'),
     ],
-    'progress' => '• ' . __('SCENE II') . ' — ' . __('CHAPTER I of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('CHAPTER I of IV'),
     ],
     [
-    'kicker_line' => '— ' . __('CHAPTER II') . ' — ',
-    'kicker_title' => __('The Road'),
+    'kicker_line' => '— ' . __('CHAPTER II') ,
+    'kicker_title' => ' — ' . __('The Road'),
     'line1' => __(' 32 countries. One'),
     'em' => __(' relentless question.'),
     'line2' => __(),
@@ -143,11 +143,11 @@
     gathering. A study in how different people hold the same
     desire to be fully alive.'),
     ],
-    'progress' => '• ' . __('SCENE II') . ' — ' . __('CHAPTER II of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('CHAPTER II of IV'),
     ],
     [
-    'kicker_line' => '— ' . __('CHAPTER III') . ' — ',
-    'kicker_title' => __('The Art'),
+    'kicker_line' => '— ' . __('CHAPTER III') ,
+    'kicker_title' => ' — ' . __('The Art'),
     'line1' => __('Street art.
     Conceptual work. '),
     'em' => __('Language as canvas.'),
@@ -159,11 +159,11 @@
     __('From urban murals to written essays, the creative philosophy
     is constant: '),
     ],
-    'progress' => '• ' . __('SCENE II') . ' — ' . __('CHAPTER III of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('CHAPTER III of IV'),
     ],
     [
-    'kicker_line' => '— ' . __('CHAPTER IV') . ' — ',
-    'kicker_title' => __('The Philosophy'),
+        'kicker_line' => '— ' . __('CHAPTER IV') ,
+    'kicker_title' => ' — ' . __('The Philosophy'),
     'line1' => __('Identity is not'),
     'em' => __(' given'),
     'line2' => __('. It is built —
@@ -176,7 +176,7 @@
     are either in it, or you are still deciding. Both are fine. The
     door is always open.'),
     ],
-    'progress' => '• ' . __('SCENE 04') . ' — ' . __('CHAPTER IV of IV'),
+    'progress' => __('SCENE 04') . ' — ' . __('CHAPTER IV of IV'),
     ],
     ];
     @endphp
@@ -236,22 +236,23 @@
                         @if ($index> 0) inert @endif
                         @if ($index > 0) aria-hidden="true" @endif
                         >
-                        <p class="font-sans text-[16px] font-semibold text-[var(--primary-color)]">
+                        <p class=" manrope-font text-[16px] font-bold text-secondary">
                             <span class="uppercase tracking-widest">{{ $slide['kicker_line'] }}</span>
-                            <span class="mt-0.5 block pl-0.5  text-[16px] font-medium italic normal-case tracking-wide text-[#333333]/80 sm:mt-0 sm:ml-2 sm:inline sm:pl-0 md:text-lg">{{ $slide['kicker_title'] }}</span>
+                            <span class="cormorant-font mt-0.5 block pl-0.5  text-[16px]  italic normal-case tracking-wide text-[#333333] font-normal sm:mt-0 sm:ml-2 sm:inline sm:pl-0 md:text-lg">{{ $slide['kicker_title'] }}</span>
                         </p>
-                        <h2 class="mt-2 max-w-[400px] font-serif text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px] plarfair-font">
-                            {{ $slide['line1'] }}<em class="font-serif font-semibold italic text-[#28A4BA]">{{ $slide['em'] }}</em>{{ $slide['line2'] }}
+                        <h2 class="mt-2 max-w-[400px]  text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px] plarfair-font">
+                            {{ $slide['line1'] }}<em class=" font-normal italic text-secondary">{{ $slide['em'] }}</em>{{ $slide['line2'] }}
                         </h2>
-                        <div class="mt-6 max-w-[400px] space-y-4 font-serif text-[16px] leading-relaxed text-[var(--text-color)]/70 cormorant-font tracking-[0%]">
+                        <div class="mt-6 max-w-[400px] space-y-4 font-normal text-[16px] leading-[35.52pz] text-[var(--text-color)]/ cormorant-font tracking-[0%]">
                             @foreach ($slide['body'] as $para)
                             <p>{{ $para }}</p>
                             @endforeach
                         </div>
                         <p
-                            class="mt-8  text-[16px] font-medium uppercase  text-[var(--primary-color)] manrope-font tracking-[2.4px]"
+                            class="mt-8 flex flex-wrap items-center gap-x-2 text-[16px] font-medium uppercase text-secondary manrope-font tracking-[2.4px]"
                             data-story-step>
-                            {{ $slide['progress'] }}
+                            <span class="shrink-0 text-[28px] leading-none text-primary" aria-hidden="true">•</span>
+                            <span>{{ $slide['progress'] }}</span>
                         </p>
                     </div>
                     @endforeach
@@ -267,7 +268,7 @@
                 <p class="quote-banner__text">
                     "Every road walked is a sentence written. Every city crossed is a paragraph earned."
                 </p>
-                <footer class="quote-banner__attribution manrope-font tracking-[2.98px]">— Mercedes A. Villamán</footer>
+                <footer class="quote-banner__attribution tracking-[2.98px]">— Mercedes A. Villamán</footer>
             </blockquote>
         </div>
     </section>
@@ -477,7 +478,7 @@
     @endphp
 
     {{-- Instagram gallery marquee (Slick; styles: `.insta-gallery*`) --}}
-    <section class="insta-gallery" aria-label="{{ __('Instagram gallery') }}">
+    <section class="insta-gallery overflow-hidden" aria-label="{{ __('Instagram gallery') }}">
         <div class="container insta-gallery__heading-wrap">
             <a
                 href="https://www.instagram.com/villamanmercedes/"

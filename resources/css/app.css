@@ -299,7 +299,7 @@ body {
 }
 
 .btn {
-    @apply inline-flex items-center justify-center border border-[var(--primary-color)] py-[14px] px-[40px] text-center md:text-[12px] text-[10px];
+    @apply inline-flex items-center justify-center border border-[var(--primary-color)] py-[14px] px-[40px] text-center md:text-[11px] text-[10px] tracking-[1.96px] ;
 }
 
 .btn {
@@ -307,15 +307,15 @@ body {
 }
 
 .btn-primary {
-    @apply bg-[var(--primary-color)] text-[#050505] font-bold uppercase tracking-wide transition-opacity;
+    @apply bg-[var(--primary-color)] text-[#050505] font-bold uppercase  transition-opacity;
 }
 
 .secondary-btn {
-    @apply bg-transparent text-white/65 font-bold uppercase tracking-wide transition-colors hover:text-white;
+    @apply bg-transparent text-white/65 font-semibold uppercase  transition-colors hover:text-white;
 }
 
 .social-icon {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-full border-2 border-[var(--primary-color)] transition-opacity hover:opacity-80;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#28A4BA96] hover:opacity-80;
 }
 
 
@@ -409,7 +409,7 @@ body {
 }
 
 .quote-banner__attribution {
-    @apply font-sans text-xs font-semibold uppercase tracking-widest text-cyan-400 sm:text-sm;
+    @apply  text-[16px] font-bold uppercase tracking-widest text-primary;
 }
 
 /* Stories from the Field — featured posts grid (reusable block) */
@@ -547,7 +547,7 @@ body {
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
-.stories-field__all-link {
+.stories-field__all-link, .quote-banner__attribution {
     font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
