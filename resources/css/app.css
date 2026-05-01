@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-@theme {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
+
 
 :root {
     --primary-color: #10e0ff;
@@ -13,19 +10,275 @@
     --text-color: #333333;
 }
 
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-EXTRALIGHT.TTF") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-LIGHT.TTF") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-REGULAR.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-MEDIUM.TTF") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-SEMIBOLD.TTF") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-BOLD.TTF") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../public/fonts/manrope/MANROPE-EXTRABOLD.TTF") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIRDISPLAY-REGULAR.TTF") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIRDISPLAY-MEDIUM.TTF") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIRDISPLAY-SEMIBOLD.TTF") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIR DISPLAY 700.TTF") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIRDISPLAY-EXTRABOLD.TTF") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIR DISPLAY 900.TTF") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIR DISPLAY ITALIC.TTF") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIR DISPLAY 700ITALIC.TTF") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Playfair Display";
+    src: url("../../public/fonts/playfair/PLAYFAIR DISPLAY 900ITALIC.TTF") format("truetype");
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Syne";
+    src: url("../../public/fonts/syne/SYNE-VARIABLEFONT_WGHT.TTF") format("truetype-variations"),
+        url("../../public/fonts/syne/SYNE-VARIABLEFONT_WGHT.TTF") format("truetype");
+    font-weight: 400 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Syne";
+    src: url("../../public/fonts/syne/SYNE.BOLD.TTF") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/CormorantGaramond-VariableFont_wght.ttf") format("truetype-variations"),
+        url("../../public/fonts/Cormorant_Garamond/CormorantGaramond-VariableFont_wght.ttf") format("truetype");
+    font-weight: 300 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/CormorantGaramond-Italic-VariableFont_wght.ttf") format("truetype-variations"),
+        url("../../public/fonts/Cormorant_Garamond/CormorantGaramond-Italic-VariableFont_wght.ttf") format("truetype");
+    font-weight: 300 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-Light.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-LightItalic.ttf") format("truetype");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-Italic.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-MediumItalic.ttf") format("truetype");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-SemiBoldItalic.ttf") format("truetype");
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("../../public/fonts/Cormorant_Garamond/static/CormorantGaramond-BoldItalic.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
 body {
     background-color: var(--white-color);
 }
 
+.manrope-font {
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
 
+.plarfair-font {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+.syne-font {
+    font-family: "Syne", ui-sans-serif, system-ui, sans-serif;
+}
+
+.cormorant-font {
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+}
 .container {
     @apply mx-auto px-[15px];
 }
 
 .desktop-nav-link {
-    @apply text-[16px] font-semibold uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)] ;
+    @apply text-[16px] font-semibold uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)]  ;
 }
-
+    
 
 .mobile-nav-link {
     @apply block border-b border-white/10 py-3 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)];
@@ -36,9 +289,11 @@ body {
 }
 
 .btn {
-    @apply inline-flex items-center justify-center border border-[var(--primary-color)] px-8 py-3.5 text-center md:text-[12px] text-[10px] ;
+    @apply inline-flex items-center justify-center border border-[var(--primary-color)] px-8 py-3.5 text-center md:text-[12px] text-[10px]  ;
 }
-    
+   .btn {
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+   } 
 .btn-primary {
     @apply bg-[var(--primary-color)] text-[#050505] font-bold uppercase tracking-wide transition-opacity ;
 }
@@ -53,7 +308,7 @@ body {
 
 
 .footer-title {
-    @apply text-[12px] font-bold uppercase tracking-[2.78px] text-[var(--text-color)];
+    @apply text-[12px] font-bold uppercase tracking-[2.78px] text-[var(--text-color)] ;
 }
 
 .footer-link {
@@ -165,15 +420,15 @@ body {
 }
 
 .stories-field__kicker-scene {
-    @apply font-semibold uppercase tracking-widest text-[var(--secondary-color)];
+    @apply font-bold uppercase text-[16px] tracking-widest text-[var(--secondary-color)];
 }
 
 .stories-field__kicker-rest {
-    @apply font-serif font-medium italic tracking-wide text-[var(--text-color)]/75;
+    @apply  italic tracking-wide text-[var(--text-color)]/75;
 }
 
 .stories-field__title {
-    @apply font-serif text-[2rem] font-bold leading-[1.1] tracking-tight text-[var(--text-color)] sm:text-4xl md:text-5xl lg:text-6xl;
+    @apply font-serif text-[30px] font-bold leading-[1.1] tracking-tight text-[var(--text-color)]  md:text-[50px];
 }
 
 .stories-field__title-line {
@@ -181,7 +436,7 @@ body {
 }
 
 .stories-field__title-line--accent {
-    @apply font-serif font-bold italic text-[var(--secondary-color)];
+    @apply  font-normal italic text-[var(--secondary-color)];
 }
 
 .stories-field__all-link {
@@ -209,9 +464,9 @@ body {
     background-image: var(--stories-field-card-bg);
 }
 
-.stories-field__card-overlay {
+/* .stories-field__card-overlay {
     @apply absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/45 to-black/10;
-}
+} */
 
 .stories-field__card-body {
     @apply relative z-10 mt-auto flex w-full flex-col gap-3 p-6 sm:p-8;
@@ -243,7 +498,7 @@ body {
 }
 
 .stories-field__card-meta-row {
-    @apply flex flex-wrap items-end justify-between gap-3 border-t border-white/10 pt-4;
+    @apply flex flex-wrap items-end justify-between gap-3  pt-4;
 }
 
 .stories-field__meta {
@@ -268,4 +523,16 @@ body {
     .stories-field__card:hover .stories-field__card-media {
         @apply scale-100;
     }
+}
+
+.quote-banner__text  {
+font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+.stories-field__title-line--accent
+ {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+.stories-field__all-link {
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
