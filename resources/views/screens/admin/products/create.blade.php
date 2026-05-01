@@ -37,8 +37,6 @@
                                 <a href="{{ route('product-variations.create') }}">Products → Create variation</a>
                                 first.
                             </div>
-                        @else
-                            <p class="small text-muted mb-3">Each row: variation, option label, price, and optional single image for that option (saved in <code>product_images</code>).</p>
                         @endif
                         <div id="variation-rows-container"></div>
                     </div>
@@ -153,7 +151,7 @@
     Dropzone.autoDiscover = false;
 
     $(document).ready(function() {
-        new Dropzone("#gallery_images", {
+        window.myDropzone = new Dropzone("#gallery_images", {
             url: "javascript:void(0)",
             autoProcessQueue: false,
             maxFiles: 5,
@@ -163,12 +161,41 @@
             paramName: 'images[]',
 
             init: function() {
-                this.on("maxfilesexceeded", function() {
+                const dz = this;
+
+                dz.on("maxfilesexceeded", function() {
                     Swal.fire({
                         icon: "error",
                         title: "You can upload a maximum of 5 gallery images.",
                         showConfirmButton: true
                     });
+                });
+
+                dz.on("addedfile", function(file) {
+                    const input = document.getElementById("galleryInput");
+                    if (!input) {
+                        return;
+                    }
+                    const dt = new DataTransfer();
+                    Array.from(input.files).forEach(function(f) {
+                        dt.items.add(f);
+                    });
+                    dt.items.add(file);
+                    input.files = dt.files;
+                });
+
+                dz.on("removedfile", function(file) {
+                    const input = document.getElementById("galleryInput");
+                    if (!input) {
+                        return;
+                    }
+                    const dt = new DataTransfer();
+                    Array.from(input.files).forEach(function(f) {
+                        if (f.name !== file.name || f.size !== file.size) {
+                            dt.items.add(f);
+                        }
+                    });
+                    input.files = dt.files;
                 });
             }
         });

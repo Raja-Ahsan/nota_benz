@@ -62,6 +62,10 @@
     </div>
 </div>
 @push('scripts')
+@php
+    $galleryCount = $product->images->whereNull('product_attribute_item_id')->count();
+    $galleryDeleteBase = url('/admin/products/'.$product->slug.'/gallery-image');
+@endphp
 <script>
     (function() {
         const VARIATION_DEFINITIONS = @json($variationDefinitions);
@@ -158,27 +162,121 @@
         ajaxCreate("{{ route('products.index') }}");
     })();
 
+    window.existingGalleryCount = {{ (int) $galleryCount }};
     Dropzone.autoDiscover = false;
+    const deleteGalleryUrlBase = @json($galleryDeleteBase);
+    const maxGalleryTotal = 5;
 
     $(document).ready(function() {
-        new Dropzone("#gallery_images", {
+        window.existingCount = window.existingGalleryCount || 0;
+        window.allowedNew = maxGalleryTotal - window.existingCount;
+
+        window.myDropzone = new Dropzone("#gallery_images", {
             url: "javascript:void(0)",
             autoProcessQueue: false,
-            maxFiles: 5,
+            maxFiles: window.allowedNew,
             acceptedFiles: 'image/*',
             addRemoveLinks: true,
             clickable: true,
             paramName: 'images[]',
 
             init: function() {
-                this.on("maxfilesexceeded", function() {
+                const dz = this;
+
+                if (window.allowedNew <= 0) {
+                    dz.disable();
+                    $('#gallery_images').addClass('disabled');
+                }
+
+                dz.on("addedfile", function(file) {
+                    const input = document.getElementById("galleryInput");
+                    if (!input) {
+                        return;
+                    }
+                    const dt = new DataTransfer();
+                    Array.from(input.files).forEach(function(f) {
+                        dt.items.add(f);
+                    });
+                    dt.items.add(file);
+                    input.files = dt.files;
+                });
+
+                dz.on("removedfile", function(file) {
+                    const input = document.getElementById("galleryInput");
+                    if (!input) {
+                        return;
+                    }
+                    const dt = new DataTransfer();
+                    Array.from(input.files).forEach(function(f) {
+                        if (f.name !== file.name || f.size !== file.size) {
+                            dt.items.add(f);
+                        }
+                    });
+                    input.files = dt.files;
+                });
+
+                dz.on("maxfilesexceeded", function() {
                     Swal.fire({
                         icon: "error",
-                        title: "You can upload a maximum of 5 gallery images.",
-                        showConfirmButton: true
+                        title: "You can upload a maximum of " + maxGalleryTotal + " gallery images."
                     });
                 });
             }
+        });
+    });
+
+    $(document).on('click', '.delete-gallery-image', function() {
+        const btn = $(this);
+        const wrapper = btn.closest('.gallery-item');
+        const imageId = wrapper.data('id');
+
+        Swal.fire({
+            title: "Remove image?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, remove"
+        }).then(function(result) {
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            $.ajax({
+                url: deleteGalleryUrlBase + '/' + imageId,
+                type: "DELETE",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                success: function(res) {
+                    if (res.success) {
+                        wrapper.remove();
+                        window.existingCount = Math.max(0, (window.existingCount || 0) - 1);
+                        window.allowedNew = maxGalleryTotal - window.existingCount;
+                        if (window.myDropzone) {
+                            window.myDropzone.options.maxFiles = window.allowedNew;
+                            if (window.allowedNew > 0) {
+                                window.myDropzone.enable();
+                                $('#gallery_images').removeClass('disabled');
+                            }
+                        }
+                        Swal.fire({
+                            icon: "success",
+                            title: res.message || 'Removed',
+                            timer: 1200,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    const msg = xhr.responseJSON && xhr.responseJSON.message
+                        ? xhr.responseJSON.message
+                        : 'Could not remove image.';
+                    Swal.fire({ icon: 'error', title: 'Error', text: msg });
+                }
+            });
         });
     });
 </script>

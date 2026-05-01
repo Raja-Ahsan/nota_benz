@@ -1,7 +1,7 @@
 {{--
     $readonly bool
-    When readonly: pass $galleryImages (collection of ProductImage)
-    When editing/creating: pass optional $galleryImages for "current gallery" above Dropzone
+    $galleryImages optional collection of ProductImage (main gallery: product_attribute_item_id null)
+    Uses ProductImage::publicUrl() for src (paths under public/).
 --}}
 @php
     $ro = ! empty($readonly);
@@ -9,7 +9,7 @@
 @endphp
 <div class="col-12">
     <div class="mb-3">
-        <label class="form-label">Gallery images</label>
+        <label class="form-label">Gallery images (optional)</label>
         @if ($ro)
             @if ($galleryCollection->isNotEmpty())
                 <div class="d-flex flex-wrap gap-2 mt-2">
@@ -26,21 +26,22 @@
                 <p class="text-muted mb-0">No gallery images.</p>
             @endif
         @else
-            @if ($galleryCollection->isNotEmpty())
-                <small class="text-muted d-block mb-2">Current gallery</small>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    @foreach ($galleryCollection as $img)
-                        @php $src = $img->publicUrl(); @endphp
-                        @if ($src !== '')
-                            <a href="{{ $src }}" target="_blank" rel="noopener">
-                                <img src="{{ $src }}" alt="" class="img-thumbnail rounded border border-secondary" style="max-height: 100px; width: auto;">
-                            </a>
-                        @endif
-                    @endforeach
-                </div>
-            @endif
-            <small class="text-muted d-block mb-2">Upload new images below only when you want to replace the gallery; leave empty to keep current images.</small>
             <div id="gallery_images" class="dropzone"></div>
+            <input type="file" name="images[]" id="galleryInput" multiple hidden>
+            <div class="d-flex flex-wrap gap-2 mt-2" id="galleryPreview">
+                @foreach ($galleryCollection as $img)
+                    @php $src = $img->publicUrl(); @endphp
+                    @if ($src !== '')
+                        <div class="gallery-item image-preview-wrapper position-relative" data-id="{{ $img->id }}">
+                            <img src="{{ $src }}" alt=""
+                                style="width: 100px; height: 100px; object-fit: cover; display: block;">
+                            <button type="button" class="btn btn-danger btn-sm delete-gallery-image"
+                                style="position: absolute; top: 2px; right: 2px; padding: 2px 6px; line-height: 1;"
+                                title="Remove">&times;</button>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
         @endif
     </div>
 </div>

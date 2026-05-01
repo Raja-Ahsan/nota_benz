@@ -27,7 +27,7 @@
                     @php $optSrc = $item->image->publicUrl(); @endphp
                     @if ($optSrc !== '')
                         <small class="text-muted d-block mt-1">Current:</small>
-                        <img src="{{ $optSrc }}" alt="" class="img-thumbnail mt-1" style="max-height: 56px;" loading="lazy">
+                        <img src="{{ $optSrc }}" alt="" class="img-thumbnail mt-1" style="height: 100px; width: 100px;" loading="lazy">
                     @else
                         <small class="text-warning d-block mt-1">Saved path missing or invalid.</small>
                     @endif

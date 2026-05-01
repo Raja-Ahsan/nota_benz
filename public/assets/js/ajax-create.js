@@ -11,15 +11,15 @@ function ajaxCreate(successRedirect = null) {
         let submitBtn = form.find('button[type="submit"]');
         let btnOriginalText = submitBtn.length ? submitBtn.text() : 'Save';
         let formData = new FormData(this);
-        
-        // Check for Dropzone instances and append files
-        if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0) {
+
+        const galleryInput = form.find('#galleryInput')[0];
+        const usesGalleryInput = !!galleryInput;
+
+        if (typeof Dropzone !== 'undefined' && Dropzone.instances.length > 0 && !usesGalleryInput) {
             Dropzone.instances.forEach(function (dz) {
-                // Only process if the dropzone is attached to this form or a child of it
-                // Or simply process all active dropzones if that's the desired generic behavior.
-                // Given the user context, we'll append all queued files from all instances.
                 dz.getQueuedFiles().forEach(function (file) {
-                    formData.append(dz.options.paramName, file);
+                    const param = dz.options.paramName || 'file';
+                    formData.append(param, file);
                 });
             });
         }

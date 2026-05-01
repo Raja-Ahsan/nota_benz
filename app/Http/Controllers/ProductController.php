@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
@@ -231,35 +232,33 @@ class ProductController extends Controller
             } elseif (! is_array($galleryFiles)) {
                 $galleryFiles = [];
             }
-            $hasGalleryUpload = false;
+
+            $newGalleryFiles = [];
             foreach ($galleryFiles as $file) {
                 if ($file && $file->isValid()) {
-                    $hasGalleryUpload = true;
-                    break;
+                    $newGalleryFiles[] = $file;
                 }
             }
 
-            if ($hasGalleryUpload) {
-                foreach ($product->images()->whereNull('product_attribute_item_id')->get() as $img) {
-                    $full = public_path($img->image);
-                    if (is_file($full)) {
-                        @unlink($full);
-                    }
+            if ($newGalleryFiles !== []) {
+                $maxGallery = 5;
+                $existingGalleryCount = $product->images()->whereNull('product_attribute_item_id')->count();
+                if ($existingGalleryCount + count($newGalleryFiles) > $maxGallery) {
+                    throw ValidationException::withMessages([
+                        'images' => ["You can have at most {$maxGallery} gallery images (including existing)."],
+                    ]);
                 }
-                $product->images()->whereNull('product_attribute_item_id')->delete();
 
-                $sortOrder = 0;
-                foreach ($galleryFiles as $file) {
-                    if (! $file || ! $file->isValid()) {
-                        continue;
-                    }
+                $sortOrder = (int) ($product->images()->whereNull('product_attribute_item_id')->max('sort_order') ?? -1);
+                foreach ($newGalleryFiles as $file) {
                     $path = ProductPublicImage::store($file);
+                    $sortOrder++;
                     ProductImage::create([
                         'product_id' => $product->id,
                         'product_attribute_item_id' => null,
                         'image' => $path,
                         'is_primary' => false,
-                        'sort_order' => $sortOrder++,
+                        'sort_order' => $sortOrder,
                         'created_by' => auth()->id(),
                     ]);
                 }
@@ -320,6 +319,34 @@ class ProductController extends Controller
             'message' => 'Product updated successfully',
             'redirect' => route('products.index'),
         ]);
+    }
+
+    public function destroyGalleryImage(Request $request, Product $product, ProductImage $productImage)
+    {
+        abort_unless((int) $productImage->product_id === (int) $product->id, 404);
+        abort_unless($productImage->product_attribute_item_id === null, 404);
+
+        DB::transaction(function () use ($productImage) {
+            $raw = trim((string) $productImage->image);
+            if ($raw !== '' && ! preg_match('#^https?://#i', $raw)) {
+                $full = public_path(str_replace('\\', '/', ltrim($raw, '/')));
+                if (is_file($full)) {
+                    @unlink($full);
+                }
+            }
+            $productImage->delete();
+        });
+
+        $this->normalizeProductImagesOrder($product->fresh());
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Image removed successfully',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Image removed successfully');
     }
 
     public function destroy(Request $request, Product $product)
