@@ -1,4 +1,4 @@
-<header class="fixed inset-x-0 top-0 z-50 ">
+<header class="absolute inset-x-0 top-0 z-50 ">
     <div class="container  flex  items-center justify-between gap-4 py-4 px-4 sm:px-6  lg:px-8">
         {{-- Logo --}}
         <a

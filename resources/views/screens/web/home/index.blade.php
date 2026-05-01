@@ -35,7 +35,7 @@
                 <div class="flex items-center gap-3">
                     <span class="h-px w-8 shrink-0 bg-[var(--primary-color)] " aria-hidden="true"></span>
                     <p class=" italic text-white text-[16px]">
-                        <span class="text-[var(--primary-color)] manrope-font tracking-[3.6px]">SCENE <span class="text-[var(--primary-color)] mx-2 ">I</span></span> <span class="text-white/40 cormorant-font tracking-[1.38px]">— Identity Moment</span>
+                        <span class="text-secondary manrope-font tracking-[3.6px]">SCENE <span class="text-primary mx-2 ">I</span></span> <span class="text-white/60 cormorant-font tracking-[1.38px]">— Identity Moment</span>
                     </p>
                 </div>
 
@@ -49,7 +49,7 @@
                 {{-- Subcopy --}}
                 <div class="space-y-1 font-sans text-[11px] text-white/50  md:text-[20px]">
                     <p class="font-medium italic tracking-wide cormorant-font tracking-[1.25px]">NOTABENZ — A Story In Motion</p>
-                    <p class="font-medium uppercase tracking-wide text-[var(--primary-color)] manrope-font tracking-[3.7px]">
+                    <p class="font-medium uppercase text-[14px] text-primary manrope-font tracking-[3.7px]">
                         NOT A BRAND. A PERSPECTIVE.
                     </p>
                 </div>
@@ -60,7 +60,7 @@
                         href="#"
                         class="btn btn-primary">
                         Enter the journey
-                        <span aria-hidden="true">→</span>
+                        <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>
                     </a>
                     <a
                         href="#"
@@ -345,6 +345,182 @@
             </div>
         </div>
     </section>
+
+    {{-- SCENE IV — Identity Artifacts (styles: resources/css/app.css `.identity-artifacts*`) --}}
+    <section class="identity-artifacts" aria-labelledby="identity-artifacts-heading">
+        <div class="container">
+            <header class="identity-artifacts__header">
+                <div class="identity-artifacts__intro">
+                    <p class="identity-artifacts__kicker">
+                        <span class="identity-artifacts__kicker-line" aria-hidden="true"></span>
+                        <span class="identity-artifacts__kicker-scene manrope-font">SCENE IV</span>
+                        <span class="identity-artifacts__kicker-rest cormorant-font">— Identity Artifacts</span>
+                    </p>
+                    <h2 id="identity-artifacts-heading" class="identity-artifacts__title plarfair-font">
+                        <span class="identity-artifacts__title-line">Not a store.</span>
+                        <span class="identity-artifacts__title-line identity-artifacts__title-line--accent">A Gallery.</span>
+                    </h2>
+                    <p class="identity-artifacts__sub cormorant-font">
+                        Each piece is a story fragment. A personal artifact. A signal.
+                    </p>
+                </div>
+                <a href="#" class="identity-artifacts__browse manrope-font">
+                    Browse all <span class="identity-artifacts__browse-chevron" aria-hidden="true">&gt;</span>
+                </a>
+            </header>
+
+            <div class="identity-artifacts__grid" role="list">
+                <article class="identity-artifacts__card identity-artifacts__card--1" role="listitem">
+                    <div class="identity-artifacts__media">
+                        <span class="identity-artifacts__badge manrope-font">New</span>
+                        <img
+                            class="identity-artifacts__img"
+                            src="{{ asset('assets/images/stories-img-01.png') }}"
+                            width="480"
+                            height="640"
+                            alt="">
+                    </div>
+                    <div class="identity-artifacts__body">
+                        <p class="identity-artifacts__category manrope-font">Book</p>
+                        <h3 class="identity-artifacts__name plarfair-font">My Opus — Vol. I</h3>
+                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$34.99</span></p>
+                    </div>
+                </article>
+
+                <article class="identity-artifacts__card identity-artifacts__card--2" role="listitem">
+                    <div class="identity-artifacts__media">
+                        <span class="identity-artifacts__badge identity-artifacts__badge--long manrope-font">Bestseller</span>
+                        <img
+                            class="identity-artifacts__img"
+                            src="{{ asset('assets/images/stories-img-02.png') }}"
+                            width="480"
+                            height="640"
+                            alt="">
+                    </div>
+                    <div class="identity-artifacts__body">
+                        <p class="identity-artifacts__category manrope-font">Home</p>
+                        <h3 class="identity-artifacts__name plarfair-font">Glass Jar Soy Candle</h3>
+                        <p class="identity-artifacts__price manrope-font">
+                            <span class="identity-artifacts__price-was">$28.00</span>
+                            <span class="identity-artifacts__price-current">$22.00</span>
+                        </p>
+                    </div>
+                </article>
+
+                <article class="identity-artifacts__card identity-artifacts__card--3" role="listitem">
+                    <div class="identity-artifacts__media">
+                        <img
+                            class="identity-artifacts__img"
+                            src="{{ asset('assets/images/stories-img-03.png') }}"
+                            width="480"
+                            height="720"
+                            alt="">
+                    </div>
+                    <div class="identity-artifacts__body">
+                        <p class="identity-artifacts__category manrope-font">Apparel</p>
+                        <h3 class="identity-artifacts__name plarfair-font">Cropped Windbreaker</h3>
+                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$68.00</span></p>
+                    </div>
+                </article>
+
+                <article class="identity-artifacts__card identity-artifacts__card--4" role="listitem">
+                    <div class="identity-artifacts__media">
+                        <span class="identity-artifacts__badge manrope-font">Limited</span>
+                        <img
+                            class="identity-artifacts__img"
+                            src="{{ asset('assets/images/slider-img-03.png') }}"
+                            width="480"
+                            height="640"
+                            alt="">
+                    </div>
+                    <div class="identity-artifacts__body">
+                        <p class="identity-artifacts__category manrope-font">Art print</p>
+                        <h3 class="identity-artifacts__name plarfair-font">Urban Series — No. 7</h3>
+                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$45.00</span></p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    @php
+        $instaTopImages = [
+            'assets/images/slider-img-01.png',
+            'assets/images/slider-img-02.png',
+            'assets/images/slider-images/01.png',
+            'assets/images/slider-images/02.png',
+            'assets/images/slider-images/03.png',
+            'assets/images/slider-images/04.png',
+            'assets/images/slider-images/05.png',
+            'assets/images/slider-images/06.png',
+            'assets/images/stories-img-01.png',
+            'assets/images/image-02.png',
+            'assets/images/image-03.png',
+            'assets/images/image-04.png',
+        ];
+        $instaBottomImages = [
+            'assets/images/slider-images/07.png',
+            'assets/images/slider-images/08.png',
+            'assets/images/slider-images/09.png',
+            'assets/images/slider-images/10.png',
+            'assets/images/slider-images/11.png',
+            'assets/images/slider-img-03.png',
+            'assets/images/slider-img-04.png',
+            'assets/images/stories-img-02.png',
+            'assets/images/stories-img-03.png',
+            'assets/images/pen.png',
+            'assets/images/image-05.png',
+            'assets/images/image-06.png',
+            'assets/images/image-07.png',
+            'assets/images/image-08.png',
+        ];
+    @endphp
+
+    {{-- Instagram gallery marquee (Slick; styles: `.insta-gallery*`) --}}
+    <section class="insta-gallery" aria-label="{{ __('Instagram gallery') }}">
+        <div class="container insta-gallery__heading-wrap">
+            <a
+                href="https://www.instagram.com/villamanmercedes/"
+                class="insta-gallery__handle manrope-font"
+                target="_blank"
+                rel="noopener noreferrer">
+                <span class="insta-gallery__handle-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="5" ry="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+                    </svg>
+                </span>
+                <span class="insta-gallery__handle-text">@villamanmercedes</span>
+            </a>
+        </div>
+
+        <div class="insta-gallery__rail insta-gallery__rail--top">
+            <div class="insta-gallery__axis insta-gallery__axis--flip">
+                <div class="insta-gallery__slider js-insta-slider-top">
+                    @foreach ($instaTopImages as $src)
+                        <div class="insta-gallery__slide">
+                            <div class="insta-gallery__slide-inner">
+                                <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="insta-gallery__rail insta-gallery__rail--bottom">
+            <div class="insta-gallery__slider js-insta-slider-bottom">
+                @foreach ($instaBottomImages as $src)
+                    <div class="insta-gallery__slide">
+                        <div class="insta-gallery__slide-inner">
+                            <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 </main>
 
 <script>
@@ -406,3 +582,54 @@
     })();
 </script>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+@endpush
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        (function() {
+            if (typeof jQuery === 'undefined' || !jQuery.fn.slick) {
+                return;
+            }
+            var $ = jQuery;
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function instaMarqueeOptions() {
+                return {
+                    infinite: true,
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    variableWidth: true,
+                    arrows: false,
+                    dots: false,
+                    autoplay: !reduceMotion,
+                    autoplaySpeed: 1,
+                    speed: 26000,
+                    cssEase: 'linear',
+                    pauseOnHover: false,
+                    pauseOnFocus: false,
+                    waitForAnimate: false,
+                    swipe: false,
+                    touchMove: false,
+                    accessibility: false,
+                    draggable: false,
+                };
+            }
+
+            $(function() {
+                var $top = $('.js-insta-slider-top');
+                var $bottom = $('.js-insta-slider-bottom');
+                if ($top.length) {
+                    $top.slick(instaMarqueeOptions());
+                }
+                if ($bottom.length) {
+                    $bottom.slick(instaMarqueeOptions());
+                }
+            });
+        })();
+    </script>
+@endpush

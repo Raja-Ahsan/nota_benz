@@ -8,6 +8,8 @@
     </main>
 
     @include('layouts.web.footer')
+
+    @stack('scripts')
 </body>
 
 </html>
