@@ -35,21 +35,21 @@
                 <div class="flex items-center gap-3">
                     <span class="h-px w-8 shrink-0 bg-[var(--primary-color)] " aria-hidden="true"></span>
                     <p class=" italic text-white text-[16px]">
-                        <span class="text-[var(--primary-color)]">SCENE <span class="text-[var(--primary-color)] mx-2 ">I</span></span> <span class="text-white/40">— Identity Moment</span>
+                        <span class="text-[var(--primary-color)] manrope-font tracking-[3.6px]">SCENE <span class="text-[var(--primary-color)] mx-2 ">I</span></span> <span class="text-white/40 cormorant-font tracking-[1.38px]">— Identity Moment</span>
                     </p>
                 </div>
 
                 {{-- Headline --}}
-                <h1 class=" text-[40px] font-bold uppercase leading-[1.05] tracking-tight text-white  md:text-[80px]">
+                <h1 class=" text-[40px] font-extrabold uppercase leading-[1.05] tracking-tight text-white  md:text-[80px] syne-font tracking-[4.16px]">
                     <span class="block">MY LIFE.</span>
                     <span class="block">MY</span>
-                    <span class="block text-[var(--primary-color)]">OPUS.</span>
+                    <span class="block text-[var(--primary-color)] plarfair-font">OPUS.</span>
                 </h1>
 
                 {{-- Subcopy --}}
-                <div class="space-y-1 font-sans text-[16px] text-white/50  md:text-[20px]">
-                    <p class="font-medium italic tracking-wide">NOTABENZ — A Story In Motion</p>
-                    <p class="font-medium uppercase tracking-wide text-[var(--primary-color)]">
+                <div class="space-y-1 font-sans text-[11px] text-white/50  md:text-[20px]">
+                    <p class="font-medium italic tracking-wide cormorant-font tracking-[1.25px]">NOTABENZ — A Story In Motion</p>
+                    <p class="font-medium uppercase tracking-wide text-[var(--primary-color)] manrope-font tracking-[3.7px]">
                         NOT A BRAND. A PERSPECTIVE.
                     </p>
                 </div>
@@ -98,7 +98,7 @@
         <div class="home-ticker-track" role="presentation">
             @foreach (['a', 'b'] as $copy)
             <div
-                class="flex shrink-0 items-center justify-center gap-10 whitespace-nowrap px-2  text-[18px] italic tracking-wide text-white  @if ($copy === 'b') select-none @endif"
+                class="flex shrink-0 items-center justify-center gap-10 whitespace-nowrap px-2  text-[18px] italic tracking-wide text-white  @if ($copy === 'b') select-none @endif cormorant-font tracking-[0.91px]"
                 @if ($copy==='b' ) aria-hidden="true" @endif>
                 @foreach ($tickerWords as $i => $word)
                 @if ($i > 0)
@@ -240,16 +240,16 @@
                             <span class="uppercase tracking-widest">{{ $slide['kicker_line'] }}</span>
                             <span class="mt-0.5 block pl-0.5  text-[16px] font-medium italic normal-case tracking-wide text-[#333333]/80 sm:mt-0 sm:ml-2 sm:inline sm:pl-0 md:text-lg">{{ $slide['kicker_title'] }}</span>
                         </p>
-                        <h2 class="mt-2 max-w-[400px] font-serif text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px]">
+                        <h2 class="mt-2 max-w-[400px] font-serif text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px] plarfair-font">
                             {{ $slide['line1'] }}<em class="font-serif font-semibold italic text-[#28A4BA]">{{ $slide['em'] }}</em>{{ $slide['line2'] }}
                         </h2>
-                        <div class="mt-6 max-w-[400px] space-y-4 font-serif text-[16px] leading-relaxed text-[var(--text-color)]/70">
+                        <div class="mt-6 max-w-[400px] space-y-4 font-serif text-[16px] leading-relaxed text-[var(--text-color)]/70 cormorant-font tracking-[0%]">
                             @foreach ($slide['body'] as $para)
                             <p>{{ $para }}</p>
                             @endforeach
                         </div>
                         <p
-                            class="mt-8  text-[16px] font-medium uppercase tracking-[0.2em] text-[var(--primary-color)]"
+                            class="mt-8  text-[16px] font-medium uppercase  text-[var(--primary-color)] manrope-font tracking-[2.4px]"
                             data-story-step>
                             {{ $slide['progress'] }}
                         </p>
@@ -265,9 +265,9 @@
         <div class="quote-banner__inner">
             <blockquote class="quote-banner__quote">
                 <p class="quote-banner__text">
-                    Every road walked is a sentence written. Every city crossed is a paragraph earned.
+                    "Every road walked is a sentence written. Every city crossed is a paragraph earned."
                 </p>
-                <footer class="quote-banner__attribution">— Mercedes A. Villamán</footer>
+                <footer class="quote-banner__attribution manrope-font tracking-[2.98px]">— Mercedes A. Villamán</footer>
             </blockquote>
         </div>
     </section>
@@ -276,25 +276,25 @@
     <section class="stories-field" aria-labelledby="stories-field-heading">
         <div class="container">
             <div class="stories-field__inner">
-                <header class="stories-field__header">
+                <div class="stories-field__header">
                     <div class="stories-field__intro">
                         <p class="stories-field__kicker">
-                            <span class="stories-field__kicker-scene">SCENE III</span>
-                            <span class="stories-field__kicker-rest">— The Writing</span>
+                            <span class="stories-field__kicker-scene manrope-font">— SCENE III</span>
+                            <span class="stories-field__kicker-rest cormorant-font">— The Writing</span>
                         </p>
                         <h2 id="stories-field-heading" class="stories-field__title">
-                            <span class="stories-field__title-line">Stories</span>
-                            <span class="stories-field__title-line stories-field__title-line--accent">from the Field</span>
+                            <span class="stories-field__title-line">Stories from</span>
+                            <span class="stories-field__title-line stories-field__title-line--accent  "> the Field</span>
                         </h2>
                     </div>
                     <a href="#" class="stories-field__all-link">All stories <span aria-hidden="true">→</span></a>
-                </header>
+                </div>
 
                 <div class="stories-field__grid">
-                    <article class="stories-field__card stories-field__card--feature">
+                    <div class="stories-field__card stories-field__card--feature">
                         <div
                             class="stories-field__card-media"
-                            style="--stories-field-card-bg: url('/assets/images/slider-img-01.png')"
+                            style="--stories-field-card-bg: url('{{ asset('assets/images/stories-img-01.png') }}')"
                             role="img"
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
@@ -306,12 +306,12 @@
                                 <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
-                    </article>
+                    </div>
 
-                    <article class="stories-field__card stories-field__card--compact">
+                    <div class="stories-field__card stories-field__card--compact">
                         <div
                             class="stories-field__card-media"
-                            style="--stories-field-card-bg: url('/assets/images/pen.png')"
+                            style="--stories-field-card-bg: url('{{ asset('assets/images/stories-img-02.png') }}')"
                             role="img"
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
@@ -323,12 +323,12 @@
                                 <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
-                    </article>
+                    </div>
 
-                    <article class="stories-field__card stories-field__card--compact">
+                    <div class="stories-field__card stories-field__card--compact">
                         <div
                             class="stories-field__card-media"
-                            style="--stories-field-card-bg: url('/assets/images/image-06.png')"
+                            style="--stories-field-card-bg: url('{{ asset('assets/images/stories-img-03.png') }}')"
                             role="img"
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
@@ -340,7 +340,7 @@
                                 <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
-                    </article>
+                    </div>
                 </div>
             </div>
         </div>
