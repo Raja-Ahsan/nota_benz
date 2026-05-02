@@ -40,7 +40,7 @@
                 </div>
 
                 {{-- Headline --}}
-                <h1 class=" text-[40px] font-extrabold uppercase leading-[1.05] tracking-tight text-white  md:text-[80px] syne-font tracking-[4.16px]">
+                <h1 class="banner-hd text-[40px] font-extrabold uppercase leading-[1.05] tracking-tight text-white  md:text-[80px] syne-font tracking-[4.16px]">
                     <span class="block">MY LIFE.</span>
                     <span class="block">MY</span>
                     <span class="block text-[var(--primary-color)] plarfair-font">OPUS.</span>
@@ -64,7 +64,7 @@
                     </a>
                     <a
                         href="#"
-                        class="btn secondary-btn">
+                        class="btn border-btn secondary-btn">
                         Explore artifacts
                     </a>
                 </div>
@@ -279,9 +279,9 @@
             <div class="stories-field__inner">
                 <div class="stories-field__header">
                     <div class="stories-field__intro">
-                        <p class="stories-field__kicker">
-                            <span class="stories-field__kicker-scene manrope-font">— SCENE III</span>
-                            <span class="stories-field__kicker-rest cormorant-font">— The Writing</span>
+                        <p class="sec-hd-light">
+                            <span class="primary-span">SCENE III</span>
+                            <span class="secondary-span">The Writing</span>
                         </p>
                         <h2 id="stories-field-heading" class="stories-field__title">
                             <span class="stories-field__title-line">Stories from</span>
@@ -300,11 +300,11 @@
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
                         <div class="stories-field__card-body">
-                            <p class="stories-field__category"><span class="stories-field__category-label">Manifesto</span></p>
+                            <p class="text-primary font-manrope tracking-[2.4px] uppercase font-bold"><span class="stories-field__category-label flex items-center gap-2">Manifesto</span></p>
                             <h3 class="stories-field__card-title">Don’t Let the Bastards Grind You Down</h3>
                             <div class="stories-field__card-meta-row">
                                 <p class="stories-field__meta">Dec 30, 2025 · 2 min</p>
-                                <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
+                                <a href="#" class="text-primary manrope-font tracking-[2.4px] uppercase font-bold">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
                     </div>
@@ -317,11 +317,11 @@
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
                         <div class="stories-field__card-body">
-                            <p class="stories-field__category"><span class="stories-field__category-label">Personal</span></p>
+                            <p class="text-primary font-manrope tracking-[2.4px] uppercase font-bold"><span class="stories-field__category-label">Personal</span></p>
                             <h3 class="stories-field__card-title stories-field__card-title--sm">Letters I Never Sent</h3>
                             <div class="stories-field__card-meta-row">
                                 <p class="stories-field__meta">Dec 30, 2025 · 1 min</p>
-                                <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
+                                <a href="#" class="text-primary manrope-font tracking-[2.4px] uppercase font-bold">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
                     </div>
@@ -334,11 +334,11 @@
                             aria-hidden="true"></div>
                         <div class="stories-field__card-overlay" aria-hidden="true"></div>
                         <div class="stories-field__card-body">
-                            <p class="stories-field__category"><span class="stories-field__category-label">Travel</span></p>
+                            <p class="text-primary font-manrope tracking-[2.4px] uppercase font-bold"><span class="stories-field__category-label">Travel</span></p>
                             <h3 class="stories-field__card-title stories-field__card-title--sm">The Camino: Walking Into Myself</h3>
                             <div class="stories-field__card-meta-row">
                                 <p class="stories-field__meta">Nov 12, 2025 · 5 min</p>
-                                <a href="#" class="stories-field__read-link">Read <span aria-hidden="true">→</span></a>
+                                <a href="#" class="text-primary manrope-font tracking-[2.4px] uppercase font-bold">Read <span aria-hidden="true">→</span></a>
                             </div>
                         </div>
                     </div>

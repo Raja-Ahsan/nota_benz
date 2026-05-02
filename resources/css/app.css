@@ -1,23 +1,6 @@
 @import "tailwindcss";
 
 
-
-:root {
-    --primary-color: #10e0ff;
-    --secondary-color: #28a4ba;
-    --white-color: #ffffff;
-    --white-text: #ffffff;
-    --text-color: #333333;
-    --white-40: rgba(255, 255, 255, 0.4);
-}
-
-@theme {
-    --color-primary: var(--primary-color);
-    --color-secondary: var(--secondary-color);
-    --color-dim-black: var(--text-color);
-    --color-white-40: var(--white-40);
-}
-
 @font-face {
     font-family: "Manrope";
     src: url("../../public/fonts/manrope/MANROPE-EXTRALIGHT.TTF") format("truetype");
@@ -261,6 +244,32 @@
     font-display: swap;
 }
 
+:root {
+    --primary-color: #10e0ff;
+    --secondary-color: #28a4ba;
+    --white-color: #ffffff;
+    --white-text: #ffffff;
+    --text-color: #333333;
+    --white-40: rgba(255, 255, 255, 0.4);
+    --playfair-display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --cormorant-garamond: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --syne: "Syne", ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+    --color-primary: var(--primary-color);
+    --color-secondary: var(--secondary-color);
+    --color-dim-black: var(--text-color);
+    --color-white-40: var(--white-40);
+    --font-playfair: var(--playfair-display);
+    --font-manrope: var(--manrope);
+    --font-cormorant: var(--cormorant-garamond);
+    --font-syne: var(--syne);
+}
+
+
+
 body {
     background-color: var(--white-color);
 }
@@ -299,7 +308,10 @@ body {
 }
 
 .btn {
-    @apply inline-flex items-center justify-center border border-[var(--primary-color)] py-[14px] px-[40px] text-center md:text-[11px] text-[10px] tracking-[1.96px] ;
+    @apply inline-flex items-center justify-center   py-[14px] px-[40px] text-center md:text-[11px] text-[10px] tracking-[1.96px] ;
+}
+.border-btn {
+    @apply border border-[#28A4BA96] py-[17px] px-[40px]
 }
 
 .btn {
@@ -311,7 +323,7 @@ body {
 }
 
 .secondary-btn {
-    @apply bg-transparent text-white/65 font-semibold uppercase  transition-colors hover:text-white;
+    @apply bg-transparent text-white/65 font-semibold uppercase   transition-colors hover:text-white;
 }
 
 .social-icon {
@@ -345,6 +357,11 @@ body {
     background-repeat: no-repeat;
 }
 
+.banner-hd{
+    transform: perspective(1530px) rotateX(3deg) rotateY(20deg);
+}
+
+/* responsive */
 @media (max-width: 500px) {
     .btn {
         max-width: 200px;
@@ -494,21 +511,25 @@ body {
     @apply m-0 flex items-center gap-2 font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--secondary-color)] sm:text-[11px];
 }
 
-.stories-field__category::before {
+/* .stories-field__category::before {
+    content: "";
+    @apply block h-px w-5 shrink-0 bg-[var(--secondary-color)] sm:w-6;
+} */
+
+.stories-field__category-label {
+    @apply leading-none relative flex items-center gap-2;
+}
+.stories-field__category-label::before {
     content: "";
     @apply block h-px w-5 shrink-0 bg-[var(--secondary-color)] sm:w-6;
 }
 
-.stories-field__category-label {
-    @apply leading-none;
-}
-
 .stories-field__card-title {
-    @apply max-w-xl font-serif text-2xl font-bold leading-snug text-white sm:text-3xl md:text-4xl lg:text-[2.35rem] lg:leading-tight;
+    @apply font-serif text-[2xl] font-bold leading-snug text-white sm:text-3xl md:text-4xl lg:text-[33px]  lg:leading-tight;
 }
 
 .stories-field__card-title--sm {
-    @apply max-w-none text-xl sm:text-2xl md:text-[1.65rem] md:leading-snug;
+    @apply max-w-none text-xl sm:text-2xl md:text-[26px] md:leading-snug;
 }
 
 .stories-field__card-meta-row {
@@ -521,6 +542,23 @@ body {
 
 .stories-field__read-link {
     @apply font-sans text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--secondary-color)] transition-opacity hover:opacity-80 sm:text-[11px];
+}
+.sec-hd-light {
+    @apply relative tracking-[3.36px] font-manrope text-[16px] font-bold uppercase text-primary;
+}
+.sec-hd-light .primary-span::before {
+    content: '';
+    background-color: var(--primary-color);
+    width: 32px;
+    height: 1px;
+    display: block;
+    margin-right: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.secondary-span {
+
 }
 
 @media (hover: hover) {
