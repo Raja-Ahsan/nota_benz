@@ -182,7 +182,7 @@
     @endphp
     <section
         id="scroll-story"
-        class="scroll-story relative h-[400svh] bg-white"
+        class="scroll-story relative h-[400svh]"
         aria-label="{{ __('Story gallery') }}"
         data-story-count="4">
         <div
@@ -279,12 +279,13 @@
             <div class="stories-field__inner">
                 <div class="stories-field__header">
                     <div class="stories-field__intro">
-                        <p class="sec-hd-light">
-                            <span class="primary-span">SCENE III</span>
-                            <span class="secondary-span">The Writing</span>
+                        <p class="stories-field__kicker">
+                            <span class="stories-field__kicker-line" aria-hidden="true"></span>
+                            <span class="stories-field__kicker-scene manrope-font">SCENE III</span>
+                            <span class="stories-field__kicker-rest cormorant-font">— The Writing</span>
                         </p>
                         <h2 id="stories-field-heading" class="stories-field__title">
-                            <span class="stories-field__title-line">Stories from</span>
+                            <span class="stories-field__title-line font-playfair">Stories from</span>
                             <span class="stories-field__title-line stories-field__title-line--accent  "> the Field</span>
                         </h2>
                     </div>
@@ -348,7 +349,7 @@
     </section>
 
     {{-- SCENE IV — Identity Artifacts (styles: resources/css/app.css `.identity-artifacts*`) --}}
-    <section class="identity-artifacts" aria-labelledby="identity-artifacts-heading">
+    <section class="identity-artifacts relative" aria-labelledby="identity-artifacts-heading">
         <div class="container">
             <header class="identity-artifacts__header">
                 <div class="identity-artifacts__intro">
@@ -371,12 +372,12 @@
             </header>
 
             <div class="identity-artifacts__grid" role="list">
-                <article class="identity-artifacts__card identity-artifacts__card--1" role="listitem">
+                <div class="identity-artifacts__card identity-artifacts__card--1" role="listitem">
                     <div class="identity-artifacts__media">
                         <span class="identity-artifacts__badge manrope-font">New</span>
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/stories-img-01.png') }}"
+                            src="{{ asset('assets/images/image-04.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -386,14 +387,14 @@
                         <h3 class="identity-artifacts__name plarfair-font">My Opus — Vol. I</h3>
                         <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$34.99</span></p>
                     </div>
-                </article>
+                </div>
 
                 <article class="identity-artifacts__card identity-artifacts__card--2" role="listitem">
                     <div class="identity-artifacts__media">
                         <span class="identity-artifacts__badge identity-artifacts__badge--long manrope-font">Bestseller</span>
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/stories-img-02.png') }}"
+                             src="{{ asset('assets/images/image-05.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -412,7 +413,7 @@
                     <div class="identity-artifacts__media">
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/stories-img-03.png') }}"
+                            src="{{ asset('assets/images/image-06.png') }}"
                             width="480"
                             height="720"
                             alt="">
@@ -429,7 +430,7 @@
                         <span class="identity-artifacts__badge manrope-font">Limited</span>
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/slider-img-03.png') }}"
+                            src="{{ asset('assets/images/image-07.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -443,6 +444,8 @@
             </div>
         </div>
     </section>
+
+
 
     @php
         $instaTopImages = [
@@ -520,6 +523,134 @@
                     </div>
                 @endforeach
             </div>
+        </div>
+    </section>
+
+    {{-- Newsletter / inner circle (bg: public/images/new-letter-bg.png) --}}
+    <section
+        class="newsletter-section relative isolate overflow-hidden"
+        aria-labelledby="newsletter-heading" 
+        style="background-image: url('{{ asset('assets/images/new-letter-bg.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
+        >
+
+
+        <div class="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center sm:px-6 md:py-24 lg:px-8 lg:py-28">
+            <p class="flex items-center justify-center gap-2 manrope-font text-[16px] font-semibold uppercase tracking-[0.32em] text-primary">
+                <span class="h-px w-7 shrink-0 bg-primary sm:w-8" aria-hidden="true"></span>
+                <span>Inner circle</span>
+            </p>
+
+            <h2
+                id="newsletter-heading"
+                class="mt-5 max-w-lg plarfair-font text-[30px] font-bold leading-[1.2] tracking-tight text-white sm:max-w-2xl md:mt-6 md:text-[40px] md:leading-[1.15]">
+                <span class="block">The story continues</span>
+                <span class="block">in your inbox.</span>
+            </h2>
+
+            <p class="mt-3 max-w-md plarfair-font text-[16px] italic leading-relaxed text-secondary sm:mt-4 md:text-[18px]">
+                No noise. Only art, words, and the chapters worth reading.
+            </p>
+
+            <form
+                class="mt-8 pb-[120px] flex w-full max-w-md flex-col shadow-[0_12px_40px_rgba(0,0,0,0.35)] sm:mt-10 sm:flex-row sm:shadow-none"
+                action="#"
+                method="post">
+                @csrf
+                <label for="newsletter-email" class="sr-only">Email address</label>
+                <input
+                    id="newsletter-email"
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    autocomplete="email"
+                    required
+                    placeholder="your@email.com"
+                    class="min-h-[52px] w-full min-w-0 flex-1 border-0 bg-white px-4 py-3.5 manrope-font text-base text-neutral-900 placeholder:text-neutral-400 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary sm:min-h-[56px] sm:py-4" />
+                <button
+                    type="submit"
+                    class="min-h-[52px] w-full shrink-0 bg-primary px-6 py-3.5 manrope-font text-[11px] font-bold uppercase tracking-[0.22em] text-black transition-opacity hover:opacity-90 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-[56px] sm:w-auto sm:px-8">
+                    Subscribe
+                </button>
+            </form>
+            <div class="w-full max-w-[367px] mx-auto border-t border-2 border-white/10"></div>
+        </div>
+    </section>
+
+    {{-- Scene V — connection CTA (bg: assets/images/scene-v-bg-image.png) --}}
+    <section
+        class="scene-v relative -mt-px overflow-hidden  bg-cover bg-center bg-no-repeat py-24 md:flex md:items-center md:justify-center md:py-32 lg:py-40"
+        style="background-image: url('{{ asset('assets/images/scene-v-bg-image.png') }}');"
+        aria-labelledby="scene-v-heading">
+
+
+        
+
+        <div class="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-4 text-center sm:px-6 lg:max-w-5xl lg:px-8">
+            {{-- Scene label + glowing divider (center-line.png below copy) --}}
+            <div class="flex w-full max-w-2xl flex-col items-center">
+                <div class="flex items-center justify-center gap-3 sm:gap-4">
+                    <span class="h-px w-7 shrink-0 bg-primary sm:w-8" aria-hidden="true"></span>
+                    <p class="shrink-0 text-center text-[13px] leading-snug sm:text-[16px]">
+                        <span class="manrope-font font-bold uppercase tracking-[0.22em] text-primary">Scene
+                            <span class="mx-1.5 sm:mx-2">V</span></span>
+                        <span class="cormorant-font text-[13px] font-normal italic tracking-[1.2px] text-white/90 sm:text-[16px]">— The Connection</span>
+                    </p>
+                </div>
+                <img
+                    src="{{ asset('assets/images/center-line.png') }}"
+                    alt=""
+                    width="80"
+                    height="60"
+                    decoding="async"
+                    class="mx-auto mt-3 block h-auto object-contain object-center sm:mt-4  mb-4"
+                    aria-hidden="true" />
+            </div>
+
+            <h2
+                id="scene-v-heading"
+                class="plarfair-font mt-8  text-[30px] font-bold leading-[1.18] tracking-tight text-white  sm:mt-10   md:text-[80px] md:leading-[1.12] lg:mt-12 ">
+                You are not <br class="hidden md:block"> scrolling a website.
+            </h2>
+
+            <p class="plarfair-font mt-3  text-[30px] italic leading-[1] tracking-[-2.4px] text-secondary md:mt-4 md:text-[80px]  ">
+                You just entered a <br class="hidden md:block"> world.
+            </p>
+
+            <p class="cormorant-font mt-8 max-w-xl text-[16px] italic leading-[1.7] tracking-[0%] text-white/60  sm:mt-10 sm:max-w-2xl md:text-[20px]">
+                Every pixel here is a deliberate act of creation. If it moved you, challenged you, or made you feel something — then the work is complete. Now it’s your turn to continue the story.
+            </p>
+
+            <div class="mt-10 flex w-full max-w-xl flex-col items-stretch gap-4 sm:mt-12 sm:flex-row sm:items-center sm:justify-center sm:gap-5">
+                <a
+                    href="#"
+                    class="btn btn-primary w-full justify-center sm:w-auto sm:min-w-[14rem]">
+                    Enter the full world
+                    <span class="pl-4 text-[15px]" aria-hidden="true">→</span>
+                </a>
+                <a
+                    href="#"
+                    class="btn secondary-btn !text-white">
+                 Send a message
+                </a>
+            </div>
+
+            <ul class="mt-14 flex list-none flex-wrap items-center justify-center gap-5 sm:mt-16 md:gap-7" role="list">
+                @foreach (['01', '02', '03', '04', '05'] as $socialNum)
+                    <li>
+                        <a
+                            href="#"
+                            class="social-icon"
+                            aria-label="{{ __('Social profile :num', ['num' => $socialNum]) }}">
+                            <img
+                                src="{{ asset('assets/images/social-icon-' . $socialNum . '.png') }}"
+                                alt="social-icon-{{ $socialNum }}"
+                              
+                                class="h-[13px] w-[13px] object-contain "
+                                />
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
     </section>
 </main>

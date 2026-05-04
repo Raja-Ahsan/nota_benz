@@ -4,10 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\ProductAttribute;
-use App\Models\ProductAttributeItem;
 use App\Models\ProductCategory;
 use App\Models\ProductType;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ProductVariation;
+use App\Models\ProductVariationValue;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -19,10 +19,10 @@ class ProductSeeder extends Seeder
     {
         // 🔹 Category
         $category = ProductCategory::firstOrCreate([
-            'slug' => 'demo-category'
+            'slug' => 'demo-category',
         ], [
             'name' => 'Demo Category',
-            'status' => 'active'
+            'status' => 'active',
         ]);
 
         // 🔹 Product Types
@@ -33,13 +33,15 @@ class ProductSeeder extends Seeder
         // 🔹 SIMPLE PRODUCT
         // =====================================================
 
-        $simpleProduct = Product::updateOrCreate(
+        Product::updateOrCreate(
             ['slug' => 'simple-mug'],
             [
                 'category_id' => $category->id,
                 'name' => 'Simple Mug',
                 'product_type_id' => $simpleType->id,
                 'price' => 500,
+                'from_price' => null,
+                'to_price' => null,
                 'description' => 'This is a simple product',
                 'status' => 'active',
                 'created_by' => 1,
@@ -47,7 +49,7 @@ class ProductSeeder extends Seeder
         );
 
         // =====================================================
-        // 🔹 VARIABLE PRODUCT
+        // 🔹 VARIABLE PRODUCT (SKU matrix: Size × Color per row)
         // =====================================================
 
         $variableProduct = Product::updateOrCreate(
@@ -57,44 +59,56 @@ class ProductSeeder extends Seeder
                 'name' => 'T-Shirt',
                 'product_type_id' => $variableType->id,
                 'price' => 0,
-                'description' => 'T-shirt with multiple sizes',
+                'from_price' => 100,
+                'to_price' => 500,
+                'description' => 'T-shirt with size and color options (each row is one SKU).',
                 'status' => 'active',
                 'created_by' => 1,
             ]
         );
+
+        $variableProduct->attributeItems()->delete();
+        foreach ($variableProduct->variations()->with('image')->get() as $existing) {
+            if ($existing->image) {
+                $existing->image->delete();
+            }
+            $existing->values()->delete();
+            $existing->delete();
+        }
 
         $sizeAttribute = ProductAttribute::firstOrCreate(
             ['name' => 'Size'],
             ['created_by' => 1]
         );
 
-        foreach (['Small', 'Medium', 'Large'] as $size) {
-            ProductAttributeItem::updateOrCreate(
-                ['name' => $size],
-                [
-                    'product_id' => $variableProduct->id,
-                    'product_attribute_id' => $sizeAttribute->id,
-                    'price' => 100,
-                    'created_by' => 1,
-                ]
-            );
-        }
-
         $colorAttribute = ProductAttribute::firstOrCreate(
             ['name' => 'Color'],
             ['created_by' => 1]
         );
 
-        foreach (['Red', 'Blue'] as $color) {
-            ProductAttributeItem::updateOrCreate(
-                ['name' => $color],
-                [
+        $sort = 0;
+        foreach (['Small', 'Medium', 'Large'] as $size) {
+            foreach (['Red', 'Blue'] as $color) {
+                $variation = ProductVariation::create([
                     'product_id' => $variableProduct->id,
-                    'product_attribute_id' => $colorAttribute->id,
                     'price' => 100,
-                    'created_by' => 1,
-                ]
-            );
+                    'sort_order' => $sort,
+                ]);
+
+                ProductVariationValue::create([
+                    'product_variation_id' => $variation->id,
+                    'product_attribute_id' => $sizeAttribute->id,
+                    'value' => $size,
+                ]);
+
+                ProductVariationValue::create([
+                    'product_variation_id' => $variation->id,
+                    'product_attribute_id' => $colorAttribute->id,
+                    'value' => $color,
+                ]);
+
+                $sort++;
+            }
         }
     }
 }

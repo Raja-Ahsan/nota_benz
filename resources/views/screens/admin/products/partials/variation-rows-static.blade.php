@@ -1,28 +1,21 @@
-{{--
-    Read-only variation rows (show page).
-    Expects $items: iterable of ProductAttributeItem with productAttribute + image loaded
---}}
-@foreach ($items as $index => $item)
+{{-- Read-only SKU rows; expects $variations with values + image --}}
+@foreach ($variations as $variation)
     <div class="variation-option-row border rounded p-3 mb-3 js-variation-row">
         <div class="row align-items-end">
-            <div class="col-xl-3 col-md-6 mb-3">
-                <label class="form-label">Variation</label>
-                <select class="form-control" disabled>
-                    <option>{{ $item->productAttribute?->name ?? '—' }}</option>
-                </select>
-            </div>
-            <div class="col-xl-3 col-md-6 mb-3">
-                <label class="form-label">Option label</label>
-                <input type="text" class="form-control" value="{{ $item->name }}" disabled />
-            </div>
+            @foreach ($variation->values->sortBy('product_attribute_id') as $vv)
+                <div class="col-xl-2 col-md-6 mb-3">
+                    <label class="form-label">{{ $vv->productAttribute?->name ?? '—' }}</label>
+                    <input type="text" class="form-control" value="{{ $vv->value }}" disabled />
+                </div>
+            @endforeach
             <div class="col-xl-2 col-md-6 mb-3">
-                <label class="form-label">Price</label>
-                <input type="text" class="form-control" value="{{ number_format((float) $item->price, 2) }}" disabled />
+                <label class="form-label">{{ __('Price') }}</label>
+                <input type="text" class="form-control" value="{{ number_format((float) $variation->price, 2) }}" disabled />
             </div>
-            <div class="col-xl-4 col-md-6 mb-3">
-                <label class="form-label">Option image</label>
-                @if ($item->image)
-                    @php $vSrc = $item->image->publicUrl(); @endphp
+            <div class="col-xl-3 col-md-6 mb-3">
+                <label class="form-label">{{ __('Variant image') }}</label>
+                @if ($variation->image)
+                    @php $vSrc = $variation->image->publicUrl(); @endphp
                     @if ($vSrc !== '')
                         <div>
                             <a href="{{ $vSrc }}" target="_blank" rel="noopener">
@@ -30,7 +23,7 @@
                             </a>
                         </div>
                     @else
-                        <p class="text-muted small mb-0">Invalid path</p>
+                        <p class="text-muted small mb-0">—</p>
                     @endif
                 @else
                     <p class="text-muted small mb-0">—</p>

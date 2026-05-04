@@ -6,6 +6,8 @@
     $p = $product ?? null;
     $ro = ! empty($readonly);
     $lockType = ! empty($lockProductType);
+    $isVariableProduct = $p && $p->productType?->slug === 'variable';
+    $varPriceRangeInitiallyVisible = (bool) $isVariableProduct;
 @endphp
 
 <div class="col-sm-6 col-md-6">
@@ -60,6 +62,42 @@
         <label class="form-label" for="price">Price @if (! $ro)<span class="text-danger">*</span>@endif</label>
         <input class="form-control" id="price" type="number" step="0.01" min="0" placeholder="0.00" name="price"
             value="{{ old('price', $p !== null ? $p->price : '') }}" @if ($ro) disabled @endif />
+    </div>
+</div>
+<div class="col-12 js-variable-only" style="{{ $varPriceRangeInitiallyVisible ? '' : 'display: none;' }}">
+    <div class="row">
+        <div class="col-sm-6 col-md-6">
+            <div class="mb-3">
+                <label class="form-label" for="from_price">{{ __('From price') }} @if (! $ro)<span class="text-danger">*</span>@endif</label>
+                <input
+                    class="form-control"
+                    id="from_price"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="from_price"
+                    placeholder="{{ __('From price') }}"
+                    value="{{ old('from_price', $p?->from_price ?? '') }}"
+                    @if ($ro) disabled @else required @endif
+                />
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="mb-3">
+                <label class="form-label" for="to_price">{{ __('To price') }} @if (! $ro)<span class="text-danger">*</span>@endif</label>
+                <input
+                    class="form-control"
+                    id="to_price"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="to_price"
+                    placeholder="{{ __('To price') }}"
+                    value="{{ old('to_price', $p?->to_price ?? '') }}"
+                    @if ($ro) disabled @else required @endif
+                />
+            </div>
+        </div>
     </div>
 </div>
 <div class="col-md-12">

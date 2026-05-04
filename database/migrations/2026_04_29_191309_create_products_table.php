@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->foreignId('product_type_id')->constrained('product_types')->cascadeOnDelete();
             $table->decimal('price', 10, 2)->default(0);
+            $table->decimal('from_price', 10, 2)->nullable();
+            $table->decimal('to_price', 10, 2)->nullable();
             $table->text('description')->nullable();
             $table->string('status')->default('active');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

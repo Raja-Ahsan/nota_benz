@@ -28,12 +28,12 @@
                         @if ($product->productType?->slug === 'variable')
                             <div class="col-12">
                                 <hr class="border-secondary">
-                                <label class="form-label mb-3 d-block">Variation options</label>
-                                @if ($product->attributeItems->isEmpty())
-                                    <p class="text-muted">No variation rows.</p>
+                                <label class="form-label mb-3 d-block">{{ __('SKU variations') }}</label>
+                                @if ($product->variations->isEmpty())
+                                    <p class="text-muted">{{ __('No variation rows.') }}</p>
                                 @else
                                     @include('screens.admin.products.partials.variation-rows-static', [
-                                        'items' => $product->attributeItems,
+                                        'variations' => $product->variations,
                                     ])
                                 @endif
                             </div>

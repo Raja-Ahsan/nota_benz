@@ -46,7 +46,7 @@
                                         <td>{{ $product->productType?->name ?? '—' }}</td>
                                         <td>
                                             @if ($product->productType?->slug === 'variable')
-                                                <span class="text-muted">—</span>
+                                                {{ $product->listingPriceLabel() }}
                                             @else
                                                 {{ number_format((float) $product->price, 2) }}
                                             @endif

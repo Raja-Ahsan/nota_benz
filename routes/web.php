@@ -1,20 +1,32 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProductCategoryController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductAttributeController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('screens.web.home.index');
 })->name('home');
 
 Route::get('/artifacts', [StoreController::class, 'index'])->name('artifacts.index');
+Route::get('/artifacts/{product:slug}', [StoreController::class, 'show'])->name('artifacts.show');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/add-to-cart', [CartItemController::class, 'store'])->name('cart.store');
+Route::patch('/cart-items/{id}', [CartItemController::class, 'updateQty'])->name('cart-items.update');
+Route::delete('/cart-items/{id}', [CartItemController::class, 'destroy'])->name('cart-items.destroy');
+
+Route::get('/checkout', fn() => view('screens.web.checkout.index'))->name('checkout');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -24,13 +36,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/place-order', [CheckoutController::class, 'storeAfterPayment'])->name('checkout.place-order');
+    Route::post('/checkout/payment-intent', [CheckoutController::class, 'createPaymentIntent'])->name('checkout.payment-intent');
+    Route::get('/order-success/{order}', [CheckoutController::class, 'success'])->name('order.success');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order:id}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    
+
     Route::get('/categories', [ProductCategoryController::class, 'index'])->name('product-categories.index');
 
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -48,12 +67,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/product-variations', [ProductAttributeController::class, 'store'])->name('product-variations.store');
 });
 
-Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {
-});
+Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {});
 
 Route::prefix('admin')->middleware(['auth', 'role:admin|user'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
