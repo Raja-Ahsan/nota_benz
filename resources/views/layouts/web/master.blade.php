@@ -1,11 +1,9 @@
 @include('layouts.web.head')
 
-<body class="font-sans antialiased">
+<body class="@stack('body-class')">
     @include('layouts.web.header')
 
-    <main>
-        @yield('content')
-    </main>
+    @yield('content')
 
     @include('layouts.web.footer')
 

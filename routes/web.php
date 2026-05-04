@@ -13,6 +13,14 @@ Route::get('/', function () {
     return view('screens.web.home.index');
 })->name('home');
 
+Route::get('/about', function () {
+    return view('screens.web.about.index');
+})->name('about');
+
+Route::get('/journey', function () {
+    return view('screens.web.journey.index');
+})->name('journey');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -286,16 +286,16 @@ body {
 }
 
 .desktop-nav-link {
-    @apply text-[16px] font-semibold uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)];
+    @apply text-[16px] font-semibold uppercase tracking-wide text-white transition-colors hover:text-primary;
 }
 
 
 .mobile-nav-link {
-    @apply block border-b border-white/10 py-3 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:text-[var(--primary-color)];
+    @apply block border-b border-white/10 py-3 text-sm font-medium uppercase tracking-wide text-white transition-colors hover:text-primary;
 }
 
 .desktop-nav-button {
-    @apply hidden shrink-0 border border-[var(--primary-color)] px-6 py-1 text-[16px] font-semibold uppercase tracking-wider text-[var(--primary-color)] transition-colors hover:bg-[var(--primary-color)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)] lg:inline-flex;
+    @apply hidden shrink-0 border border-primary px-6 py-1 text-[16px] font-semibold uppercase tracking-wider text-primary transition-colors hover:bg-primary hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary lg:inline-flex;
 }
 
 .btn {
@@ -311,7 +311,7 @@ body {
 }
 
 .secondary-btn {
-    @apply bg-transparent text-white/65 font-semibold uppercase  transition-colors hover:text-white;
+    @apply bg-transparent text-white/65 font-semibold uppercase  transition-colors hover:text-white hover:bg-primary;
 }
 
 .social-icon {
@@ -949,3 +949,212 @@ body {
     vertical-align: middle;
 }
 
+body.inner-site header {
+    position: sticky;
+    top: 0;
+    inset: auto;
+    width: 100%;
+    z-index: 50;
+    background-color: rgb(255 255 255 / 0.93);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid color-mix(in srgb, var(--text-color) 8%, transparent);
+}
+
+body.inner-site .desktop-nav-link {
+    @apply text-[var(--text-color)] hover:text-[var(--primary-color)];
+}
+
+body.inner-site .desktop-nav-link[aria-current="page"] {
+    color: var(--primary-color);
+}
+
+body.inner-site #menuBtn {
+    border-color: color-mix(in srgb, var(--text-color) 22%, transparent);
+    color: var(--primary-color);
+}
+
+
+/* ——— Auth (register / login / …): reusable shell — matches home hero treatment ——— */
+
+.auth-page {
+    @apply relative isolate flex min-h-svh w-full flex-col overflow-hidden;
+}
+
+.auth-page__media {
+    @apply pointer-events-none absolute inset-0 -z-10;
+}
+
+.auth-page__video {
+    @apply absolute inset-0 h-full w-full object-cover;
+}
+
+.auth-page__gradient--lr {
+    @apply absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/35;
+}
+
+.auth-page__gradient--tb {
+    @apply absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent;
+}
+
+.auth-page__wrap {
+    @apply relative z-10 flex flex-1 flex-col justify-center px-0 py-24 sm:py-28 md:py-32 lg:py-36;
+    padding-top: clamp(6.5rem, 14vw, 9rem);
+}
+
+.auth-page__container {
+    @apply mx-auto flex w-full max-w-[min(100%,28rem)] justify-center sm:max-w-md lg:max-w-lg;
+}
+
+.auth-card {
+    @apply w-full rounded-sm border border-white/10 bg-black/45 px-5 py-8 shadow-2xl backdrop-blur-xl sm:px-8 sm:py-10;
+}
+
+.auth-card__brand {
+    @apply mb-8 flex justify-center outline-none ring-offset-2 ring-offset-transparent transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--primary-color)];
+}
+
+.auth-card__brand-img {
+    @apply mx-auto h-auto max-h-10 w-auto max-w-[min(100%,220px)] object-contain sm:max-h-11 md:max-h-12;
+}
+
+.auth-card__eyebrow {
+    @apply mb-6 flex items-center gap-3;
+}
+
+.auth-card__eyebrow-line {
+    @apply h-px w-6 shrink-0 bg-[var(--primary-color)] sm:w-8;
+}
+
+.auth-card__eyebrow-text {
+    @apply m-0 flex flex-wrap items-baseline gap-x-1 text-[13px] italic text-white sm:text-[15px];
+}
+
+.auth-card__eyebrow-scene {
+    @apply text-[11px] font-bold uppercase tracking-[0.28em] text-secondary sm:text-[12px] sm:tracking-[3.6px];
+}
+
+.auth-card__eyebrow-sub {
+    @apply text-[12px] tracking-[0.08em] text-white/60 sm:text-[14px] sm:tracking-[1.38px];
+}
+
+.auth-card__heading {
+    @apply text-balance text-[1.65rem] font-extrabold uppercase leading-[1.08] tracking-[0.06em] text-white sm:text-[2rem] md:text-[2.25rem] md:tracking-[4.16px];
+}
+
+.auth-card__lede {
+    @apply mt-3 max-w-prose text-pretty text-[14px] italic leading-relaxed text-white/55 sm:text-[16px] sm:leading-snug;
+}
+
+.auth-card__copy {
+    @apply mt-4 max-w-prose text-pretty text-[13px] leading-relaxed text-white/60 sm:text-[15px] sm:leading-snug;
+}
+
+.auth-form {
+    @apply mt-8 space-y-5 sm:space-y-6;
+}
+
+.auth-field {
+    @apply w-full;
+}
+
+.auth-label {
+    @apply mb-1.5 block text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 sm:text-[11px] sm:tracking-[0.18em];
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Inputs: dark glass card */
+input.auth-input {
+    @apply mt-1 block w-full rounded-md border border-white/15 bg-white/[0.07] px-3.5 py-2.5 text-sm text-white shadow-none outline-none transition-colors sm:px-4 sm:py-3;
+}
+
+input.auth-input::placeholder {
+    @apply text-white/35;
+}
+
+input.auth-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 38%, transparent);
+}
+
+.auth-error {
+    @apply list-none space-y-1 text-[13px];
+    color: rgb(252 165 165);
+}
+
+.auth-card ul.auth-error {
+    color: rgb(252 165 165) !important;
+}
+
+.auth-actions {
+    @apply mt-8 flex flex-col-reverse gap-4 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:gap-6;
+}
+
+.auth-actions--end {
+    @apply sm:justify-end;
+}
+
+.auth-flash {
+    @apply rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2.5 text-sm font-medium;
+    color: rgb(167 243 208) !important;
+}
+
+.auth-remember {
+    @apply mt-2 sm:mt-1;
+}
+
+.auth-remember__label {
+    @apply inline-flex cursor-pointer items-center gap-3 select-none;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+.auth-remember__input {
+    @apply h-4 w-4 shrink-0 rounded border-white/25 bg-white/5 text-[var(--primary-color)] focus:ring-2 focus:ring-[var(--primary-color)]/40 focus:ring-offset-0 focus:ring-offset-transparent;
+}
+
+.auth-remember__text {
+    @apply text-[13px] text-white/70 sm:text-sm;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+.auth-alt-link {
+    @apply mt-8 border-t border-white/10 pt-6 text-center;
+}
+
+.auth-link {
+    @apply text-center text-[12px] font-medium uppercase tracking-[0.12em] text-white/55 underline decoration-white/25 underline-offset-4 transition-colors hover:text-primary hover:decoration-primary/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-left sm:text-[11px] sm:tracking-[0.18em];
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+.auth-link--inline {
+    @apply inline text-[11px] normal-case tracking-normal no-underline decoration-transparent sm:text-[11px];
+}
+
+.auth-link--inline:hover {
+    @apply underline decoration-[var(--primary-color)]/50;
+}
+
+.auth-btn-submit {
+    @apply w-full shrink-0 justify-center sm:w-auto sm:min-w-[11rem];
+}
+
+.auth-btn-submit--wrap.btn {
+    white-space: normal;
+    line-height: 1.35;
+    padding-inline: 1rem;
+    text-align: center;
+    max-width: 100%;
+}
+
+@media (min-width: 640px) {
+    .auth-btn-submit--wrap.btn {
+        max-width: min(100%, 16rem);
+    }
+}
+
+@media (max-width: 500px) {
+    .auth-card .auth-btn-submit.btn {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
