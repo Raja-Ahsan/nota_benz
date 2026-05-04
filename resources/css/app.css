@@ -360,7 +360,24 @@ body {
 .banner-hd{
     transform: perspective(1530px) rotateX(3deg) rotateY(20deg);
 }
+.cart-icon-wrapper svg {
+    max-width: 34px;
+    color: var(--primary-color);
+    transition: color 0.2s ease;
+}
 
+.cart-icon-wrapper svg path,
+.cart-icon-wrapper svg text {
+    fill: currentColor;
+}
+.cart-icon-wrapper svg text {
+    color: #000;
+    font-size: 42px;
+}
+.inner-banner {
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.8) 0%, rgba(26, 26, 26, 0.6) 48.49%, rgba(26, 26, 26, 0.8) 100%), url('../../public/assets/images/image-08.png') no-repeat center center;
+    min-height: 500px;
+}
 /* responsive */
 @media (max-width: 500px) {
     .btn {

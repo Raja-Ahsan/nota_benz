@@ -8,10 +8,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductAttributeController;
+use App\Http\Controllers\StoreController;
 
 Route::get('/', function () {
     return view('screens.web.home.index');
 })->name('home');
+
+Route::get('/artifacts', [StoreController::class, 'index'])->name('artifacts.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
