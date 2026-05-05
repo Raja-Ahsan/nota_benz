@@ -50,16 +50,16 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-        $packages = CmsModule::updateOrCreate(
-            ['route_name' => 'packages-module'],
-            [
-                'name' => 'Packages',
-                'icon' => 'fa-solid fa-box-open',
-                'sort_order' => 4,
-                'status' => 'active',
-                'parent_id' => 0,
-            ]
-        );
+        $orders = CmsModule::firstOrCreate([
+            'route_name' => 'orders-module'
+        ], [
+            'name' => 'Orders',
+            'icon' => 'fa-solid fa-list-ul',
+            'sort_order' => 4,
+            'status' => 'active',
+            'parent_id' => 0,
+        ]);
+
 
         CmsModule::updateOrCreate(
             ['route_name' => 'users.index'],
@@ -94,27 +94,7 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-        CmsModule::updateOrCreate(
-            ['route_name' => 'product-variations.index'],
-            [
-                'name' => 'All Variations',
-                'icon' => 'fa-solid fa-sliders',
-                'sort_order' => 3,
-                'status' => 'active',
-                'parent_id' => $products->id,
-            ]
-        );
-
-        CmsModule::updateOrCreate(
-            ['route_name' => 'packages.index'],
-            [
-                'name' => 'All Packages',
-                'icon' => 'fa-solid fa-list-ul',
-                'sort_order' => 1,
-                'status' => 'active',
-                'parent_id' => $packages->id,
-            ]
-        );
+       
 
         $allowed = [
             'admin.dashboard',
@@ -122,8 +102,7 @@ class CmsModuleSeeder extends Seeder
             'products-module',
             'product-categories.index',
             'products.index',
-            'product-variations.index',
-            'packages-module', 'packages.index',
+            'orders-module',
         ];
 
         CmsModule::query()

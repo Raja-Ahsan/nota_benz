@@ -1339,3 +1339,33 @@ input.auth-input:focus {
         margin-right: 0;
     }
 }
+
+/* Profile (same shell as login / register) */
+.auth-page__container--profile {
+    @apply max-w-[min(100%,32rem)] sm:max-w-lg lg:max-w-xl;
+}
+
+.auth-profile-section {
+    @apply mt-10 border-t border-white/10 pt-10 first:mt-0 first:border-t-0 first:pt-0;
+}
+
+.auth-profile-section__title {
+    @apply text-sm font-bold uppercase tracking-[0.2em] text-white;
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+.auth-profile-section__lede {
+    @apply mt-2 max-w-prose text-pretty text-[13px] leading-relaxed text-white/55 sm:text-sm;
+}
+
+.auth-profile-actions {
+    @apply mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6;
+}
+
+.auth-verify-hint {
+    @apply mt-3 text-[13px] leading-relaxed text-white/65;
+}
+
+.auth-verify-hint button {
+    @apply text-[var(--primary-color)] underline decoration-[var(--primary-color)]/40 underline-offset-2 transition hover:decoration-[var(--primary-color)];
+}
