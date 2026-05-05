@@ -30,22 +30,25 @@
                                 alt="{{ $product->name }}"
                             >
                         </div>
-                        <template x-if="galleryUrls.length > 1">
+                        @if ($galleryImages->count() > 1)
                             <ul class="product-gallery__thumbs mt-3 flex list-none flex-wrap gap-2 p-0" role="list">
-                                <template x-for="(url, idx) in galleryUrls" :key="idx">
-                                    <li>
-                                        <button
-                                            type="button"
-                                            class="product-gallery__thumb"
-                                            :class="{ 'is-active': mainImageOverride === url || (!mainImageOverride && url === defaultMain) }"
-                                            @click="pickGallery(url)"
-                                        >
-                                            <img :src="url" alt="" class="h-full w-full object-cover" width="96" height="96" loading="lazy">
-                                        </button>
-                                    </li>
-                                </template>
+                                @foreach ($galleryImages as $img)
+                                    @php $thumbSrc = $img->publicUrl(); @endphp
+                                    @if ($thumbSrc !== '')
+                                        <li>
+                                            <button
+                                                type="button"
+                                                class="product-gallery__thumb {{ $thumbSrc === $defaultMainImage ? 'is-active' : '' }}"
+                                                :class="{ 'is-active': mainImageOverride === '{{ $thumbSrc }}' || (!mainImageOverride && '{{ $thumbSrc }}' === defaultMain) }"
+                                                @click="pickGallery('{{ $thumbSrc }}')"
+                                            >
+                                                <img src="{{ $thumbSrc }}" alt="" class="h-full w-full object-cover" width="96" height="96" loading="lazy">
+                                            </button>
+                                        </li>
+                                    @endif
+                                @endforeach
                             </ul>
-                        </template>
+                        @endif
                     </div>
 
                     <div class="product-buy-box flex flex-col gap-6">
