@@ -4,18 +4,13 @@
 
 @section('content')
     <main class="auth-page" aria-labelledby="auth-forgot-title">
-        <div class="auth-page__media" aria-hidden="true">
-            <!-- <video
-                class="auth-page__video"
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto">
-                <source src="{{ asset('assets/video/hero-section-bg-video.mp4') }}" type="video/mp4" />
-            </video> -->
-            <div class="auth-page__gradient auth-page__gradient--lr"></div>
-            <div class="auth-page__gradient auth-page__gradient--tb"></div>
+    <div
+            class="auth-page__media bg-cover bg-center bg-no-repeat"
+            aria-hidden="true"
+            style="background-image: url('{{ asset('assets/images/scene-v-bg-image.png') }}');"
+        >
+            <!-- <div class="auth-page__gradient auth-page__gradient--lr"></div>
+            <div class="auth-page__gradient auth-page__gradient--tb"></div> -->
         </div>
 
         <div class="auth-page__wrap">
@@ -32,13 +27,7 @@
                         />
                     </a>
 
-                    <div class="auth-card__eyebrow">
-                        <span class="auth-card__eyebrow-line" aria-hidden="true"></span>
-                        <p class="auth-card__eyebrow-text">
-                            <span class="auth-card__eyebrow-scene manrope-font">{{ __('SCENE') }} <span class="text-primary mx-1.5">I</span></span>
-                            <span class="auth-card__eyebrow-sub cormorant-font">{{ __('— Identity / Access') }}</span>
-                        </p>
-                    </div>
+                
 
                     <h1 id="auth-forgot-title" class="auth-card__heading syne-font">
                         {{ __('Forgot your password?') }}

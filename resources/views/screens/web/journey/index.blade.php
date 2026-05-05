@@ -55,7 +55,7 @@ inner-site
                         Explore chapters
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">↓</span>
                     </a>
-                    <a href="#" class="btn secondary-btn">Full scroll story</a>
+                    <a href="#" class="btn secondary-btn border-btn">Full scroll story</a>
                 </div>
             </div>
         </div>
@@ -321,7 +321,7 @@ inner-site
                         Enter the journey
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>
                     </a>
-                    <a href="#" class="btn secondary-btn !text-dim-black">
+                    <a href="#" class="btn secondary-btn !text-dim-black border-btn">
                         About NOTaBENZ
                     </a>
                 </div>

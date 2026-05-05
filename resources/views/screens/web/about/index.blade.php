@@ -1,10 +1,5 @@
 @extends('layouts.web.master')
 
-<<<<<<< HEAD
-@section('content')
-
-@endsection
-=======
 @section('title', __('About') . ' — NOTaBENZ')
 
 @push('body-class')
@@ -61,7 +56,7 @@ inner-site
                         Read our story
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">↓</span>
                     </a>
-                    <a href="mailto:info@notabenz.com" class="btn secondary-btn">Work with us</a>
+                    <a href="mailto:info@notabenz.com" class="btn secondary-btn border-btn">Work with us</a>
                 </div>
             </div>
         </div>
@@ -222,7 +217,7 @@ inner-site
                         </a>
                         <a
                             href="mailto:info@notabenz.com"
-                            class="btn secondary-btn !text-dim-black"
+                            class="btn secondary-btn !text-dim-black border-btn"
                         >
                             Interview & press
                         </a>
@@ -402,7 +397,7 @@ inner-site
                     </a>
                     <a
                         href="mailto:info@notabenz.com"
-                        class="btn btn-secondary"
+                        class="btn btn-secondary border-btn"
                     >
                         Email the studio
                     </a>
@@ -429,4 +424,3 @@ inner-site
         });
     </script>
 @endpush
->>>>>>> a7c7ae0e9688e8819255f0fe6c48f44d8eec763d
