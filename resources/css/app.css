@@ -325,7 +325,7 @@ body {
 .btn-primary:hover {
     background-color: transparent;
     border: 1px solid var(--primary-color);
-    color: #fff;
+    color: var(--primary-color);
 }
 .secondary-btn {
     @apply bg-transparent text-white/65 font-semibold uppercase  transition-colors hover:text-white hover:bg-primary;
@@ -484,7 +484,23 @@ body {
     max-height: 18px !important;
     flex-shrink: 0;
     display: block;
+    
 }
+
+.cart-icon-wrapper svg {
+     max-width: 34px;
+        color: var(--primary-color);
+        transition: color 0.2s ease;
+    }
+    
+    .cart-icon-wrapper svg path,
+    .cart-icon-wrapper svg text {
+       fill: currentColor;
+    }
+    .cart-icon-wrapper svg text {
+        color: #000;
+        font-size: 42px;
+    }
 /* responsive */
 @media (max-width: 500px) {
     .btn {
@@ -903,8 +919,11 @@ body {
     line-height: 1;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #fff;
-    background-color: var(--identity-teal);
+    color: var(--primary-color);
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    border-radius: 0;
+    white-space: nowrap;
 }
 
 .identity-artifacts__badge--long {

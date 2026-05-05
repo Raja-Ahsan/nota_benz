@@ -377,7 +377,7 @@
                         <span class="identity-artifacts__badge manrope-font">New</span>
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/image-04.png') }}"
+                            src="{{ asset('assets/images/scene-v-img-01.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -394,7 +394,7 @@
                         <span class="identity-artifacts__badge identity-artifacts__badge--long manrope-font">Bestseller</span>
                         <img
                             class="identity-artifacts__img"
-                             src="{{ asset('assets/images/image-05.png') }}"
+                             src="{{ asset('assets/images/scene-v-img-02.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -413,7 +413,7 @@
                     <div class="identity-artifacts__media">
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/image-06.png') }}"
+                            src="{{ asset('assets/images/scene-v-img-03.png') }}"
                             width="480"
                             height="720"
                             alt="">
@@ -430,7 +430,7 @@
                         <span class="identity-artifacts__badge manrope-font">Limited</span>
                         <img
                             class="identity-artifacts__img"
-                            src="{{ asset('assets/images/image-07.png') }}"
+                            src="{{ asset('assets/images/scene-v-img-04.png') }}"
                             width="480"
                             height="640"
                             alt="">
@@ -629,7 +629,7 @@
                 </a>
                 <a
                     href="#"
-                    class="btn secondary-btn !text-white">
+                    class="btn secondary-btn border-btn">
                  Send a message
                 </a>
             </div>
