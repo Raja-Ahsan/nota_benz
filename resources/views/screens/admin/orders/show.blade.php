@@ -7,7 +7,7 @@
                 <div class="card">
                     <div
                         class="card-header card-no-border d-flex align-items-center justify-content-between flex-wrap gap-2">
-                        <h5>Order #ORD-{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</h5>
+                        <h5>Order {{ $order->publicOrderNumber() }}</h5>
                         <div class="d-flex align-items-center gap-2">
                             <strong>Order Status:</strong> <span
                                 class="badge {{ $order->order_status === 'completed' || $order->order_status === 'delivered' ? 'badge-light-success' : ($order->order_status === 'cancelled' ? 'badge-light-danger' : 'badge-light-info') }}">{{ ucfirst($order->order_status) }}</span>
@@ -25,7 +25,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="mb-2"><strong>Order ID:</strong>
-                                            #ORD-{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
+                                            {{ $order->publicOrderNumber() }}</div>
                                         <div class="mb-2"><strong>Order Date:</strong>
                                             {{ $order->created_at->format('d M Y, h:i A') }}</div>
                                         <div class="mb-2"><strong>Payment Method:</strong>

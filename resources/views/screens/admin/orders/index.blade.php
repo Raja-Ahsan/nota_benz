@@ -34,7 +34,7 @@
                                         @forelse ($orders as $order)
                                             <tr class="product-removes inbox-data">
                                                 <td><a
-                                                        href="{{ route('orders.show', $order) }}">#ORD-{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</a>
+                                                        href="{{ route('orders.show', $order) }}">{{ $order->publicOrderNumber() }}</a>
                                                 </td>
                                                 <td>
                                                     <p>${{ number_format($order->total, 2) }}</p>
