@@ -38,6 +38,11 @@ function ajaxUpdate(formSelector, successRedirect = null) {
             data: formData,
             processData: false,
             contentType: false,
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
             beforeSend: function () {
                 form.find('button[type="submit"]').prop('disabled', true).text('Updating...');
             },

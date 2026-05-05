@@ -366,81 +366,52 @@
                         Each piece is a story fragment. A personal artifact. A signal.
                     </p>
                 </div>
-                <a href="#" class="identity-artifacts__browse manrope-font">
+                <a href="{{ route('artifacts.index') }}" class="identity-artifacts__browse manrope-font">
                     Browse all <span class="identity-artifacts__browse-chevron" aria-hidden="true">&gt;</span>
                 </a>
             </header>
 
             <div class="identity-artifacts__grid" role="list">
-                <div class="identity-artifacts__card identity-artifacts__card--1" role="listitem">
-                    <div class="identity-artifacts__media">
-                        <span class="identity-artifacts__badge manrope-font">New</span>
-                        <img
-                            class="identity-artifacts__img"
-                            src="{{ asset('assets/images/scene-v-img-01.png') }}"
-                            width="480"
-                            height="640"
-                            alt="">
-                    </div>
-                    <div class="identity-artifacts__body">
-                        <p class="identity-artifacts__category manrope-font">Book</p>
-                        <h3 class="identity-artifacts__name plarfair-font">My Opus — Vol. I</h3>
-                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$34.99</span></p>
-                    </div>
-                </div>
-
-                <article class="identity-artifacts__card identity-artifacts__card--2" role="listitem">
-                    <div class="identity-artifacts__media">
-                        <span class="identity-artifacts__badge identity-artifacts__badge--long manrope-font">Bestseller</span>
-                        <img
-                            class="identity-artifacts__img"
-                             src="{{ asset('assets/images/scene-v-img-02.png') }}"
-                            width="480"
-                            height="640"
-                            alt="">
-                    </div>
-                    <div class="identity-artifacts__body">
-                        <p class="identity-artifacts__category manrope-font">Home</p>
-                        <h3 class="identity-artifacts__name plarfair-font">Glass Jar Soy Candle</h3>
-                        <p class="identity-artifacts__price manrope-font">
-                            <span class="identity-artifacts__price-was">$28.00</span>
-                            <span class="identity-artifacts__price-current">$22.00</span>
-                        </p>
-                    </div>
-                </article>
-
-                <article class="identity-artifacts__card identity-artifacts__card--3" role="listitem">
-                    <div class="identity-artifacts__media">
-                        <img
-                            class="identity-artifacts__img"
-                            src="{{ asset('assets/images/scene-v-img-03.png') }}"
-                            width="480"
-                            height="720"
-                            alt="">
-                    </div>
-                    <div class="identity-artifacts__body">
-                        <p class="identity-artifacts__category manrope-font">Apparel</p>
-                        <h3 class="identity-artifacts__name plarfair-font">Cropped Windbreaker</h3>
-                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$68.00</span></p>
-                    </div>
-                </article>
-
-                <article class="identity-artifacts__card identity-artifacts__card--4" role="listitem">
-                    <div class="identity-artifacts__media">
-                        <span class="identity-artifacts__badge manrope-font">Limited</span>
-                        <img
-                            class="identity-artifacts__img"
-                            src="{{ asset('assets/images/scene-v-img-04.png') }}"
-                            width="480"
-                            height="640"
-                            alt="">
-                    </div>
-                    <div class="identity-artifacts__body">
-                        <p class="identity-artifacts__category manrope-font">Art print</p>
-                        <h3 class="identity-artifacts__name plarfair-font">Urban Series — No. 7</h3>
-                        <p class="identity-artifacts__price manrope-font"><span class="identity-artifacts__price-current">$45.00</span></p>
-                    </div>
-                </article>
+                @php
+                    $galleryPlaceholder = asset('assets/images/placeholders/img-not-available.png');
+                @endphp
+                @forelse (($galleryProducts ?? collect()) as $product)
+                    @php
+                        $primaryImg = $product->images->where('is_primary', 1)->first()
+                            ?? $product->images->first();
+                        $imgSrc = $primaryImg?->publicUrl() ?: $galleryPlaceholder;
+                        $cardVariant = min($loop->iteration, 4);
+                    @endphp
+                    <article class="identity-artifacts__card identity-artifacts__card--{{ $cardVariant }}" role="listitem">
+                        <a href="{{ route('artifacts.show', $product) }}" class="block text-inherit no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg">
+                            <div class="identity-artifacts__media">
+                                <img
+                                    class="identity-artifacts__img"
+                                    src="{{ $imgSrc }}"
+                                    width="480"
+                                    height="640"
+                                    alt="{{ $product->name }}"
+                                    loading="lazy"
+                                >
+                            </div>
+                            <div class="identity-artifacts__body">
+                                <p class="identity-artifacts__category manrope-font">{{ $product->category?->name ?? __('Artifacts') }}</p>
+                                <h3 class="identity-artifacts__name plarfair-font">{{ $product->name }}</h3>
+                                <p class="identity-artifacts__price manrope-font">
+                                    @if ($product->isVariable() && $product->from_price !== null && $product->to_price !== null)
+                                        <span class="identity-artifacts__price-current">{{ $product->listingPriceLabel() }}</span>
+                                    @else
+                                        <span class="identity-artifacts__price-current">${{ number_format((float) $product->price, 2) }}</span>
+                                    @endif
+                                </p>
+                            </div>
+                        </a>
+                    </article>
+                @empty
+                    <p class="identity-artifacts__sub col-span-full text-center text-neutral-500">
+                        {{ __('Artifacts coming soon.') }}
+                    </p>
+                @endforelse
             </div>
         </div>
     </section>

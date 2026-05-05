@@ -26,7 +26,7 @@
 
         <section class="checkout-section py-10 md:py-14">
             <div class="container">
-                <form id="submit-form" method="POST" action="{{ route('checkout.place-order') }}">
+                <form id="submit-form" method="POST" action="{{ route('checkout.place-order') }}" novalidate>
                     @csrf
                     <input type="hidden" name="payment_intent_id" id="payment_intent_id">
 
@@ -119,9 +119,14 @@
                                             id="zipCode"
                                             name="billing_zip"
                                             class="{{ $inputClass }}"
-                                            placeholder="{{ __('Enter ZIP code') }}"
+                                            placeholder="{{ __('Digits only, e.g. 12345') }}"
                                             value="{{ old('billing_zip') }}"
                                             required
+                                            inputmode="numeric"
+                                            autocomplete="postal-code"
+                                            maxlength="10"
+                                            pattern="[0-9]{3,10}"
+                                            title="{{ __('Digits only (3–10 characters)') }}"
                                         >
                                     </div>
                                     <div>
@@ -177,7 +182,19 @@
                                         </div>
                                         <div>
                                             <label for="shippingZipCode" class="{{ $labelClass }}">{{ __('ZIP code') }}</label>
-                                            <input type="text" id="shippingZipCode" name="shipping_zip" class="{{ $inputClass }}" placeholder="{{ __('Enter ZIP code') }}" value="{{ old('shipping_zip') }}">
+                                            <input
+                                                type="text"
+                                                id="shippingZipCode"
+                                                name="shipping_zip"
+                                                class="{{ $inputClass }}"
+                                                placeholder="{{ __('Digits only, e.g. 12345') }}"
+                                                value="{{ old('shipping_zip') }}"
+                                                inputmode="numeric"
+                                                autocomplete="shipping postal-code"
+                                                maxlength="10"
+                                                pattern="[0-9]{3,10}"
+                                                title="{{ __('Digits only (3–10 characters)') }}"
+                                            >
                                         </div>
                                         <div>
                                             <label for="shippingCountry" class="{{ $labelClass }}">{{ __('Country') }}</label>
@@ -297,146 +314,310 @@
             syncShippingVisibility();
         })();
 
+        (function () {
+            ['zipCode', 'shippingZipCode'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('input', function () {
+                    el.value = el.value.replace(/\D/g, '').slice(0, 10);
+                });
+                el.addEventListener('blur', function () {
+                    el.value = el.value.replace(/\D/g, '').slice(0, 10);
+                });
+            });
+        })();
+
+        const submitFormEl = document.getElementById("submit-form");
+        if (submitFormEl) {
+            submitFormEl.addEventListener("submit", function (e) {
+                e.preventDefault();
+            });
+        }
+
         let clientSecret = null;
+        let lastSucceededPaymentIntentId = null;
+        let initPaymentInFlight = null;
+
+        function normalizeZipInputs() {
+            ['zipCode', 'shippingZipCode'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.value = el.value.replace(/\D/g, '').slice(0, 10);
+                }
+            });
+        }
+
+        function isZipDigitsOnly(value) {
+            const z = String(value || "").trim();
+            return /^[0-9]{3,10}$/.test(z);
+        }
+
+        function validateCheckoutForm() {
+            normalizeZipInputs();
+
+            const form = document.getElementById("submit-form");
+            if (form && !form.reportValidity()) {
+                return false;
+            }
+
+            const billingZip = document.getElementById("zipCode");
+            if (!isZipDigitsOnly(billingZip?.value)) {
+                Swal.fire(
+                    @json(__('Check your details')),
+                    @json(__('ZIP / postal code must contain digits only (3–10 characters).')),
+                    "warning"
+                );
+                billingZip?.focus();
+                return false;
+            }
+
+            const sameAs = document.getElementById("same_as_billing");
+            if (sameAs && !sameAs.checked) {
+                const shipFields = [
+                    ["shippingFirstName", @json(__('Shipping full name'))],
+                    ["shippingPhone", @json(__('Shipping phone'))],
+                    ["shippingAddress", @json(__('Shipping address'))],
+                    ["shippingCity", @json(__('Shipping city'))],
+                    ["shippingState", @json(__('Shipping state'))],
+                    ["shippingZipCode", @json(__('Shipping ZIP'))],
+                    ["shippingCountry", @json(__('Shipping country'))],
+                ];
+                for (const [id, label] of shipFields) {
+                    const el = document.getElementById(id);
+                    if (!el || !String(el.value).trim()) {
+                        Swal.fire(@json(__('Check your details')), @json(__('Please complete: ')) + label, "warning");
+                        el?.focus();
+                        return false;
+                    }
+                }
+                const sz = document.getElementById("shippingZipCode");
+                if (!isZipDigitsOnly(sz?.value)) {
+                    Swal.fire(
+                        @json(__('Check your details')),
+                        @json(__('Shipping ZIP must contain digits only (3–10 characters).')),
+                        "warning"
+                    );
+                    sz?.focus();
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         async function initPayment() {
-            try {
-                const response = await fetch("{{ route('checkout.payment-intent') }}", {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                    },
-                });
+            if (initPaymentInFlight) {
+                return initPaymentInFlight;
+            }
 
-                const raw = await response.text();
-                let data = null;
+            initPaymentInFlight = (async function () {
                 try {
-                    data = raw ? JSON.parse(raw) : null;
+                    const response = await fetch("{{ route('checkout.payment-intent') }}", {
+                        method: "POST",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        },
+                    });
+
+                    const raw = await response.text();
+                    let data = null;
+                    try {
+                        data = raw ? JSON.parse(raw) : null;
+                    } catch (e) {
+                        Swal.fire(
+                            @json(__('Error')),
+                            @json(__('Checkout could not start. Please refresh the page and try again.')),
+                            "error"
+                        );
+                        return false;
+                    }
+
+                    if (!response.ok || !data?.clientSecret) {
+                        Swal.fire(
+                            @json(__('Error')),
+                            data?.message || @json(__('Payment could not be initialized. Try again or contact support.')),
+                            "error"
+                        );
+                        return false;
+                    }
+
+                    clientSecret = data.clientSecret;
+                    lastSucceededPaymentIntentId = null;
+                    return true;
                 } catch (e) {
-                    Swal.fire(
-                        @json(__('Error')),
-                        @json(__('Checkout could not start. Please refresh the page and try again.')),
-                        "error"
-                    );
-                    return;
+                    Swal.fire(@json(__('Error')), @json(__('Network error. Check your connection and try again.')), "error");
+                    return false;
                 }
+            })();
 
-                if (!response.ok || !data?.clientSecret) {
-                    Swal.fire(
-                        @json(__('Error')),
-                        data?.message || @json(__('Payment could not be initialized. Try again or contact support.')),
-                        "error"
-                    );
-                    return;
-                }
-
-                clientSecret = data.clientSecret;
-            } catch (e) {
-                Swal.fire(@json(__('Error')), @json(__('Network error. Check your connection and try again.')), "error");
+            try {
+                return await initPaymentInFlight;
+            } finally {
+                initPaymentInFlight = null;
             }
         }
 
         initPayment();
 
+        function placeOrderPayload(paymentIntentId) {
+            const sameAs = document.getElementById("same_as_billing")?.checked;
+            const base = {
+                _token: "{{ csrf_token() }}",
+                payment_intent_id: paymentIntentId,
+                billing_name: $("#name").val(),
+                billing_email: $("#email").val(),
+                billing_phone: $("#phone").val(),
+                billing_address: $("#address").val(),
+                billing_city: $("#city").val(),
+                billing_state: $("#state").val(),
+                billing_zip: $("#zipCode").val(),
+                billing_country: $("#country").val(),
+            };
+            if (sameAs) {
+                return Object.assign({}, base, {
+                    shipping_name: $("#name").val(),
+                    shipping_email: $("#email").val(),
+                    shipping_phone: $("#phone").val(),
+                    shipping_address: $("#address").val(),
+                    shipping_city: $("#city").val(),
+                    shipping_state: $("#state").val(),
+                    shipping_zip: $("#zipCode").val(),
+                    shipping_country: $("#country").val(),
+                });
+            }
+            return Object.assign({}, base, {
+                shipping_name: $("#shippingFirstName").val(),
+                shipping_email: "",
+                shipping_phone: $("#shippingPhone").val(),
+                shipping_address: $("#shippingAddress").val(),
+                shipping_city: $("#shippingCity").val(),
+                shipping_state: $("#shippingState").val(),
+                shipping_zip: $("#shippingZipCode").val(),
+                shipping_country: $("#shippingCountry").val(),
+            });
+        }
+
+        function placeOrderAjax(btn, btnLabel, paymentIntentId) {
+            $.ajax({
+                url: "{{ route('checkout.place-order') }}",
+                method: "POST",
+                dataType: "json",
+                headers: {
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                data: placeOrderPayload(paymentIntentId),
+                beforeSend: function () {
+                    btn.disabled = true;
+                    btnLabel.textContent = @json(__('Placing order…'));
+                },
+                success: function (res) {
+                    lastSucceededPaymentIntentId = null;
+                    if (res.login_required && res.redirect_url) {
+                        Swal.fire({
+                            title: @json(__('Order placed')),
+                            text: res.message || @json(__('Sign in to view your order confirmation.')),
+                            icon: "success",
+                            confirmButtonText: @json(__('Continue')),
+                        }).then(() => {
+                            window.location.href = res.redirect_url;
+                        });
+                        return;
+                    }
+                    Swal.fire({
+                        title: @json(__('Order placed')),
+                        text: @json(__('Your order has been placed successfully.')),
+                        icon: "success",
+                        confirmButtonText: @json(__('Continue')),
+                    }).then(() => {
+                        window.location.href = @json(url('/order-success')).replace(/\/$/, "") + "/" + res.order_id;
+                    });
+                },
+                complete: function () {
+                    btnLabel.textContent = @json(__('Place order'));
+                    btn.disabled = false;
+                },
+                error: function (xhr) {
+                    let msg = @json(__('Something went wrong'));
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                        const errs = Object.values(xhr.responseJSON.errors).flat();
+                        msg = errs.join("\n");
+                        Swal.fire(@json(__('Check your details')), msg, "warning");
+                    } else if (xhr.responseJSON?.message) {
+                        msg = xhr.responseJSON.message;
+                        Swal.fire(@json(__('Order failed')), msg, "error");
+                    } else {
+                        Swal.fire(@json(__('Order failed')), msg, "error");
+                    }
+                },
+            });
+        }
+
         document.getElementById("submit-btn").addEventListener("click", async function () {
             const btn = this;
             const btnLabel = document.getElementById("submit-btn-label");
 
+            if (!validateCheckoutForm()) {
+                return;
+            }
+
             btn.disabled = true;
 
-            if (!clientSecret) {
-                Swal.fire(@json(__('Error')), @json(__('Payment not initialized')), "error");
-                btn.disabled = false;
-                return;
+            if (!clientSecret && !lastSucceededPaymentIntentId) {
+                btnLabel.textContent = @json(__('Preparing payment…'));
+                const ready = await initPayment();
+                btnLabel.textContent = @json(__('Place order'));
+                if (!ready || !clientSecret) {
+                    btn.disabled = false;
+                    return;
+                }
             }
 
-            const result = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: card,
-                    billing_details: {
-                        name: document.getElementById("name").value,
-                        email: document.getElementById("email").value,
-                    },
-                },
-            });
+            let paymentIntentId = lastSucceededPaymentIntentId;
 
-            if (result.error) {
-                Swal.fire(@json(__('Payment failed')), result.error.message, "error");
-                btn.disabled = false;
-                return;
-            }
-
-            if (result.paymentIntent.status === "succeeded") {
-                $.ajax({
-                    url: "{{ route('checkout.place-order') }}",
-                    method: "POST",
-                    dataType: "json",
-                    headers: {
-                        Accept: "application/json",
-                        "X-Requested-With": "XMLHttpRequest",
-                    },
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        payment_intent_id: result.paymentIntent.id,
-                        billing_name: $("#name").val(),
-                        billing_email: $("#email").val(),
-                        billing_phone: $("#phone").val(),
-                        billing_address: $("#address").val(),
-                        billing_city: $("#city").val(),
-                        billing_state: $("#state").val(),
-                        billing_zip: $("#zipCode").val(),
-                        billing_country: $("#country").val(),
-                        shipping_name: $("#shippingFirstName").val(),
-                        shipping_phone: $("#shippingPhone").val(),
-                        shipping_address: $("#shippingAddress").val(),
-                        shipping_city: $("#shippingCity").val(),
-                        shipping_state: $("#shippingState").val(),
-                        shipping_zip: $("#shippingZipCode").val(),
-                        shipping_country: $("#shippingCountry").val(),
-                    },
-                    beforeSend: function () {
-                        btn.disabled = true;
-                        btnLabel.textContent = @json(__('Placing order…'));
-                    },
-                    success: function (res) {
-                        if (res.login_required && res.redirect_url) {
-                            Swal.fire({
-                                title: @json(__('Order placed')),
-                                text: res.message || @json(__('Sign in to view your order confirmation.')),
-                                icon: "success",
-                                confirmButtonText: @json(__('Continue')),
-                            }).then(() => {
-                                window.location.href = res.redirect_url;
-                            });
-                            return;
-                        }
-                        Swal.fire({
-                            title: @json(__('Order placed')),
-                            text: @json(__('Your order has been placed successfully.')),
-                            icon: "success",
-                            confirmButtonText: @json(__('Continue')),
-                        }).then(() => {
-                            window.location.href = @json(url('/order-success')).replace(/\/$/, "") + "/" + res.order_id;
-                        });
-                    },
-                    complete: function () {
-                        btn.disabled = false;
-                        btnLabel.textContent = @json(__('Place order'));
-                    },
-                    error: function (xhr) {
-                        let msg = @json(__('Something went wrong'));
-                        if (xhr.responseJSON?.message) {
-                            msg = xhr.responseJSON.message;
-                        }
-                        Swal.fire(@json(__('Order failed')), msg, "error");
-                        btn.disabled = false;
+            if (!paymentIntentId) {
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            name: document.getElementById("name").value,
+                            email: document.getElementById("email").value,
+                        },
                     },
                 });
+
+                if (result.error) {
+                    const rawPi = result.error.payment_intent;
+                    const erroredPiId = typeof rawPi === "string" ? rawPi : rawPi && rawPi.id;
+                    const stripeSaysSucceeded =
+                        typeof rawPi === "object" && rawPi && rawPi.status === "succeeded";
+                    const likelyAlreadyConfirmed =
+                        result.error.code === "payment_intent_unexpected_state";
+                    if (erroredPiId && (stripeSaysSucceeded || likelyAlreadyConfirmed)) {
+                        paymentIntentId = erroredPiId;
+                        lastSucceededPaymentIntentId = paymentIntentId;
+                    } else {
+                        Swal.fire(@json(__('Payment failed')), result.error.message, "error");
+                        btn.disabled = false;
+                        await initPayment();
+                        return;
+                    }
+                } else if (result.paymentIntent.status !== "succeeded") {
+                    Swal.fire(@json(__('Payment failed')), @json(__('Payment was not completed.')), "error");
+                    btn.disabled = false;
+                    await initPayment();
+                    return;
+                } else {
+                    paymentIntentId = result.paymentIntent.id;
+                    lastSucceededPaymentIntentId = paymentIntentId;
+                }
             }
+
+            placeOrderAjax(btn, btnLabel, paymentIntentId);
         });
     </script>
 @endpush

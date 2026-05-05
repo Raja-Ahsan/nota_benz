@@ -23,12 +23,10 @@ class CmsModulePermissionsSeeder extends Seeder
                 'product-categories.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'products.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'orders.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-
             ],
 
             'user' => [
                 'admin.dashboard' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
-                'users-module' => ['is_view' => 0, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
                 'orders.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
             ],
         ];
