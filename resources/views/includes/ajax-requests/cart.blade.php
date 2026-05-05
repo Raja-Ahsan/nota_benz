@@ -1,13 +1,23 @@
 <script>
     $(document).on('click', '.add-to-cart', function() {
-        let productId = $(this).data('id');
+        const $btn = $(this);
+        const productId = $btn.data('id');
+        const $buyBox = $btn.closest('.product-buy-box');
+        let qty = 1;
+        if ($buyBox.length) {
+            const raw = parseInt($buyBox.find('input.qty-input').val(), 10);
+            if (!Number.isNaN(raw) && raw >= 1) {
+                qty = Math.min(raw, 999);
+            }
+        }
 
         $.ajax({
             url: "{{ route('cart.store') }}",
             type: "POST",
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),
-                product_id: productId
+                product_id: productId,
+                qty: qty
             },
             success: function(res) {
                 if (res.success) {

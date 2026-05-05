@@ -11,7 +11,15 @@ class CartItemController extends Controller
 {
     public function store(Request $request)
     {
-        $product = Product::findOrFail($request->product_id);
+        $data = $request->validate([
+            'product_id' => 'required|integer|exists:products,id',
+            'qty' => 'nullable|integer|min:1|max:999',
+        ]);
+
+        $qty = isset($data['qty']) ? (int) $data['qty'] : 1;
+        $qty = max(1, min(999, $qty));
+
+        $product = Product::findOrFail($data['product_id']);
 
         // 1️⃣ identify user / session
         if (auth()->check()) {
@@ -25,15 +33,15 @@ class CartItemController extends Controller
             ]);
         }
 
-        // 2️⃣ add or update item
+        // 2️⃣ add or update item (merge qty if line already exists — standard storefront behavior)
         $item = $cart->items()->where('product_id', $product->id)->first();
 
         if ($item) {
-            $item->increment('qty');
+            $item->increment('qty', $qty);
         } else {
             $cart->items()->create([
                 'product_id' => $product->id,
-                'qty' => 1,
+                'qty' => $qty,
                 'price' => $product->price,
             ]);
         }

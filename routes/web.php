@@ -26,6 +26,7 @@ Route::get('/journey', function () {
 })->name('journey');
 
 Route::get('/artifacts', [StoreController::class, 'index'])->name('artifacts.index');
+Route::get('/artifacts/filter', [StoreController::class, 'filterArtifacts'])->name('artifacts.filter');
 Route::get('/artifacts/{product:slug}', [StoreController::class, 'show'])->name('artifacts.show');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
