@@ -34,14 +34,16 @@ Route::post('/add-to-cart', [CartItemController::class, 'store'])->name('cart.st
 Route::patch('/cart-items/{id}', [CartItemController::class, 'updateQty'])->name('cart-items.update');
 Route::delete('/cart-items/{id}', [CartItemController::class, 'destroy'])->name('cart-items.destroy');
 
+/** Guest checkout: account created from billing email when new; Stripe still secures payment. */
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/place-order', [CheckoutController::class, 'storeAfterPayment'])->name('checkout.place-order');
+Route::post('/checkout/payment-intent', [CheckoutController::class, 'createPaymentIntent'])->name('checkout.payment-intent');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout/place-order', [CheckoutController::class, 'storeAfterPayment'])->name('checkout.place-order');
-    Route::post('/checkout/payment-intent', [CheckoutController::class, 'createPaymentIntent'])->name('checkout.payment-intent');
     Route::get('/order-success/{order}', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order:id}', [OrderController::class, 'show'])->name('orders.show');

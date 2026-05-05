@@ -5,9 +5,9 @@
             <div class="sm:col-span-2 lg:col-span-1">
                 <a href="{{ url('/') }}" class="">
                     <img
-                        src="{{ asset('assets/images/logo.png') }}"
+                        src="{{ asset('assets/images/logo-dark.png') }}"
                         alt="NOTaBENZ"
-                        class=" max-w-[700px]"
+                        class=" max-w-[180px] mb-4"
                     
                         decoding="async"
                     />
