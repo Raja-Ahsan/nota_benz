@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/order-success/{order}', [CheckoutController::class, 'success'])->name('order.success');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order:id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order:id}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {

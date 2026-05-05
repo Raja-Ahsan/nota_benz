@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
@@ -52,11 +54,26 @@ class OrderController extends Controller
         return view('screens.admin.orders.show', compact('order'));
     }
 
-    public function updateStatus(Request $request, Order $order)
+    public function updateStatus(Request $request, Order $order): JsonResponse
     {
         $user = current_user();
 
-        if ($user->hasRole(config('roles.league_contractor'))) {
+        $allowedStatuses = [
+            'pending',
+            'processing',
+            'shipped',
+            'delivered',
+            'completed',
+            'cancelled',
+        ];
+
+        $isAdmin = $user->role === config('roles.admin');
+        $contractorRole = config('roles.league_contractor');
+        $isLeagueContractor = $contractorRole && $user->role === $contractorRole;
+
+        if ($isAdmin) {
+            // Full access
+        } elseif ($isLeagueContractor && $user->company) {
             $hasProduct = $order->items()
                 ->whereHas('product', function ($q) use ($user) {
                     $q->where('company_id', $user->company->id);
@@ -64,22 +81,22 @@ class OrderController extends Controller
                 ->exists();
 
             if (! $hasProduct) {
-                return response()->json(['message' => 'Unauthorized'], 403);
+                return response()->json(['message' => __('Unauthorized')], 403);
             }
         } else {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['message' => __('Unauthorized')], 403);
         }
 
-        $request->validate([
-            'order_status' => 'required|string',
+        $validated = $request->validate([
+            'order_status' => ['required', 'string', Rule::in($allowedStatuses)],
         ]);
 
         $order->update([
-            'order_status' => $request->order_status,
+            'order_status' => $validated['order_status'],
         ]);
 
         return response()->json([
-            'message' => 'Order status updated successfully',
+            'message' => __('Order status updated successfully.'),
             'status' => $order->order_status,
         ]);
     }
