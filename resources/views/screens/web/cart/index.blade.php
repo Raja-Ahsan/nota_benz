@@ -20,7 +20,7 @@
                     message="{{ __('Your cart is empty') }}"
                     sub-message="{{ __('Browse artifacts and add something you like.') }}" />
                 <div class="mt-8 flex justify-center">
-                    <a href="{{ route('artifacts.index') }}" class="btn btn-primary  inline-flex min-w-[200px] justify-center">
+                    <a href="{{ route('artifacts.index') }}" class="btn btn-primary btn-hover inline-flex min-w-[200px] justify-center">
                         {{ __('Continue shopping') }}
                     </a>
                 </div>

@@ -3,10 +3,40 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Order extends Model
 {
     protected $guarded = ['id'];
+
+    /** Human-facing reference: NAB-YYYYMMDD-His-{id} (set on create). */
+    public static function makePublicOrderNumber(?Carbon $placedAt, int $orderId): string
+    {
+        $at = $placedAt ?? Carbon::now();
+
+        return 'NAB-'.$at->format('Ymd').'-'.$at->format('His').'-'.$orderId;
+    }
+
+    public function publicOrderNumber(): string
+    {
+        if (filled($this->order_number)) {
+            return (string) $this->order_number;
+        }
+
+        return static::makePublicOrderNumber($this->created_at, (int) $this->id);
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Order $order) {
+            if (filled($order->order_number)) {
+                return;
+            }
+            $order->forceFill([
+                'order_number' => static::makePublicOrderNumber($order->created_at, (int) $order->id),
+            ])->saveQuietly();
+        });
+    }
 
     public function addresses()
     {

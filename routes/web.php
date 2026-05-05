@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('screens.web.home.index');
 })->name('home');
 
+Route::get('/about', function () {
+    return view('screens.web.about.index');
+})->name('about');
+
+Route::get('/journey', function () {
+    return view('screens.web.journey.index');
+})->name('journey');
+
 Route::get('/artifacts', [StoreController::class, 'index'])->name('artifacts.index');
 Route::get('/artifacts/{product:slug}', [StoreController::class, 'show'])->name('artifacts.show');
 
@@ -24,9 +32,6 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/add-to-cart', [CartItemController::class, 'store'])->name('cart.store');
 Route::patch('/cart-items/{id}', [CartItemController::class, 'updateQty'])->name('cart-items.update');
 Route::delete('/cart-items/{id}', [CartItemController::class, 'destroy'])->name('cart-items.destroy');
-
-Route::get('/checkout', fn() => view('screens.web.checkout.index'))->name('checkout');
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');

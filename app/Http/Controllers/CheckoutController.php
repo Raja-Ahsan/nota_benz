@@ -76,6 +76,7 @@ class CheckoutController extends Controller
             'billing_zip' => 'required|string',
             'billing_country' => 'required|string',
             'shipping_name' => 'nullable|string|max:255',
+            'shipping_email' => 'nullable|email|max:255',
             'shipping_phone' => 'nullable|string|max:20',
             'shipping_address' => 'nullable|string',
             'shipping_city' => 'nullable|string',
@@ -125,14 +126,13 @@ class CheckoutController extends Controller
                 'billing_zip' => $request->billing_zip,
                 'billing_country' => $request->billing_country,
                 'shipping_name' => $request->shipping_name,
+                'shipping_email' => $request->shipping_email,
                 'shipping_phone' => $request->shipping_phone,
                 'shipping_address' => $request->shipping_address,
                 'shipping_city' => $request->shipping_city,
                 'shipping_state' => $request->shipping_state,
                 'shipping_zip' => $request->shipping_zip,
                 'shipping_country' => $request->shipping_country,
-                'type' => 'billing',
-                'order_id' => $order->id,
             ]);
 
             foreach ($cart->items as $item) {

@@ -12,7 +12,7 @@
                         decoding="async"
                     />
                 </a>
-                <p class="max-w-[250px] leading-[1.5] italic text-[var(--text-color)] text-[16px] cormorant-font">
+                <p class="max-w-[250px] leading-[1.5] italic text-dim-black text-[16px] cormorant-font">
                     Not a brand. A perspective. Stories, art, and the life that shaped them — by Mercedes A. Villamín.
                 </p>
                 <ul class="mt-6 flex flex-wrap items-center gap-3" role="list">

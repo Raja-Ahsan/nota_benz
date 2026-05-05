@@ -57,7 +57,7 @@
                 {{-- CTAs --}}
                 <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
                     <a
-                        href="#"
+                        href="{{ route('journey') }}"
                         class="btn btn-primary">
                         Enter the journey
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>

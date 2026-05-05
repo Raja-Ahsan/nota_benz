@@ -1,12 +1,12 @@
 @include('layouts.web.head')
 
-<body class="font-sans antialiased">
+<body class="@stack('body-class')">
     @include('layouts.web.header')
 
     @yield('content')
 
     @include('layouts.web.footer')
-<script src="{{ asset('assets/libs/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/js/jquery.min.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

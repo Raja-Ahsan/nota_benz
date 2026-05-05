@@ -295,16 +295,44 @@
         let clientSecret = null;
 
         async function initPayment() {
-            const response = await fetch("{{ route('checkout.payment-intent') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                },
-            });
+            try {
+                const response = await fetch("{{ route('checkout.payment-intent') }}", {
+                    method: "POST",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    },
+                });
 
-            const data = await response.json();
-            clientSecret = data.clientSecret;
+                const raw = await response.text();
+                let data = null;
+                try {
+                    data = raw ? JSON.parse(raw) : null;
+                } catch (e) {
+                    Swal.fire(
+                        @json(__('Error')),
+                        @json(__('Checkout could not start. Please refresh the page or sign in again.')),
+                        "error"
+                    );
+                    return;
+                }
+
+                if (!response.ok || !data?.clientSecret) {
+                    Swal.fire(
+                        @json(__('Error')),
+                        data?.message || @json(__('Payment could not be initialized. Try again or contact support.')),
+                        "error"
+                    );
+                    return;
+                }
+
+                clientSecret = data.clientSecret;
+            } catch (e) {
+                Swal.fire(@json(__('Error')), @json(__('Network error. Check your connection and try again.')), "error");
+            }
         }
 
         initPayment();
@@ -341,6 +369,11 @@
                 $.ajax({
                     url: "{{ route('checkout.place-order') }}",
                     method: "POST",
+                    dataType: "json",
+                    headers: {
+                        Accept: "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
                     data: {
                         _token: "{{ csrf_token() }}",
                         payment_intent_id: result.paymentIntent.id,

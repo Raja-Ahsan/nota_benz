@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('billing_zip');
             $table->string('billing_country');
             $table->string('shipping_name')->nullable();
-            $table->string('shipping_email')->nullable()->unique();
+            $table->string('shipping_email')->nullable();
             $table->string('shipping_phone')->nullable();
             $table->string('shipping_address')->nullable();
             $table->string('shipping_city')->nullable();

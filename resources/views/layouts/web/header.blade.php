@@ -18,8 +18,8 @@
         <div class="flex flex-1 items-center justify-end gap-6 lg:gap-12 xl:gap-20">
             {{-- Desktop nav --}}
             <nav class="hidden items-center gap-6 lg:flex xl:gap-10 manrope-font" aria-label="{{ __('Primary') }}">
-                <a href="#" class="desktop-nav-link">Identity</a>
-                <a href="#" class="desktop-nav-link">Journey</a>
+                <a href="{{ route('about') }}" class="desktop-nav-link">About</a>
+                <a href="{{ route('journey') }}" class="desktop-nav-link">Journey</a>
                 <a href="#" class="desktop-nav-link">Stories</a>
                 <a href="{{ route('artifacts.index') }}" class="desktop-nav-link">Artifacts</a>
             </nav>
@@ -59,8 +59,8 @@
         aria-label="{{ __('Mobile navigation') }}"
     >
         <nav class="main-container px-4 py-4 sm:px-6 lg:px-8 manrope-font">
-            <a href="#" class="mobile-nav-link">Identity</a>
-            <a href="#" class="mobile-nav-link">Journey</a>
+            <a href="{{ route('about') }}" class="mobile-nav-link">About</a>
+            <a href="{{ route('journey') }}" class="mobile-nav-link">Journey</a>
             <a href="#" class="mobile-nav-link">Stories</a>
             <a href="#" class="mobile-nav-link">Artifacts</a>
             <a

@@ -41,8 +41,8 @@
                         <p class="style-inter mb-[6px] text-[13px] font-medium uppercase tracking-[0.5px] text-[#666666]">
                             Order number
                         </p>
-                        <p class="style-poppines text-[24px] font-bold text-[var(--primary-color)] md:text-[28px]">
-                            #{{ $order->id }}
+                        <p class="style-poppines break-all text-[22px] font-bold leading-snug text-[var(--primary-color)] md:text-[26px]">
+                            {{ $order->publicOrderNumber() }}
                         </p>
                         <p class="style-inter mt-[12px] text-[16px] font-semibold text-[var(--text-color)]">
                             Total paid:
