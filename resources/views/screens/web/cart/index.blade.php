@@ -159,17 +159,10 @@
                         </div>
 
                         <div class="mt-6 space-y-3">
-                            @auth
                             <a href="{{ route('checkout') }}" class="btn btn-primary btn-hover flex w-full justify-center py-3 text-center">
                                 <i class="fa-solid fa-credit-card me-2" aria-hidden="true"></i>
-                                {{ __('Proceed to checkout') }}
+                                {{ __('Checkout') }}
                             </a>
-                            @else
-                            <a href="{{ route('login') }}" class="btn btn-primary flex w-full justify-center py-3 text-center">
-                                <i class="fa-solid fa-right-to-bracket me-2" aria-hidden="true"></i>
-                                {{ __('Log in to checkout') }}
-                            </a>
-                            @endauth
                             <a href="{{ route('artifacts.index') }}" class="btn border-btn flex w-full justify-center py-3 text-center">
                                 {{ __('Continue shopping') }}
                             </a>

@@ -35,6 +35,11 @@
                             <div class="{{ $cardWrap }}">
                                 <h2 class="{{ $sectionTitle }}">{{ __('Billing information') }}</h2>
                                 <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                                    @guest
+                                        <p class="md:col-span-2 text-sm leading-relaxed text-neutral-600">
+                                            {{ __('We’ll use your email for order updates. If you don’t have an account yet, we’ll create one for you and send login details to this address.') }}
+                                        </p>
+                                    @endguest
                                     <div>
                                         <label for="name" class="{{ $labelClass }}">{{ __('Full name') }}</label>
                                         <input
@@ -65,7 +70,7 @@
                                             type="tel"
                                             id="phone"
                                             name="billing_phone"
-                                            value="{{ old('billing_phone', $user->phone ?? '') }}"
+                                            value="{{ old('billing_phone') }}"
                                             class="{{ $inputClass }}"
                                             placeholder="{{ __('Enter phone') }}"
                                             required
@@ -314,7 +319,7 @@
                 } catch (e) {
                     Swal.fire(
                         @json(__('Error')),
-                        @json(__('Checkout could not start. Please refresh the page or sign in again.')),
+                        @json(__('Checkout could not start. Please refresh the page and try again.')),
                         "error"
                     );
                     return;
@@ -398,6 +403,17 @@
                         btnLabel.textContent = @json(__('Placing order…'));
                     },
                     success: function (res) {
+                        if (res.login_required && res.redirect_url) {
+                            Swal.fire({
+                                title: @json(__('Order placed')),
+                                text: res.message || @json(__('Sign in to view your order confirmation.')),
+                                icon: "success",
+                                confirmButtonText: @json(__('Continue')),
+                            }).then(() => {
+                                window.location.href = res.redirect_url;
+                            });
+                            return;
+                        }
                         Swal.fire({
                             title: @json(__('Order placed')),
                             text: @json(__('Your order has been placed successfully.')),

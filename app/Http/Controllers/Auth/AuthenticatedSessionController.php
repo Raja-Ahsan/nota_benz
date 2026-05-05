@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,21 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('admin.dashboard');
+        $postOrderId = $request->session()->pull('post_checkout_order_id');
+        if ($postOrderId !== null) {
+            $order = Order::query()->find($postOrderId);
+            if ($order && (int) $order->user_id === (int) Auth::id()) {
+                return redirect()->route('order.success', $order);
+            }
+        }
+
+        $user = Auth::user();
+
+        if ($user->hasRole(config('roles.admin'))) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 
     /**

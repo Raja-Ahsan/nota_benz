@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\GuestCheckoutWelcomeMail;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -15,7 +21,7 @@ class CheckoutController extends Controller
     public function index()
     {
         $checkout = Cart::current();
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (! $checkout || $checkout->items->isEmpty()) {
             return redirect()
@@ -30,9 +36,14 @@ class CheckoutController extends Controller
 
     public function success(Order $order)
     {
-        if ($order->user_id !== auth()->id()) {
+        if (! Auth::check()) {
             abort(403);
         }
+
+        if ((int) $order->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
         $order->load('items.product');
 
         return view('screens.web.order-success.index', compact('order'));
@@ -52,8 +63,8 @@ class CheckoutController extends Controller
             'amount' => (int) ($cart->total() * 100),
             'currency' => 'usd',
             'metadata' => [
-                'user_id' => auth()->id(),
-                'cart_id' => $cart->id,
+                'user_id' => Auth::check() ? (string) Auth::id() : 'guest',
+                'cart_id' => (string) $cart->id,
             ],
         ]);
 
@@ -101,11 +112,30 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Cart empty'], 422);
         }
 
+        $newAccountPassword = null;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+        } else {
+            $email = mb_strtolower(trim($validated['billing_email']));
+            $user = User::query()->whereRaw('LOWER(email) = ?', [$email])->first();
+
+            if (! $user) {
+                $newAccountPassword = Str::password(14, true, true, true, false);
+                $user = User::create([
+                    'name' => $validated['billing_name'],
+                    'email' => $email,
+                    'password' => $newAccountPassword,
+                    'role' => config('roles.user'),
+                ]);
+            }
+        }
+
         DB::beginTransaction();
 
         try {
             $order = Order::create([
-                'user_id' => auth()->id(),
+                'user_id' => $user->id,
                 'total_qty' => $cart->items->sum('qty'),
                 'tax' => 0,
                 'discount' => 0,
@@ -149,11 +179,6 @@ class CheckoutController extends Controller
             $cart->delete();
 
             DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'order_id' => $order->id,
-            ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -162,5 +187,42 @@ class CheckoutController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+
+        if ($newAccountPassword !== null) {
+            try {
+                Mail::to($user->email)->send(new GuestCheckoutWelcomeMail($user, $newAccountPassword, $order));
+            } catch (\Throwable $e) {
+                Log::error('Guest checkout welcome email failed', [
+                    'message' => $e->getMessage(),
+                    'user_id' => $user->id,
+                    'order_id' => $order->id,
+                ]);
+            }
+        }
+
+        if (Auth::check()) {
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+            ]);
+        }
+
+        if ($newAccountPassword !== null) {
+            Auth::login($user);
+
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+            ]);
+        }
+
+        $request->session()->put('post_checkout_order_id', $order->id);
+
+        return response()->json([
+            'success' => true,
+            'login_required' => true,
+            'redirect_url' => route('login'),
+            'message' => __('Your order is placed. Sign in with your existing password to view your confirmation.'),
+        ]);
     }
 }
