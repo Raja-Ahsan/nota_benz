@@ -1,9 +1,10 @@
-function ajaxDelete(buttonSelector, itemSelector, dataTableId = null) {
+function ajaxDelete(buttonSelector, itemSelector, dataTableId = null, rowRemovalTableSelector = null) {
     $(document).on('click', buttonSelector, function(e) {
         e.preventDefault();
 
         let form = $(this).closest('form');
         let formData = form.serialize();
+        const $row = form.closest(itemSelector);
 
         Swal.fire({
             title: 'Are you sure?',
@@ -24,10 +25,15 @@ function ajaxDelete(buttonSelector, itemSelector, dataTableId = null) {
                     type: 'DELETE',
                     data: formData,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        Accept: 'application/json',
                     },
                     success: function(response) {
-                        form.closest(itemSelector).remove();
+                        if (rowRemovalTableSelector && $.fn.DataTable.isDataTable($(rowRemovalTableSelector))) {
+                            $(rowRemovalTableSelector).DataTable().row($row).remove().draw(false);
+                        } else {
+                            $row.remove();
+                        }
                         Swal.fire({
                             icon: 'success',
                             title: 'Deleted!',
@@ -40,11 +46,15 @@ function ajaxDelete(buttonSelector, itemSelector, dataTableId = null) {
                             $(dataTableId).DataTable().ajax.reload(null, false);
                         }
                     },
-                    error: function() {
+                    error: function(xhr) {
+                        let msg = 'Unable to delete this record.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: 'Unable to delete this record.',
+                            text: msg,
                         });
                     }
                 });

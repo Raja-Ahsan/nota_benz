@@ -23,7 +23,7 @@
                             {{ __('Hi :name,', ['name' => $user->name]) }}
                         </p>
                         <p style="margin:0 0 16px;font-size:15px;color:#334155;">
-                            {{ __('We created an account for you so you can track orders and manage your profile. Your temporary password is below—please sign in and change it as soon as you can.') }}
+                            {{ __('We created an account for you so you can track orders and manage your profile. Your temporary password is below you can sign in and change it.') }}
                         </p>
 
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0;border-collapse:collapse;background-color:#f1f5f9;border-radius:6px;">
@@ -48,10 +48,6 @@
                                 </td>
                             </tr>
                         </table>
-
-                        <p style="margin:16px 0 0;font-size:13px;color:#64748b;">
-                            {{ __('For security, use “Forgot password” on the sign-in page if you prefer to set your own password, or update it from your profile after logging in.') }}
-                        </p>
                     </td>
                 </tr>
                 <tr>

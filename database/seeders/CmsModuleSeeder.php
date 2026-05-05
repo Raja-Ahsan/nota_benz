@@ -28,7 +28,8 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-        $users = CmsModule::updateOrCreate(
+        /* One row only: same route_name must not be updateOrCreate’d twice (second pass set parent_id = own id → hidden from sidebar). */
+        CmsModule::updateOrCreate(
             ['route_name' => 'users.index'],
             [
                 'name' => 'Users',
@@ -59,17 +60,6 @@ class CmsModuleSeeder extends Seeder
                 'sort_order' => 4,
                 'status' => 'active',
                 'parent_id' => 0,
-            ]
-        );
-
-        CmsModule::updateOrCreate(
-            ['route_name' => 'users.index'],
-            [
-                'name' => 'All Users',
-                'icon' => 'fa-solid fa-list-ul',
-                'sort_order' => 1,
-                'status' => 'active',
-                'parent_id' => $users->id,
             ]
         );
 

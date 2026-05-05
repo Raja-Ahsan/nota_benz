@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -74,42 +75,58 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function storeAfterPayment(Request $request)
+    public function storeAfterPayment(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'payment_intent_id' => 'required|string',
             'billing_name' => 'required|string|max:255',
             'billing_email' => 'required|email',
-            'billing_phone' => 'required|string|max:20',
+            'billing_phone' => ['required', 'string', 'max:22', 'regex:/^[0-9+\-\s()]{7,22}$/'],
             'billing_address' => 'required|string',
             'billing_city' => 'required|string',
             'billing_state' => 'required|string',
-            'billing_zip' => 'required|string',
+            'billing_zip' => ['required', 'string', 'regex:/^[0-9]{3,10}$/'],
             'billing_country' => 'required|string',
             'shipping_name' => 'nullable|string|max:255',
             'shipping_email' => 'nullable|email|max:255',
-            'shipping_phone' => 'nullable|string|max:20',
+            'shipping_phone' => 'nullable|string|max:22',
             'shipping_address' => 'nullable|string',
             'shipping_city' => 'nullable|string',
             'shipping_state' => 'nullable|string',
-            'shipping_zip' => 'nullable|string',
+            'shipping_zip' => ['nullable', 'string', 'regex:/^[0-9]{3,10}$/'],
             'shipping_country' => 'nullable|string',
+        ], [
+            'billing_zip.regex' => __('ZIP / postal code must contain digits only (3–10 characters).'),
+            'shipping_zip.regex' => __('Shipping ZIP must contain digits only (3–10 characters).'),
+            'billing_phone.regex' => __('Enter a valid phone number.'),
         ]);
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        $intent = PaymentIntent::retrieve($request->payment_intent_id);
+        $intent = PaymentIntent::retrieve($validated['payment_intent_id']);
 
         if ($intent->status !== 'succeeded') {
             return response()->json([
-                'message' => 'Payment not completed',
+                'message' => __('Payment not completed'),
             ], 422);
+        }
+
+        $existingOrder = Order::query()
+            ->where('payment_intent_id', $intent->id)
+            ->first();
+
+        if ($existingOrder) {
+            $existingOrder->loadMissing('user');
+
+            return $this->checkoutSuccessResponse($request, $existingOrder, null);
         }
 
         $cart = Cart::current();
 
         if (! $cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Cart empty'], 422);
+            return response()->json([
+                'message' => __('Cart empty — if you were charged, contact support with your payment receipt.'),
+            ], 422);
         }
 
         $newAccountPassword = null;
@@ -183,7 +200,7 @@ class CheckoutController extends Controller
             DB::rollBack();
 
             return response()->json([
-                'message' => 'Order failed',
+                'message' => __('Order failed'),
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -200,6 +217,13 @@ class CheckoutController extends Controller
             }
         }
 
+        return $this->checkoutSuccessResponse($request, $order, $newAccountPassword);
+    }
+
+    private function checkoutSuccessResponse(Request $request, Order $order, ?string $newAccountPassword): JsonResponse
+    {
+        $order->loadMissing('user');
+
         if (Auth::check()) {
             return response()->json([
                 'success' => true,
@@ -208,7 +232,7 @@ class CheckoutController extends Controller
         }
 
         if ($newAccountPassword !== null) {
-            Auth::login($user);
+            Auth::login($order->user);
 
             return response()->json([
                 'success' => true,
