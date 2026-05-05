@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\CmsModule;
 use App\Models\CmsModulePermission;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CmsModulePermissionsSeeder extends Seeder
@@ -19,12 +18,10 @@ class CmsModulePermissionsSeeder extends Seeder
         $permissions = [
             'admin' => [
                 'admin.dashboard' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-                'users-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'users.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'products-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'product-categories.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'products.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
-                'orders-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'orders.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
 
             ],
@@ -32,7 +29,6 @@ class CmsModulePermissionsSeeder extends Seeder
             'user' => [
                 'admin.dashboard' => ['is_view' => 1, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
                 'users-module' => ['is_view' => 0, 'is_add' => 0, 'is_update' => 0, 'is_delete' => 0],
-                'orders-module' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
                 'orders.index' => ['is_view' => 1, 'is_add' => 1, 'is_update' => 1, 'is_delete' => 1],
             ],
         ];
@@ -41,7 +37,9 @@ class CmsModulePermissionsSeeder extends Seeder
             foreach ($modules as $route => $perm) {
 
                 $module = CmsModule::where('route_name', $route)->first();
-                if (!$module) continue;
+                if (! $module) {
+                    continue;
+                }
 
                 CmsModulePermission::create([
                     'role' => $role,

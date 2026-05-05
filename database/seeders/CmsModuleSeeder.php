@@ -29,7 +29,7 @@ class CmsModuleSeeder extends Seeder
         );
 
         $users = CmsModule::updateOrCreate(
-            ['route_name' => 'users-module'],
+            ['route_name' => 'users.index'],
             [
                 'name' => 'Users',
                 'icon' => 'fa-solid fa-users',
@@ -50,16 +50,17 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-        $orders = CmsModule::firstOrCreate([
-            'route_name' => 'orders-module'
-        ], [
-            'name' => 'Orders',
-            'icon' => 'fa-solid fa-list-ul',
-            'sort_order' => 4,
-            'status' => 'active',
-            'parent_id' => 0,
-        ]);
-
+        /** Direct link to order list (same pattern as Dashboard → admin.dashboard). Not a fake "orders-module" slug. */
+        CmsModule::updateOrCreate(
+            ['route_name' => 'orders.index'],
+            [
+                'name' => 'Orders',
+                'icon' => 'fa-solid fa-list-ul',
+                'sort_order' => 4,
+                'status' => 'active',
+                'parent_id' => 0,
+            ]
+        );
 
         CmsModule::updateOrCreate(
             ['route_name' => 'users.index'],
@@ -94,15 +95,13 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
-       
-
         $allowed = [
             'admin.dashboard',
-            'users-module', 'users.index',
+            'users.index',
             'products-module',
             'product-categories.index',
             'products.index',
-            'orders-module',
+            'orders.index',
         ];
 
         CmsModule::query()

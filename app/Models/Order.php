@@ -9,12 +9,12 @@ class Order extends Model
 {
     protected $guarded = ['id'];
 
-    /** Human-facing reference: NAB-YYYYMMDD-His-{id} (set on create). */
+    /** Human-facing reference: NAB-YYYYMMDD{id} (set on create; matches storefront / emails). */
     public static function makePublicOrderNumber(?Carbon $placedAt, int $orderId): string
     {
         $at = $placedAt ?? Carbon::now();
 
-        return 'NAB-'.$at->format('Ymd').'-'.$at->format('His').'-'.$orderId;
+        return 'NAB-'.$at->format('Ymd').$orderId;
     }
 
     public function publicOrderNumber(): string
