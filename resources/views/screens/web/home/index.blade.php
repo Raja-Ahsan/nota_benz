@@ -1,5 +1,5 @@
 @extends('layouts.web.master')
-
+@section('title', 'Home')
 @section('content')
 <main class="">
     {{-- Hero: video background; header (fixed) is visually on top of this section --}}

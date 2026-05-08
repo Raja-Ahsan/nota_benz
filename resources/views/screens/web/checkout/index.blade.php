@@ -1,6 +1,6 @@
 @extends('layouts.web.master')
 
-@section('title', __('Checkout'))
+@section('title', 'Checkout')
 
 @section('content')
     @php
