@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CheckoutController;
@@ -15,10 +16,15 @@ use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
 
 Route::get('/about', function () {
     return view('screens.web.about.index');
 })->name('about');
+
+Route::get('/carpediem', function () {
+    return view('screens.web.carpe-diem.index');
+})->name('carpediem');
 
 Route::get('/journey', function () {
     return view('screens.web.journey.index');

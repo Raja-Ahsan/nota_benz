@@ -1,5 +1,7 @@
 @extends('layouts.web.master')
 
+@section('title', 'Cart')
+
 @section('content')
 <main class="inner-page cart-page bg-[var(--white-color)]">
     <section class="inner-banner inner-banner--compact flex items-center justify-center text-center">
