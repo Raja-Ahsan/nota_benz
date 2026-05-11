@@ -5,7 +5,7 @@
             href="{{ url('/') }}"
             class="">
             @if (request()->routeIs('home') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset')
-            || request()->routeIs('carpe-diem'))
+            || request()->routeIs('carpe-diem') || request()->routeIs('artifacts.index') || request()->routeIs('artifacts.show'))
             <img src="{{ asset('assets/images/logo.png') }}" alt="Logo"
                 width="180"
                 height="40"
