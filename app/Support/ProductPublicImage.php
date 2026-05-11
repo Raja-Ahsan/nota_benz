@@ -6,19 +6,15 @@ use Illuminate\Http\UploadedFile;
 
 class ProductPublicImage
 {
-    /** Relative path under `public/` (e.g. uploads/products/abc.jpg). Use with asset(). */
+    /**
+     * Store on the `public` disk under `products/` (same pattern as blogs: storage/app/public → /storage/…).
+     * Returns the path to persist on `product_images.image` (e.g. products/abc.jpg).
+     */
     public static function store(UploadedFile $file): string
     {
-        $relativeDir = 'uploads/products';
-        $absoluteDir = public_path($relativeDir);
-        if (! is_dir($absoluteDir)) {
-            mkdir($absoluteDir, 0755, true);
-        }
-
         $safe = preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
-        $filename = uniqid('', true).'_'.$safe;
-        $file->move($absoluteDir, $filename);
+        $name = uniqid('', true).'_'.$safe;
 
-        return $relativeDir.'/'.$filename;
+        return $file->storeAs('products', $name, 'public');
     }
 }
