@@ -6,8 +6,17 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header card-no-border text-end">
-                        <div class="card-header-right-icon"></div>
+                    <div class="card-header card-no-border d-flex flex-wrap justify-content-end align-items-center gap-2">
+                        <div class="card-header-right-icon">
+                            <button
+                                type="button"
+                                class="btn btn-primary f-w-500"
+                                data-bs-toggle="modal"
+                                data-bs-target="#categoryCreateModal"
+                            >
+                                <i class="fa-solid fa-plus pe-2"></i>{{ __('Add category') }}
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body pt-0 px-0">
                         <div class="list-product user-list-table">
@@ -23,60 +32,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($categories as $category)
-                                            @php
-                                                $statusBadge =
-                                                    $category->status === 'active'
-                                                        ? 'badge-light-success'
-                                                        : 'badge-light-secondary';
-                                            @endphp
-                                            <tr class="product-removes inbox-data" data-category-id="{{ $category->id }}">
-                                                <td class="category-name">{{ $category->name }}</td>
-                                                <td class="category-slug">
-                                                    <code class="text-reset">{{ $category->slug }}</code>
-                                                </td>
-                                                <td class="category-status">
-                                                    <span class="badge {{ $statusBadge }}">{{ ucfirst($category->status) }}</span>
-                                                </td>
-                                                <td>
-                                                    <div class="common-align gap-2 justify-content-start">
-                                                        <a
-                                                            class="square-white"
-                                                            href="{{ route('artifacts.index', ['category_id' => $category->id]) }}"
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            title="{{ __('View on storefront') }}"
-                                                        >
-                                                            <span><i class="fa-solid fa-eye"></i></span>
-                                                        </a>
-                                                        <button
-                                                            type="button"
-                                                            class="square-white js-category-edit border-0 p-0"
-                                                            title="{{ __('Edit') }}"
-                                                            data-update-url="{{ route('product-categories.update', $category) }}"
-                                                            data-name="{{ $category->name }}"
-                                                            data-slug="{{ $category->slug }}"
-                                                            data-status="{{ $category->status }}"
-                                                        >
-                                                            <span><i class="fa-solid fa-pen"></i></span>
-                                                        </button>
-                                                        <form
-                                                            action="{{ route('product-categories.destroy', $category) }}"
-                                                            method="POST"
-                                                            class="d-inline"
-                                                        >
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button
-                                                                type="submit"
-                                                                class="square-white border-0 js-category-delete"
-                                                                title="{{ __('Delete') }}"
-                                                            >
-                                                                <span><i class="fa-solid fa-trash"></i></span>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            @include('screens.admin.product-categories.partials.table-row', ['category' => $category])
                                         @empty
                                             <tr>
                                                 <td colspan="4" class="text-center">
@@ -90,6 +46,56 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Create category --}}
+    <div class="modal fade" id="categoryCreateModal" tabindex="-1" aria-labelledby="categoryCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryCreateModalLabel">{{ __('Add category') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
+                </div>
+                <form id="category-create-form" action="{{ route('product-categories.store') }}" method="POST" autocomplete="off">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label f-w-500" for="category-create-name">{{ __('Name') }} <span class="text-danger">*</span></label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="category-create-name"
+                                name="name"
+                                required
+                                maxlength="255"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label f-w-500" for="category-create-slug">{{ __('Slug') }}</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="category-create-slug"
+                                name="slug"
+                                maxlength="255"
+                                placeholder="{{ __('Leave empty to auto-generate from name') }}"
+                            />
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label f-w-500" for="category-create-status">{{ __('Status') }}</label>
+                            <select class="form-select" id="category-create-status" name="status" required>
+                                <option value="active">{{ __('Active') }}</option>
+                                <option value="inactive">{{ __('Inactive') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -167,6 +173,80 @@
                 $('#category-slug').val(btn.data('slug'));
                 $('#category-status').val(btn.data('status'));
                 $('#crudModal').modal('show');
+            });
+
+            $('#category-create-form').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var submitBtn = form.find('button[type="submit"]');
+                var btnText = submitBtn.text();
+                var fd = new FormData(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    beforeSend: function() {
+                        submitBtn.prop('disabled', true).text(@json(__('Saving...')));
+                    },
+                    success: function(res) {
+                        submitBtn.prop('disabled', false).text(btnText);
+                        var table = $('#categories-table').DataTable();
+                        $('#categories-table tbody tr').has('td[colspan]').remove();
+                        var $row = $(String(res.html).trim());
+                        table.row.add($row[0]).draw(false);
+                        form[0].reset();
+                        $('#categoryCreateModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: res.message || @json(__('Created successfully.')),
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    },
+                    error: function(xhr) {
+                        submitBtn.prop('disabled', false).text(btnText);
+                        if (xhr.status === 422) {
+                            var response = xhr.responseJSON;
+                            form.find('.invalid-feedback').remove();
+                            form.find('.is-invalid').removeClass('is-invalid');
+                            if (response.success === false && response.message) {
+                                Swal.fire({ icon: 'error', title: 'Error!', text: response.message });
+                            }
+                            var globalErrors = [];
+                            if (response.errors) {
+                                $.each(response.errors, function(key, messages) {
+                                    var input = form.find('[name="' + key + '"]');
+                                    if (input.length) {
+                                        input.addClass('is-invalid');
+                                        input.after('<div class="invalid-feedback d-block">' + messages[0] + '</div>');
+                                    } else {
+                                        globalErrors.push(messages[0]);
+                                    }
+                                });
+                            }
+                            if (globalErrors.length > 0) {
+                                Swal.fire({ icon: 'error', title: 'Validation Error', html: globalErrors.join('<br>') });
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text:
+                                    xhr.responseJSON && xhr.responseJSON.message
+                                        ? xhr.responseJSON.message
+                                        : @json(__('Something went wrong!')),
+                            });
+                        }
+                    },
+                });
             });
 
             window.updateCategoryRow = function(data) {

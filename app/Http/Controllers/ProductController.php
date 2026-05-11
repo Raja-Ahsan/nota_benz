@@ -128,7 +128,7 @@ class ProductController extends Controller
             'from_price' => 'nullable|numeric|min:0',
             'to_price' => 'nullable|numeric|min:0',
             'images' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif',
+            'images.*' => $this->permissiveProductImageRules(),
         ]);
 
         $type = ProductType::query()->findOrFail($base['product_type_id']);
@@ -199,7 +199,7 @@ class ProductController extends Controller
             'from_price' => 'nullable|numeric|min:0',
             'to_price' => 'nullable|numeric|min:0',
             'images' => 'nullable|array',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp,gif',
+            'images.*' => $this->permissiveProductImageRules(),
         ]);
 
         if ($type->slug === 'simple') {
@@ -252,14 +252,6 @@ class ProductController extends Controller
             }
 
             if ($newGalleryFiles !== []) {
-                $maxGallery = 5;
-                $existingGalleryCount = $product->images()->whereNull('product_attribute_item_id')->whereNull('product_variation_id')->count();
-                if ($existingGalleryCount + count($newGalleryFiles) > $maxGallery) {
-                    throw ValidationException::withMessages([
-                        'images' => ["You can have at most {$maxGallery} gallery images (including existing)."],
-                    ]);
-                }
-
                 $sortOrder = (int) ($product->images()
                     ->whereNull('product_attribute_item_id')
                     ->whereNull('product_variation_id')
@@ -372,7 +364,7 @@ class ProductController extends Controller
             'variation_rows' => ['required', 'array', 'min:1'],
             'variation_rows.*.price' => ['required', 'numeric', 'min:0'],
             'variation_rows.*.options' => ['required', 'array'],
-            'variation_rows.*.image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif'],
+            'variation_rows.*.image' => $this->permissiveProductImageRules(),
         ]);
 
         $rows = $request->input('variation_rows', []);
@@ -529,6 +521,39 @@ class ProductController extends Controller
                 @unlink($full);
             }
         }
+    }
+
+    /**
+     * Accept any image MIME (image/*) or raster files PHP can probe via getimagesize (covers many RAW/HEIC cases).
+     *
+     * @return array<int, \Closure|string>
+     */
+    private function permissiveProductImageRules(): array
+    {
+        return [
+            'nullable',
+            'file',
+            function (string $attribute, mixed $value, \Closure $fail): void {
+                if (! $value instanceof UploadedFile || ! $value->isValid()) {
+                    return;
+                }
+                $mime = strtolower((string) $value->getMimeType());
+                if (str_starts_with($mime, 'image/')) {
+                    return;
+                }
+                $path = $value->getRealPath();
+                if ($path && @getimagesize($path)) {
+                    return;
+                }
+                if ($path && function_exists('mime_content_type')) {
+                    $detected = @mime_content_type($path);
+                    if (is_string($detected) && str_starts_with(strtolower($detected), 'image/')) {
+                        return;
+                    }
+                }
+                $fail(__('The file must be an image.'));
+            },
+        ];
     }
 
     private function uniqueProductSlug(string $source, ?int $ignoreProductId = null): string

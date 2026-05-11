@@ -103,7 +103,7 @@
                 '</div>' +
                 '<div class="col-xl-3 col-md-6 mb-3">' +
                 '<label class="form-label">Variant image</label>' +
-                '<input type="file" class="form-control" name="variation_rows[' + index + '][image]" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" />' +
+                '<input type="file" class="form-control" name="variation_rows[' + index + '][image]" accept="image/*" />' +
                 '</div>' +
                 '<div class="col-xl-1 col-md-12 mb-3 text-xl-end">' +
                 '<button type="button" class="btn btn-link text-danger btn-sm p-0 btn-remove-variation-row">Remove</button>' +
@@ -166,16 +166,14 @@
     window.existingGalleryCount = {{ (int) $galleryCount }};
     Dropzone.autoDiscover = false;
     const deleteGalleryUrlBase = @json($galleryDeleteBase);
-    const maxGalleryTotal = 5;
 
     $(document).ready(function() {
         window.existingCount = window.existingGalleryCount || 0;
-        window.allowedNew = maxGalleryTotal - window.existingCount;
 
         window.myDropzone = new Dropzone("#gallery_images", {
             url: "javascript:void(0)",
             autoProcessQueue: false,
-            maxFiles: window.allowedNew,
+            maxFiles: null,
             acceptedFiles: 'image/*',
             addRemoveLinks: true,
             clickable: true,
@@ -183,11 +181,6 @@
 
             init: function() {
                 const dz = this;
-
-                if (window.allowedNew <= 0) {
-                    dz.disable();
-                    $('#gallery_images').addClass('disabled');
-                }
 
                 dz.on("addedfile", function(file) {
                     const input = document.getElementById("galleryInput");
@@ -214,13 +207,6 @@
                         }
                     });
                     input.files = dt.files;
-                });
-
-                dz.on("maxfilesexceeded", function() {
-                    Swal.fire({
-                        icon: "error",
-                        title: "You can upload a maximum of " + maxGalleryTotal + " gallery images."
-                    });
                 });
             }
         });
@@ -255,13 +241,10 @@
                     if (res.success) {
                         wrapper.remove();
                         window.existingCount = Math.max(0, (window.existingCount || 0) - 1);
-                        window.allowedNew = maxGalleryTotal - window.existingCount;
                         if (window.myDropzone) {
-                            window.myDropzone.options.maxFiles = window.allowedNew;
-                            if (window.allowedNew > 0) {
-                                window.myDropzone.enable();
-                                $('#gallery_images').removeClass('disabled');
-                            }
+                            window.myDropzone.options.maxFiles = null;
+                            window.myDropzone.enable();
+                            $('#gallery_images').removeClass('disabled');
                         }
                         Swal.fire({
                             icon: "success",

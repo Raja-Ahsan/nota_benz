@@ -33,7 +33,7 @@
             </div>
             <div class="col-xl-3 col-md-6 mb-3">
                 <label class="form-label">{{ __('Variant image') }}</label>
-                <input type="file" class="form-control" name="variation_rows[{{ $index }}][image]" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" />
+                <input type="file" class="form-control" name="variation_rows[{{ $index }}][image]" accept="image/*" />
                 @if ($variation->image)
                     @php $optSrc = $variation->image->publicUrl(); @endphp
                     @if ($optSrc !== '')

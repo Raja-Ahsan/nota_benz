@@ -43,6 +43,14 @@ class ProductSeeder extends Seeder
             ]
         );
 
+        $taino = ProductCategory::updateOrCreate(
+            ['slug' => 'taino-collection'],
+            [
+                'name' => 'TAINO COLLECTION',
+                'status' => 'active',
+            ]
+        );
+
         $addImages = static function (int $productId, array $images): void {
             ProductImage::query()->where('product_id', $productId)->delete();
 
@@ -67,8 +75,8 @@ class ProductSeeder extends Seeder
                     'uploads/products/magsafe/01.avif',
                     'uploads/products/magsafe/02.avif',
                     'uploads/products/magsafe/03.avif',
-                    'uploads/products/magsafe/4.avif',
-                    'uploads/products/magsafe/5.avif',
+                    'uploads/products/magsafe/04.avif',
+                    'uploads/products/magsafe/05.avif',
                 ],
             ],
             [
@@ -100,6 +108,7 @@ class ProductSeeder extends Seeder
                     'uploads/products/crossbody/04.avif',
                 ],
             ],
+            // nota benz category products
             [
                 'name' => 'Insulated tumbler with a straw',
                 'slug' => 'tumbler',
@@ -142,6 +151,7 @@ class ProductSeeder extends Seeder
                     'uploads/products/heavy-shirt/04.jpg',
                 ],
             ],
+
             [
                 'name' => 'Men’s slip-on canvas shoes',
                 'slug' => 'canvas-shoes',

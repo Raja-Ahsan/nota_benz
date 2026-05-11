@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProductCategory;
+use App\Support\UniqueSlug;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,6 +18,48 @@ class ProductCategoryController extends Controller
             ->get();
 
         return view('screens.admin.product-categories.index', get_defined_vars());
+    }
+
+    public function store(Request $request): JsonResponse|Response
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => ['nullable', 'string', 'max:255'],
+            'status' => 'required|string|in:active,inactive',
+        ]);
+
+        $slugRaw = trim((string) ($validated['slug'] ?? ''));
+        $slug = $slugRaw !== ''
+            ? UniqueSlug::generate(ProductCategory::class, 'slug', $slugRaw)
+            : UniqueSlug::generate(ProductCategory::class, 'slug', $validated['name']);
+
+        $category = ProductCategory::create([
+            'name' => $validated['name'],
+            'slug' => $slug,
+            'status' => $validated['status'],
+        ]);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            $html = view('screens.admin.product-categories.partials.table-row', [
+                'category' => $category->fresh(),
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Category created successfully.'),
+                'data' => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'status' => $category->status,
+                ],
+                'html' => $html,
+            ]);
+        }
+
+        return redirect()
+            ->route('product-categories.index')
+            ->with('success', __('Category created successfully.'));
     }
 
     public function update(Request $request, ProductCategory $category): JsonResponse|Response

@@ -85,7 +85,7 @@
                 '</div>' +
                 '<div class="col-xl-3 col-md-6 mb-3">' +
                 '<label class="form-label">Variant image</label>' +
-                '<input type="file" class="form-control" name="variation_rows[' + index + '][image]" accept="image/jpeg,image/png,image/jpg,image/webp,image/gif" />' +
+                '<input type="file" class="form-control" name="variation_rows[' + index + '][image]" accept="image/*" />' +
                 '</div>' +
                 '<div class="col-xl-1 col-md-12 mb-3 text-xl-end">' +
                 '<button type="button" class="btn btn-link text-danger btn-sm p-0 btn-remove-variation-row">Remove</button>' +
@@ -151,7 +151,7 @@
         window.myDropzone = new Dropzone("#gallery_images", {
             url: "javascript:void(0)",
             autoProcessQueue: false,
-            maxFiles: 5,
+            maxFiles: null,
             acceptedFiles: 'image/*',
             addRemoveLinks: true,
             clickable: true,
@@ -159,14 +159,6 @@
 
             init: function() {
                 const dz = this;
-
-                dz.on("maxfilesexceeded", function() {
-                    Swal.fire({
-                        icon: "error",
-                        title: "You can upload a maximum of 5 gallery images.",
-                        showConfirmButton: true
-                    });
-                });
 
                 dz.on("addedfile", function(file) {
                     const input = document.getElementById("galleryInput");

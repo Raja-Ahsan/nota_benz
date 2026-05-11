@@ -53,23 +53,10 @@ $("#image").on("change", function () {
     }
 });
 
-// multiple image upload
-const max_images = 5;
-
+// multiple image upload (no hard cap; Dropzone on #gallery_images handles product admin)
 $("#gallery_images").on("change", function () {
     const files = this.files;
     $("#galleryPreview").html("");
-
-    if (files.length > max_images) {
-        Swal.fire({
-            icon: "error",
-            title: "Too many images",
-            text: `You can upload maximum ${max_images} images only`,
-        });
-
-        this.value = "";
-        return;
-    }
 
     Array.from(files).forEach((file) => {
         if (!file.type.startsWith("image/")) return;
