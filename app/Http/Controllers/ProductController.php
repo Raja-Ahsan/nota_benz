@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -516,9 +517,16 @@ class ProductController extends Controller
                 continue;
             }
             $path = str_replace('\\', '/', ltrim($raw, '/'));
-            $full = public_path($path);
-            if (is_file($full)) {
-                @unlink($full);
+            if (str_starts_with($path, 'uploads/')) {
+                $full = public_path($path);
+                if (is_file($full)) {
+                    @unlink($full);
+                }
+
+                continue;
+            }
+            if ($path !== '') {
+                Storage::disk('public')->delete($path);
             }
         }
     }

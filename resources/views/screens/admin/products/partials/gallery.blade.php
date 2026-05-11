@@ -1,7 +1,7 @@
 {{--
     $readonly bool
     $galleryImages optional collection of ProductImage (main gallery: product_attribute_item_id null)
-    Uses ProductImage::publicUrl() for src (paths under public/).
+    Uses ProductImage::publicUrl() for src (legacy uploads/… or storage products/…).
 --}}
 @php
     $ro = ! empty($readonly);
