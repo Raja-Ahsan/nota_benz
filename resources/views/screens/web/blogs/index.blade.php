@@ -1,6 +1,6 @@
 @extends('layouts.web.master')
 
-@section('title', __('Journal'))
+@section('title', 'Jumps')
 
 @push('body-class')
 inner-site

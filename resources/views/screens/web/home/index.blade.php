@@ -59,7 +59,7 @@
                     <a
                         href="{{ route('journey') }}"
                         class="btn btn-primary">
-                        Enter the journey
+                        Down the Rabbit Hole
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>
                     </a>
                     <a
