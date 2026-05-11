@@ -6,5 +6,8 @@ import './store-product-detail';
 import './artifacts-filter';
 import './main';
 
-import './bootstrap';
+
+window.Alpine = Alpine;
+
+Alpine.start();
 
