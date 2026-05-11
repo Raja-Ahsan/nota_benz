@@ -38,7 +38,7 @@
                     <label class="flex flex-col gap-1 text-sm font-medium text-gray-700">
                         {{ __('Category') }}
                         <select name="category_id" class="rounded border border-gray-300 px-3 py-2 text-base font-normal">
-                            <option value="">{{ __('All categories') }}</option>
+                            <option value="">{{ __('All products') }}</option>
                             @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}" @selected((string) request('category_id')===(string) $cat->id)>{{ $cat->name }}</option>
                             @endforeach
