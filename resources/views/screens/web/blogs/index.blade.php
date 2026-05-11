@@ -1,6 +1,7 @@
 @extends('layouts.web.master')
+<!-- blog page for jumps -->
 
-@section('title', __('Journal'))
+@section('title', 'Jumps')
 
 @push('body-class')
 inner-site
@@ -27,14 +28,11 @@ inner-site
                     <p class="manrope-font text-[10px] font-semibold uppercase tracking-[0.28em] text-white/60">
                         <a href="{{ route('home') }}" class="text-white/70 transition-colors hover:text-primary-color">{{ __('Home') }}</a>
                         <span class="mx-2 text-white/35" aria-hidden="true">/</span>
-                        <span class="text-white/90">{{ __('Journal') }}</span>
+                        <span class="text-white/90">Jumps</span>
                     </p>
                     <h1 class="syne-font text-[34px] font-extrabold uppercase leading-[1.05] tracking-tight text-white sm:text-[48px] md:text-[56px]">
-                        {{ __('Words in motion') }}
+                        Jumps
                     </h1>
-                    <p class="cormorant-font text-[17px] leading-relaxed text-white/85 sm:text-[20px]">
-                        {{ __('Essays, letters, and field notes — organized by theme. Choose a lane or read everything.') }}
-                    </p>
                 </div>
             </div>
         </section>
