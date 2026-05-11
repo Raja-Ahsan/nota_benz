@@ -1,4 +1,5 @@
 @extends('layouts.web.master')
+<!-- blog page for jumps -->
 
 @section('title', 'Jumps')
 
