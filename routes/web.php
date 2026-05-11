@@ -15,6 +15,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreController;
 use Illuminate\Support\Facades\Route;
+// web routes
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
