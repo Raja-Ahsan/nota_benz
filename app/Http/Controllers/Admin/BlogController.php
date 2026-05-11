@@ -153,8 +153,8 @@ class BlogController extends Controller
         return redirect()->route('blogs.index')->with('success', __('Blog updated.'));
     }
 
-    /** Summernote: JSON { url } for in-body images (toolbar / paste). */
-    public function uploadSummernoteImage(Request $request): JsonResponse
+    /** Quill / blog body: JSON { url } for in-body images. */
+    public function uploadBlogBodyImage(Request $request): JsonResponse
     {
         $request->validate([
             'image' => ['required', 'file', 'max:8192', 'mimes:jpeg,jpg,png,gif,webp,bmp,avif'],
@@ -162,8 +162,11 @@ class BlogController extends Controller
 
         $path = $request->file('image')->store('blog-editor', 'public');
 
+        /* Root-relative URL so images work on any host/port (e.g. localhost:8000 vs APP_URL localhost). */
+        $publicPath = ltrim(str_replace('\\', '/', $path), '/');
+
         return response()->json([
-            'url' => Storage::disk('public')->url($path),
+            'url' => '/storage/'.$publicPath,
         ]);
     }
 

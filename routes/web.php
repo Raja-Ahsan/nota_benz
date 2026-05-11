@@ -90,7 +90,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/blog-categories/{blogCategory}', [BlogCategoryController::class, 'update'])->name('blog-categories.update');
     Route::delete('/blog-categories/{blogCategory}', [BlogCategoryController::class, 'destroy'])->name('blog-categories.destroy');
 
-    Route::post('/blog-editor/image', [AdminBlogController::class, 'uploadSummernoteImage'])->name('blogs.summernote-upload-image');
+    Route::post('/blog-editor/image', [AdminBlogController::class, 'uploadBlogBodyImage'])->name('blogs.editor-image');
 
     Route::get('/blogs', [AdminBlogController::class, 'index'])->name('blogs.index');
     Route::get('/blogs/create', [AdminBlogController::class, 'create'])->name('blogs.create');

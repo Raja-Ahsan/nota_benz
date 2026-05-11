@@ -48,10 +48,10 @@
 
                 {{-- Subcopy --}}
                 <div class="space-y-1 font-sans text-[11px] text-white/50  md:text-[20px]">
-                    <p class="font-medium italic tracking-wide cormorant-font tracking-[1.25px]">NOTABENZ — A Story In Motion</p>
                     <p class="font-medium uppercase text-[14px] text-primary manrope-font tracking-[3.7px]">
-                        NOT A BRAND. A PERSPECTIVE.
+                        NOTABENZ - A PERSPECTIVE.
                     </p>
+                    <p class="font-medium italic tracking-wide cormorant-font tracking-[1.25px]">Not Because, But inSpite of</p>
                 </div>
 
                 {{-- CTAs --}}
@@ -114,11 +114,11 @@
     @php
     $storySlides = [
     [
-    'kicker_line' => '— ' . __('CHAPTER I') ,
+    'kicker_line' => '— ' . __('Take I') ,
     'kicker_title' => ' — ' . __('The Origin'),
     'line1' => __('Born from a '),
-    'em' => __('single desire'),
-    'line2' => __(' — to be undeniable.'),
+    'em' => __('single Mother'),
+    'line2' => __(' — on a Broken Home'),
     'body' => [
     __('Dominican roots. World-wandering spirit. A name that
     refuses the ordinary. NOTaBENZ did not arrive as a brand
@@ -127,10 +127,10 @@
     she was a writer. Between continents and contradictions, she
     found her voice — precise, poetic, and uncompromising.'),
     ],
-    'progress' => __('SCENE II') . ' — ' . __('CHAPTER I of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('Take I of IV'),
     ],
     [
-    'kicker_line' => '— ' . __('CHAPTER II') ,
+    'kicker_line' => '— ' . __('Take II') ,
     'kicker_title' => ' — ' . __('The Road'),
     'line1' => __(' 32 countries. One'),
     'em' => __(' relentless question.'),
@@ -143,10 +143,10 @@
     gathering. A study in how different people hold the same
     desire to be fully alive.'),
     ],
-    'progress' => __('SCENE II') . ' — ' . __('CHAPTER II of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('Take II of IV'),
     ],
     [
-    'kicker_line' => '— ' . __('CHAPTER III') ,
+    'kicker_line' => '— ' . __('Take III') ,
     'kicker_title' => ' — ' . __('The Art'),
     'line1' => __('Street art.
     Conceptual work. '),
@@ -159,10 +159,10 @@
     __('From urban murals to written essays, the creative philosophy
     is constant: '),
     ],
-    'progress' => __('SCENE II') . ' — ' . __('CHAPTER III of IV'),
+    'progress' => __('SCENE II') . ' — ' . __('Take III of IV'),
     ],
     [
-        'kicker_line' => '— ' . __('CHAPTER IV') ,
+        'kicker_line' => '— ' . __('Take IV') ,
     'kicker_title' => ' — ' . __('The Philosophy'),
     'line1' => __('Identity is not'),
     'em' => __(' given'),
@@ -176,7 +176,7 @@
     are either in it, or you are still deciding. Both are fine. The
     door is always open.'),
     ],
-    'progress' => __('SCENE 04') . ' — ' . __('CHAPTER IV of IV'),
+    'progress' => __('SCENE IV') . ' — ' . __('Take IV of IV'),
     ],
     ];
     @endphp
