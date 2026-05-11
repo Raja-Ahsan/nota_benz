@@ -1,12 +1,14 @@
 @extends('layouts.web.master')
 
 @section('title', 'Blogs')
-
+@push('body-class')
+inner-site
+@endpush
 @section('content')
 <section class="carpe-diem-banner">
-    <div class="container-fluid">
-        <h1>Carpe Diem</h1>
-    </div>
+    <video src="{{ asset('assets/images/video-01.mp4') }}" autoplay muted loop>
+        <source src="{{ asset('assets/images/video-01-frame.avif') }}" type="video/mp4">
+    </video>
 </section>
 <section class="parallax-reveal-section">
 </section>
@@ -44,6 +46,11 @@
             </div>
             <div class="swiper-pagination"></div>
         </div>
+    </div>
+</section>
+<sectionc class="scenes-sec">
+    <div class="container">
+        <h2>SCENES AND COMPOSITIONS</h2>
     </div>
 </section>
 @endsection

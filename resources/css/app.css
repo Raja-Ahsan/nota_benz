@@ -269,14 +269,9 @@
 }
 
 
-html,
-body {
-    overflow-x: hidden;
-}
 body {
     background-color: var(--white-color);
     font-family: var(--font-manrope);
-    position: relative;
 }
 
 .manrope-font {
@@ -506,25 +501,8 @@ body {
         font-size: 42px;
     }
 
-    .carpe-diem-banner {
-        background-image: url('../../public/assets/images/image-08.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        padding: 300px 0;
-    }
 
-    .parallax-reveal-section {
-        min-height: 70vh;
-        position: relative;
-        z-index: 1;
-    
-        background-image: url('../../public/assets/images/gallery/01.avif');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
+   
 
     .swiper {
         width: 100%;
@@ -547,6 +525,9 @@ body {
       }
       .animated-slider .swiper-slide {
         max-width: 570px;
+      }
+      .carpe-diem-banner {
+        
       }
 /* responsive */
 @media (max-width: 500px) {
@@ -1415,4 +1396,79 @@ input.auth-input:focus {
 
 .auth-verify-hint button {
     @apply text-[var(--primary-color)] underline decoration-[var(--primary-color)]/40 underline-offset-2 transition hover:decoration-[var(--primary-color)];
+}
+
+/* Journal post body (HTML from admin CKEditor) */
+.blog-body-content :where(p):not(:last-child) {
+    margin-bottom: 1.1em;
+}
+
+.blog-body-content :where(h2, h3, h4) {
+    margin-top: 1.25em;
+    margin-bottom: 0.6em;
+    font-weight: 700;
+    font-family: "Playfair Display", Georgia, serif;
+    letter-spacing: 0.01em;
+}
+
+.blog-body-content :where(h2) {
+    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+}
+
+.blog-body-content :where(h3) {
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+}
+
+.blog-body-content :where(ul, ol) {
+    margin: 0.75em 0 1em;
+    padding-left: 1.35em;
+}
+
+.blog-body-content :where(li)::marker {
+    color: color-mix(in srgb, var(--secondary-color) 85%, transparent);
+}
+
+.blog-body-content :where(blockquote) {
+    margin: 1.25em 0;
+    padding-left: 1rem;
+    border-left: 3px solid color-mix(in srgb, var(--secondary-color) 55%, transparent);
+    font-style: italic;
+    color: color-mix(in srgb, var(--text-color) 78%, transparent);
+}
+
+.blog-body-content :where(a) {
+    color: var(--secondary-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.blog-body-content :where(img, video, iframe) {
+    max-width: 100%;
+    height: auto;
+}
+
+.blog-body-content :where(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.95em;
+}
+
+.blog-body-content :where(th, td) {
+    border: 1px solid color-mix(in srgb, var(--text-color) 18%, transparent);
+    padding: 0.5rem 0.65rem;
+    text-align: start;
+}
+
+.blog-body-content :where(pre, code) {
+    font-family: ui-monospace, monospace;
+}
+
+.blog-body-content :where(pre) {
+    overflow-x: auto;
+    padding: 0.85em 1em;
+    border-radius: 0.25rem;
+    background: color-mix(in srgb, var(--text-color) 6%, transparent);
+    font-size: 0.92em;
+    margin: 1em 0;
 }

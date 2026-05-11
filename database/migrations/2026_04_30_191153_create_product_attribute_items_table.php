@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('product_attribute_id')->constrained('product_attributes')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->string('name');
-            $table->decimal('price', 10, 2); 
+            $table->decimal('price', 10, 2);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();

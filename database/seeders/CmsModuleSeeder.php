@@ -85,6 +85,39 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
+        $blogs = CmsModule::updateOrCreate(
+            ['route_name' => 'blogs-module'],
+            [
+                'name' => 'Blogs',
+                'icon' => 'fa-solid fa-book-open',
+                'sort_order' => 5,
+                'status' => 'active',
+                'parent_id' => 0,
+            ]
+        );
+
+        CmsModule::updateOrCreate(
+            ['route_name' => 'blog-categories.index'],
+            [
+                'name' => 'Blog categories',
+                'icon' => 'fa-solid fa-tags',
+                'sort_order' => 1,
+                'status' => 'active',
+                'parent_id' => $blogs->id,
+            ]
+        );
+
+        CmsModule::updateOrCreate(
+            ['route_name' => 'blogs.index'],
+            [
+                'name' => 'All posts',
+                'icon' => 'fa-solid fa-list-ul',
+                'sort_order' => 2,
+                'status' => 'active',
+                'parent_id' => $blogs->id,
+            ]
+        );
+
         $allowed = [
             'admin.dashboard',
             'users.index',
@@ -92,6 +125,9 @@ class CmsModuleSeeder extends Seeder
             'product-categories.index',
             'products.index',
             'orders.index',
+            'blogs-module',
+            'blog-categories.index',
+            'blogs.index',
         ];
 
         CmsModule::query()

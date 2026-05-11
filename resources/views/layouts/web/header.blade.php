@@ -5,7 +5,7 @@
             href="{{ url('/') }}"
             class="">
             @if (request()->routeIs('home') || request()->routeIs('login') || request()->routeIs('register') || request()->routeIs('password.request') || request()->routeIs('password.reset')
-            || request()->routeIs('carpediem'))
+            || request()->routeIs('carpe-diem'))
             <img src="{{ asset('assets/images/logo.png') }}" alt="Logo"
                 width="180"
                 height="40"
@@ -26,7 +26,7 @@
                 <a href="#" class="desktop-nav-link">Glitches</a>
                 <a href="{{ route('carpediem') }}" class="desktop-nav-link">Carpe Diem</a>
                 <a href="{{ route('artifacts.index') }}" class="desktop-nav-link">Artifacts</a>
-                <a href="{{ route('blog.index') }}" class="desktop-nav-link">Blogs</a>
+                <a href="{{ route('blog.index') }}" class="desktop-nav-link">Jumps</a>
             </nav>
             <a href="{{ route('cart.index') }}" class="cart-icon-wrapper inline-block no-underline" aria-label="{{ __('Shopping cart') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 105.5 126.1" preserveAspectRatio="xMinYMax meet" data-hook="svg-icon-1">
@@ -98,6 +98,7 @@
         <nav class="main-container px-4 py-4 sm:px-6 lg:px-8 manrope-font">
             <a href="{{ route('about') }}" class="mobile-nav-link">About</a>
             <a href="{{ route('journey') }}" class="mobile-nav-link">Journey</a>
+            <a href="{{ route('blog.index') }}" class="mobile-nav-link">{{ __('Blogs') }}</a>
             <a href="#" class="mobile-nav-link">Stories</a>
             <a href="{{ route('artifacts.index') }}" class="mobile-nav-link">Artifacts</a>
 

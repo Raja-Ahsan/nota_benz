@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BlogController;
@@ -17,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blogs/posts', [BlogController::class, 'posts'])->name('blog.posts');
+Route::get('/blogs/{slug}', [BlogController::class, 'show'])
+    ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
+    ->name('blog.show');
 
 Route::get('/about', function () {
     return view('screens.web.about.index');
@@ -61,6 +67,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
     Route::get('/categories', [ProductCategoryController::class, 'index'])->name('product-categories.index');
+    Route::post('/categories', [ProductCategoryController::class, 'store'])->name('product-categories.store');
     Route::put('/categories/{category}', [ProductCategoryController::class, 'update'])->name('product-categories.update');
     Route::delete('/categories/{category}', [ProductCategoryController::class, 'destroy'])->name('product-categories.destroy');
 
@@ -77,6 +84,20 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/product-variations', [ProductAttributeController::class, 'index'])->name('product-variations.index');
     Route::get('/product-variations/create', [ProductAttributeController::class, 'create'])->name('product-variations.create');
     Route::post('/product-variations', [ProductAttributeController::class, 'store'])->name('product-variations.store');
+
+    Route::get('/blog-categories', [BlogCategoryController::class, 'index'])->name('blog-categories.index');
+    Route::post('/blog-categories', [BlogCategoryController::class, 'store'])->name('blog-categories.store');
+    Route::put('/blog-categories/{blogCategory}', [BlogCategoryController::class, 'update'])->name('blog-categories.update');
+    Route::delete('/blog-categories/{blogCategory}', [BlogCategoryController::class, 'destroy'])->name('blog-categories.destroy');
+
+    Route::post('/blog-editor/image', [AdminBlogController::class, 'uploadSummernoteImage'])->name('blogs.summernote-upload-image');
+
+    Route::get('/blogs', [AdminBlogController::class, 'index'])->name('blogs.index');
+    Route::get('/blogs/create', [AdminBlogController::class, 'create'])->name('blogs.create');
+    Route::post('/blogs', [AdminBlogController::class, 'store'])->name('blogs.store');
+    Route::get('/blogs/{blog}/edit', [AdminBlogController::class, 'edit'])->name('blogs.edit');
+    Route::put('/blogs/{blog}', [AdminBlogController::class, 'update'])->name('blogs.update');
+    Route::delete('/blogs/{blog}', [AdminBlogController::class, 'destroy'])->name('blogs.destroy');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:user'])->group(function () {});

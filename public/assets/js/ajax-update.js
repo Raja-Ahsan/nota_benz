@@ -16,21 +16,6 @@ function ajaxUpdate(formSelector, successRedirect = null) {
             });
         }
 
-        let existingImages = $("#galleryPreview .image-preview-wrapper").length;
-        let newImages = hasDropzone ? Dropzone.instances[0].files.length : 0;
-
-        let totalImages = existingImages + newImages;
-
-        let maxImages = 5;
-        if (totalImages > maxImages) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'You can only upload up to 5 images!',
-            });
-            return false;
-        }
-
         // Proceed with AJAX request to update
         $.ajax({
             url: form.attr('action'),
