@@ -14,6 +14,13 @@
 
     <section class="product-detail-sec py-10">
         <div class="container">
+            @php
+                $galleryThumbUrls = $galleryImages
+                    ->map(fn ($img) => $img->publicUrl())
+                    ->filter(fn ($u) => trim((string) $u) !== '')
+                    ->values()
+                    ->all();
+            @endphp
             @if ($isVariable)
                 <div
                     class="product-detail-layout grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12"
@@ -30,25 +37,11 @@
                                 alt="{{ $product->name }}"
                             >
                         </div>
-                        @if ($galleryImages->count() > 1)
-                            <ul class="product-gallery__thumbs mt-3 flex list-none flex-wrap gap-2 p-0" role="list">
-                                @foreach ($galleryImages as $img)
-                                    @php $thumbSrc = $img->publicUrl(); @endphp
-                                    @if ($thumbSrc !== '')
-                                        <li>
-                                            <button
-                                                type="button"
-                                                class="product-gallery__thumb {{ $thumbSrc === $defaultMainImage ? 'is-active' : '' }}"
-                                                :class="{ 'is-active': mainImageOverride === '{{ $thumbSrc }}' || (!mainImageOverride && '{{ $thumbSrc }}' === defaultMain) }"
-                                                @click="pickGallery('{{ $thumbSrc }}')"
-                                            >
-                                                <img src="{{ $thumbSrc }}" alt="" class="h-full w-full object-cover" width="96" height="96" loading="lazy">
-                                            </button>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @endif
+                        @include('screens.web.artifacts.partials.gallery-thumbs-slider', [
+                            'urls' => $galleryThumbUrls,
+                            'mode' => 'alpine',
+                            'defaultUrl' => $defaultMainImage,
+                        ])
                     </div>
 
                     <div class="product-buy-box flex flex-col gap-6">
@@ -121,21 +114,11 @@
                                 alt="{{ $product->name }}"
                             >
                         </div>
-                        @if ($galleryImages->count() > 1)
-                            <ul class="product-gallery__thumbs mt-3 flex list-none flex-wrap gap-2 p-0" role="list">
-                                @foreach ($galleryImages as $img)
-                                    <li>
-                                        <button
-                                            type="button"
-                                            class="product-gallery__thumb {{ $img->publicUrl() === $defaultMainImage ? 'is-active' : '' }}"
-                                            data-full-src="{{ $img->publicUrl() }}"
-                                        >
-                                            <img src="{{ $img->publicUrl() }}" alt="" class="h-full w-full object-cover" width="96" height="96" loading="lazy">
-                                        </button>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
+                        @include('screens.web.artifacts.partials.gallery-thumbs-slider', [
+                            'urls' => $galleryThumbUrls,
+                            'mode' => 'simple',
+                            'defaultUrl' => $defaultMainImage,
+                        ])
                     </div>
 
                     <div class="product-buy-box flex flex-col gap-6">

@@ -11,7 +11,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductAttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoreController;
@@ -80,10 +79,6 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/products/{product:slug}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product:slug}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
-
-    Route::get('/product-variations', [ProductAttributeController::class, 'index'])->name('product-variations.index');
-    Route::get('/product-variations/create', [ProductAttributeController::class, 'create'])->name('product-variations.create');
-    Route::post('/product-variations', [ProductAttributeController::class, 'store'])->name('product-variations.store');
 
     Route::get('/blog-categories', [BlogCategoryController::class, 'index'])->name('blog-categories.index');
     Route::post('/blog-categories', [BlogCategoryController::class, 'store'])->name('blog-categories.store');

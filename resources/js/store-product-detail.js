@@ -128,4 +128,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    document.querySelectorAll('[data-thumbs-slider]').forEach((root) => {
+        const track = root.querySelector('[data-thumbs-track]');
+        const prev = root.querySelector('[data-thumbs-scroll="prev"]');
+        const next = root.querySelector('[data-thumbs-scroll="next"]');
+        if (! track || ! prev || ! next) {
+            return;
+        }
+
+        const step = () => Math.max(180, Math.floor(track.clientWidth * 0.65));
+
+        const syncDisabled = () => {
+            const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+            const left = track.scrollLeft;
+            prev.disabled = left <= 1;
+            next.disabled = left >= maxScroll - 1;
+        };
+
+        prev.addEventListener('click', () => {
+            track.scrollBy({ left: -step(), behavior: 'smooth' });
+        });
+        next.addEventListener('click', () => {
+            track.scrollBy({ left: step(), behavior: 'smooth' });
+        });
+        track.addEventListener('scroll', syncDisabled, { passive: true });
+        if (typeof ResizeObserver !== 'undefined') {
+            new ResizeObserver(syncDisabled).observe(track);
+        }
+        window.addEventListener('load', syncDisabled, { once: true });
+        syncDisabled();
+    });
 });

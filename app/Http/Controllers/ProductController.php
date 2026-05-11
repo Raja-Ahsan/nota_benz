@@ -43,7 +43,7 @@ class ProductController extends Controller
 
         $categories = ProductCategory::query()->where('status', 'active')->orderBy('name')->get();
         $productTypes = ProductType::query()->orderBy('name')->get();
-        $variationAttributes = ProductAttribute::query()->orderBy('name')->get();
+        $variationAttributes = $this->fixedVariationAttributes();
         $galleryImages = $product->images
             ->filter(fn (ProductImage $img) => $this->isGalleryImage($img))
             ->values();
@@ -66,9 +66,7 @@ class ProductController extends Controller
 
         $productTypes = ProductType::query()->orderBy('name')->get();
 
-        $variationAttributes = ProductAttribute::query()
-            ->orderBy('name')
-            ->get();
+        $variationAttributes = $this->fixedVariationAttributes();
 
         $variationDefinitions = $variationAttributes->map(fn (ProductAttribute $a) => [
             'id' => $a->id,
@@ -99,9 +97,7 @@ class ProductController extends Controller
 
         $productTypes = ProductType::query()->orderBy('name')->get();
 
-        $variationAttributes = ProductAttribute::query()
-            ->orderBy('name')
-            ->get();
+        $variationAttributes = $this->fixedVariationAttributes();
 
         $variationDefinitions = $variationAttributes->map(fn (ProductAttribute $a) => [
             'id' => $a->id,
@@ -147,7 +143,7 @@ class ProductController extends Controller
             ]);
         }
 
-        $variationAttributes = ProductAttribute::query()->orderBy('name')->get();
+        $variationAttributes = $this->fixedVariationAttributes();
         $normalizedVariationRows = $this->validatedVariationRows($request, $type, $variationAttributes);
 
         $slugSource = $request->filled('slug') ? $request->input('slug') : $request->input('name');
@@ -216,7 +212,7 @@ class ProductController extends Controller
             ]);
         }
 
-        $variationAttributes = ProductAttribute::query()->orderBy('name')->get();
+        $variationAttributes = $this->fixedVariationAttributes();
         $normalizedVariationRows = $this->validatedVariationRows($request, $type, $variationAttributes);
 
         $slug = $slugRaw !== ''
@@ -345,18 +341,34 @@ class ProductController extends Controller
     }
 
     /**
+     * Variable products always use Color + Size (rows are still stored as product_variation_values).
+     *
+     * @return Collection<int, ProductAttribute>
+     */
+    private function fixedVariationAttributes(): Collection
+    {
+        $uid = auth()->id();
+
+        return collect(['Color', 'Size'])->map(function (string $name) use ($uid): ProductAttribute {
+            $existing = ProductAttribute::query()->where('name', $name)->orderBy('id')->first();
+            if ($existing) {
+                return $existing;
+            }
+
+            return ProductAttribute::create([
+                'name' => $name,
+                'created_by' => $uid,
+            ]);
+        });
+    }
+
+    /**
      * @return list<array{price: float, options: array<int, string>}>
      */
     private function validatedVariationRows(Request $request, ProductType $type, Collection $variationAttributes): array
     {
         if ($type->slug !== 'variable') {
             return [];
-        }
-
-        if ($variationAttributes->isEmpty()) {
-            throw ValidationException::withMessages([
-                'variation_rows' => __('Create attribute definitions (e.g. Size, Color) before adding a variable product.'),
-            ]);
         }
 
         $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
