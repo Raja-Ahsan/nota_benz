@@ -19,6 +19,7 @@ class StoreController extends Controller
 
         $categories = ProductCategory::query()
             ->where('status', 'active')
+            ->where('slug', '!=', 'all-products')
             ->orderBy('name')
             ->get();
 

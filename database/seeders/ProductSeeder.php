@@ -19,14 +19,6 @@ class ProductSeeder extends Seeder
             );
 
         // Categories (idempotent for reseeding)
-        $all = ProductCategory::updateOrCreate(
-            ['slug' => 'all-products'],
-            [
-                'name' => 'All Products',
-                'status' => 'active',
-            ]
-        );
-
         $nota = ProductCategory::updateOrCreate(
             ['slug' => 'notabenz'],
             [
@@ -67,7 +59,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'MagSafe® tough case for iPhone®',
                 'slug' => 'magsafe-case',
-                'category_id' => $all->id,
+                'category_id' => $nota->id,
                 'price' => 20.50,
                 'description' => 'Protect your phone with this tough, dual-layer case...',
                 'status' => 'active',
@@ -82,7 +74,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'White glossy mug',
                 'slug' => 'white-mug',
-                'category_id' => $all->id,
+                'category_id' => $nota->id,
                 'price' => 7.00,
                 'description' => "Whether you're drinking your morning coffee...",
                 'status' => 'active',
@@ -97,7 +89,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Utility crossbody bag',
                 'slug' => 'crossbody-bag',
-                'category_id' => $all->id,
+                'category_id' => $nota->id,
                 'price' => 27.00,
                 'description' => 'This bag is sturdy, stylish...',
                 'status' => 'active',
