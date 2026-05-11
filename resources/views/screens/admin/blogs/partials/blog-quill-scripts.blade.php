@@ -14,6 +14,7 @@
             min-height: 300px;
             background: #fff;
             color: #1a1a1a;
+            position: relative;
         }
         .blog-quill-wrap .ql-editor {
             min-height: 280px;
@@ -31,6 +32,7 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script>
         (function() {
             var uploadUrl = @json(route('blogs.editor-image'));
@@ -145,37 +147,52 @@
                     return;
                 }
 
-                var quill = new Quill('#blog_body_editor', {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: {
-                            container: [
-                                [{ header: [1, 2, false] }],
-                                ['bold', 'italic', 'underline'],
-                                [{ list: 'ordered' }, { list: 'bullet' }],
-                                ['blockquote', 'link', 'image'],
-                                ['clean'],
-                            ],
-                            handlers: {
-                                image: function() {
-                                    var input = document.createElement('input');
-                                    input.type = 'file';
-                                    input.accept = 'image/*';
-                                    input.setAttribute('aria-hidden', 'true');
-                                    input.style.position = 'fixed';
-                                    input.style.left = '-9999px';
-                                    document.body.appendChild(input);
-                                    input.addEventListener('change', function() {
-                                        if (input.files && input.files[0]) {
-                                            uploadAndInsertImage(quill, input.files[0]);
-                                        }
-                                        input.remove();
-                                    });
-                                    input.click();
-                                },
+                var quill;
+
+                if (typeof ImageResize !== 'undefined') {
+                    var IR = ImageResize.default || ImageResize;
+                    Quill.register('modules/imageResize', IR);
+                }
+
+                var quillModules = {
+                    toolbar: {
+                        container: [
+                            [{ header: [1, 2, false] }],
+                            ['bold', 'italic', 'underline'],
+                            [{ list: 'ordered' }, { list: 'bullet' }],
+                            ['blockquote', 'link', 'image'],
+                            ['clean'],
+                        ],
+                        handlers: {
+                            image: function() {
+                                var input = document.createElement('input');
+                                input.type = 'file';
+                                input.accept = 'image/*';
+                                input.setAttribute('aria-hidden', 'true');
+                                input.style.position = 'fixed';
+                                input.style.left = '-9999px';
+                                document.body.appendChild(input);
+                                input.addEventListener('change', function() {
+                                    if (input.files && input.files[0]) {
+                                        uploadAndInsertImage(quill, input.files[0]);
+                                    }
+                                    input.remove();
+                                });
+                                input.click();
                             },
                         },
                     },
+                };
+
+                if (typeof ImageResize !== 'undefined') {
+                    quillModules.imageResize = {
+                        modules: ['Resize', 'DisplaySize', 'Toolbar'],
+                    };
+                }
+
+                quill = new Quill('#blog_body_editor', {
+                    theme: 'snow',
+                    modules: quillModules,
                     placeholder: @json(__('Write here… Use the image button or paste a screenshot.')),
                 });
 

@@ -162,8 +162,11 @@ class BlogController extends Controller
 
         $path = $request->file('image')->store('blog-editor', 'public');
 
+        /* Root-relative URL so images work on any host/port (e.g. localhost:8000 vs APP_URL localhost). */
+        $publicPath = ltrim(str_replace('\\', '/', $path), '/');
+
         return response()->json([
-            'url' => Storage::disk('public')->url($path),
+            'url' => '/storage/'.$publicPath,
         ]);
     }
 
