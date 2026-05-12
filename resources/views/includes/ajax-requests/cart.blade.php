@@ -11,14 +11,33 @@
             }
         }
 
+        let productVariationId = null;
+        const $matrixRoot = $btn.closest('.product-detail-layout');
+        if ($matrixRoot.length && typeof window.Alpine !== 'undefined' && typeof Alpine.$data === 'function') {
+            try {
+                const ax = Alpine.$data($matrixRoot[0]);
+                const mv = ax && ax.matchingVariation;
+                if (mv && mv.id) {
+                    productVariationId = mv.id;
+                }
+            } catch (e) {
+                /* ignore */
+            }
+        }
+
+        const postData = {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            product_id: productId,
+            qty: qty,
+        };
+        if (productVariationId != null) {
+            postData.product_variation_id = productVariationId;
+        }
+
         $.ajax({
             url: "{{ route('cart.store') }}",
             type: "POST",
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
-                product_id: productId,
-                qty: qty
-            },
+            data: postData,
             success: function(res) {
                 if (res.success) {
                     $('#cart-count').text(res.count);

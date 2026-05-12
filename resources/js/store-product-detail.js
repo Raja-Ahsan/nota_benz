@@ -149,15 +149,14 @@ document.addEventListener('alpine:init', () => {
         },
 
         get matchingVariation() {
-            const incomplete = this.dimensions.some((d) => ! String(this.selections[this.k(d.id)] ?? '').trim());
-            if (incomplete) {
-                return null;
-            }
             return this.variations.find((v) => this.dimensions.every((d) => {
                 const key = this.k(d.id);
-                const need = this.selections[key];
+                const need = String(this.selections[key] ?? '').trim();
+                if (need === '') {
+                    return true;
+                }
                 const got = v.options[key] ?? v.options[d.id];
-                return String(need ?? '') === String(got ?? '');
+                return need === String(got ?? '');
             }));
         },
 
