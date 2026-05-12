@@ -56,7 +56,49 @@ document.addEventListener('alpine:init', () => {
                     values.add(val);
                 }
             });
-            return [...values].sort((a, b) => String(a).localeCompare(String(b)));
+            const arr = [...values];
+            const dim = this.dimensions.find((d) => this.k(d.id) === key);
+            const label = dim ? String(dim.name).trim().toLowerCase() : '';
+            if (label === 'size') {
+                arr.sort((a, b) => this.compareSizeOption(a, b));
+            }
+            // Color and other dims: keep first-seen order (variation list / admin order), not A–Z.
+            return arr;
+        },
+
+        /** Sort clothing-style sizes: S, M, L, XL… (not alphabetical M before S). */
+        compareSizeOption(a, b) {
+            const ra = this.sizeRank(a);
+            const rb = this.sizeRank(b);
+            if (ra !== rb) {
+                return ra - rb;
+            }
+            return String(a).localeCompare(String(b), undefined, { sensitivity: 'base', numeric: true });
+        },
+
+        sizeRank(raw) {
+            const s = String(raw).trim().toLowerCase().replace(/\s+/g, '');
+            const alias = {
+                xxs: 'xxs', '2xs': 'xxs', xs: 'xs', extraextrasmall: 'xxs', extrasmall: 'xs',
+                s: 's', small: 's',
+                m: 'm', medium: 'm',
+                l: 'l', large: 'l',
+                xl: 'xl', extralarge: 'xl', 'x-large': 'xl',
+                xxl: 'xxl', '2xl': '2xl', '2xlarge': '2xl', doublexl: 'xxl',
+                xxxl: 'xxxl', '3xl': '3xl', '3xlarge': '3xl', triplexl: 'xxxl',
+                '4xl': '4xl', '5xl': '5xl', '6xl': '6xl', '7xl': '7xl', '8xl': '8xl',
+            };
+            const normalized = alias[s] ?? s;
+            const order = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', '2xl', 'xxxl', '3xl', '4xl', '5xl', '6xl', '7xl', '8xl'];
+            let i = order.indexOf(normalized);
+            if (i !== -1) {
+                return i;
+            }
+            const num = parseInt(s, 10);
+            if (s !== '' && ! Number.isNaN(num) && String(num) === s) {
+                return 200 + num;
+            }
+            return 500 + s.charCodeAt(0);
         },
 
         selectValue(attrId, value) {

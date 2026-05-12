@@ -31,23 +31,7 @@
                     ])
                     <div class="col-12 js-variable-only" style="display: none;">
                         <hr class="border-secondary">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-                            <div>
-                                <label class="form-label mb-0">{{ __('Variations') }}</label>
-                                <p class="text-muted small mb-0">{{ __('One row per variant: Color, Size, price, and optional image.') }}</p>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm" id="btn-add-variation-row">
-                                <i class="fa-solid fa-plus pe-1"></i> Add row
-                            </button>
-                        </div>
-                        <div id="variation-rows-container">
-                            @if ($product->productType?->slug === 'variable' && $product->variations->isNotEmpty())
-                                @include('screens.admin.products.partials.variation-rows-edit', [
-                                    'product' => $product,
-                                    'variationAttributes' => $variationAttributes,
-                                ])
-                            @endif
-                        </div>
+                        @include('screens.admin.products.partials.woo-attribute-blocks', ['wooInitialBlocks' => $wooInitialBlocks])
                     </div>
                 </div>
             </div>
@@ -68,56 +52,9 @@
         ->count();
     $galleryDeleteBase = url('/admin/products/'.$product->slug.'/gallery-image');
 @endphp
+<script src="{{ asset('assets/js/admin-product-woo-attributes.js') }}"></script>
 <script>
     (function() {
-        const VARIATION_DEFINITIONS = @json($variationDefinitions);
-        const HAS_VARIATIONS = VARIATION_DEFINITIONS.length > 0;
-        let rowIndex = {{ $product->productType?->slug === 'variable' ? $product->variations->count() : 0 }};
-
-        function escapeHtml(s) {
-            return String(s)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/"/g, '&quot;');
-        }
-
-        function variationRowTemplate(index) {
-            let fields = '';
-            VARIATION_DEFINITIONS.forEach(function(v) {
-                fields += '<div class="col-xl-2 col-md-6 mb-3">' +
-                    '<label class="form-label">' + escapeHtml(v.name) + ' <span class="text-danger">*</span></label>' +
-                    '<input type="text" class="form-control" name="variation_rows[' + index + '][options][' + String(v.id) + ']" placeholder="' + (v.name === 'Color' ? 'e.g. Red' : 'e.g. M') + '" required />' +
-                    '</div>';
-            });
-            return (
-                '<div class="variation-option-row border rounded p-3 mb-3 js-variation-row" data-index="' + index + '">' +
-                '<div class="row align-items-end">' + fields +
-                '<div class="col-xl-2 col-md-6 mb-3">' +
-                '<label class="form-label">Price <span class="text-danger">*</span></label>' +
-                '<input type="number" class="form-control" name="variation_rows[' + index + '][price]" step="0.01" min="0" placeholder="0.00" required />' +
-                '</div>' +
-                '<div class="col-xl-3 col-md-6 mb-3">' +
-                '<label class="form-label">Variant image</label>' +
-                '<input type="file" class="form-control" name="variation_rows[' + index + '][image]" accept="image/*" />' +
-                '</div>' +
-                '<div class="col-xl-1 col-md-12 mb-3 text-xl-end">' +
-                '<button type="button" class="btn btn-link text-danger btn-sm p-0 btn-remove-variation-row">Remove</button>' +
-                '</div></div></div>'
-            );
-        }
-
-        function addVariationRow(focusFirst) {
-            if (!HAS_VARIATIONS) {
-                return;
-            }
-            const $wrap = $('#variation-rows-container');
-            $wrap.append(variationRowTemplate(rowIndex));
-            if (focusFirst) {
-                $wrap.find('.js-variation-row:last input[type="text"]').first().trigger('focus');
-            }
-            rowIndex++;
-        }
-
         function toggleSimpleVariable() {
             const slug = $('#product_type_id').find(':selected').data('slug');
             const $simple = $('.js-simple-only');
@@ -125,34 +62,15 @@
 
             if (slug === 'variable') {
                 $simple.hide().find('#price').prop('disabled', true).removeAttr('required');
-                $variable.show().find('select, input').prop('disabled', false);
+                $variable.show().find('select, input, textarea, button').prop('disabled', false);
                 $('#price').val('0');
-
-                const $ctr = $('#variation-rows-container');
-                if (HAS_VARIATIONS && $ctr.children('.js-variation-row').length === 0) {
-                    addVariationRow(false);
-                }
             } else {
                 $simple.show().find('#price').prop('disabled', false).attr('required', 'required');
-                $variable.hide().find('select, input').prop('disabled', true);
+                $variable.hide().find('select, input, textarea, button').prop('disabled', true);
             }
         }
 
         $('#product_type_id').on('change', toggleSimpleVariable);
-
-        $('#btn-add-variation-row').on('click', function() {
-            addVariationRow(true);
-        });
-
-        $(document).on('click', '.btn-remove-variation-row', function() {
-            const slug = $('#product_type_id').find(':selected').data('slug');
-            const $rows = $('#variation-rows-container .js-variation-row');
-            if (slug === 'variable' && $rows.length <= 1) {
-                return;
-            }
-            $(this).closest('.js-variation-row').remove();
-        });
-
         toggleSimpleVariable();
 
         ajaxCreate("{{ route('products.index') }}");

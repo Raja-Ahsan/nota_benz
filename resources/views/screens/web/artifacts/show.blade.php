@@ -61,22 +61,19 @@
                         <div class="variation-stack space-y-6" role="group" aria-label="{{ __('Options') }}">
                             <template x-for="d in dimensions" :key="d.id">
                                 <fieldset class="variation-fieldset border-0 p-0">
-                                    <legend class="variation-legend mb-2 text-sm font-semibold uppercase tracking-wide text-neutral-900" x-text="d.name"></legend>
-                                    <div class="variation-options flex flex-wrap gap-2" role="radiogroup" :aria-label="d.name">
+                                    <label class="variation-legend mb-2 block text-sm font-semibold uppercase tracking-wide text-neutral-900" :for="'matrix-select-' + d.id" x-text="d.name"></label>
+                                    <select
+                                        :id="'matrix-select-' + d.id"
+                                        class="variation-select w-full max-w-xs rounded-md border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-900 shadow-sm transition focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                        :name="'matrix-' + d.id"
+                                        :aria-label="d.name"
+                                        :value="selections[k(d.id)]"
+                                        @change="selectValue(d.id, $event.target.value)"
+                                    >
                                         <template x-for="val in optionsForDimension(d.id)" :key="String(d.id) + ':' + val">
-                                            <label class="variation-label cursor-pointer">
-                                                <input
-                                                    type="radio"
-                                                    class="variation-input sr-only"
-                                                    :name="'matrix-' + d.id"
-                                                    :value="val"
-                                                    :checked="isSelected(d.id, val)"
-                                                    @change="selectValue(d.id, val)"
-                                                >
-                                                <span class="variation-pill" :class="{ 'is-selected': isSelected(d.id, val) }" x-text="val"></span>
-                                            </label>
+                                            <option :value="val" x-text="val"></option>
                                         </template>
-                                    </div>
+                                    </select>
                                 </fieldset>
                             </template>
                         </div>

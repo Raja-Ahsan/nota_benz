@@ -79,12 +79,17 @@ class ProductController extends Controller
             'variations.image',
         ]);
 
+        $wooInitialBlocks = $product->productType?->slug === 'variable'
+            ? $this->buildWooInitialBlocksFromProduct($product, $variationAttributes)
+            : [];
+
         return view('screens.admin.products.edit', compact(
             'product',
             'categories',
             'productTypes',
             'variationAttributes',
-            'variationDefinitions'
+            'variationDefinitions',
+            'wooInitialBlocks'
         ));
     }
 
@@ -104,11 +109,21 @@ class ProductController extends Controller
             'name' => $a->name,
         ])->values();
 
+        $wooInitialBlocks = [
+            [
+                'color' => '',
+                'rows' => [
+                    ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
+                ],
+            ],
+        ];
+
         return view('screens.admin.products.create', compact(
             'categories',
             'productTypes',
             'variationAttributes',
-            'variationDefinitions'
+            'variationDefinitions',
+            'wooInitialBlocks'
         ));
     }
 
@@ -144,12 +159,12 @@ class ProductController extends Controller
         }
 
         $variationAttributes = $this->fixedVariationAttributes();
-        $normalizedVariationRows = $this->validatedVariationRows($request, $type, $variationAttributes);
+        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes);
 
         $slugSource = $request->filled('slug') ? $request->input('slug') : $request->input('name');
         $slug = $this->uniqueProductSlug((string) $slugSource);
 
-        DB::transaction(function () use ($request, $base, $type, $normalizedVariationRows, $slug) {
+        DB::transaction(function () use ($request, $base, $type, $normalizedVariationRows, $rowImageUploads, $slug, $variationAttributes) {
             $price = $type->slug === 'simple' ? $request->input('price') : 0;
 
             $product = Product::create([
@@ -167,7 +182,14 @@ class ProductController extends Controller
 
             $this->syncGalleryFromRequest($request, $product);
             if ($type->slug === 'variable' && $normalizedVariationRows !== []) {
-                $this->replaceProductVariationsFromRequest($request, $product, $normalizedVariationRows, null);
+                $this->replaceProductVariationsFromRequest(
+                    $request,
+                    $product,
+                    $normalizedVariationRows,
+                    null,
+                    $rowImageUploads,
+                    $variationAttributes
+                );
             }
             $this->normalizeProductImagesOrder($product->fresh());
         });
@@ -213,13 +235,22 @@ class ProductController extends Controller
         }
 
         $variationAttributes = $this->fixedVariationAttributes();
-        $normalizedVariationRows = $this->validatedVariationRows($request, $type, $variationAttributes);
+        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes);
 
         $slug = $slugRaw !== ''
             ? $this->uniqueProductSlug($slugRaw, $product->id)
             : $product->slug;
 
-        DB::transaction(function () use ($request, $base, $type, $normalizedVariationRows, $product, $slug) {
+        $preservedVariationImagePaths = null;
+        if ($type->slug === 'variable') {
+            $preservedVariationImagePaths = $this->matchPreservedVariationPathsByOptions(
+                $product,
+                $normalizedVariationRows,
+                $variationAttributes
+            );
+        }
+
+        DB::transaction(function () use ($request, $base, $type, $normalizedVariationRows, $rowImageUploads, $preservedVariationImagePaths, $product, $slug, $variationAttributes) {
             $price = $type->slug === 'simple' ? $request->input('price') : 0;
 
             $product->update([
@@ -268,22 +299,26 @@ class ProductController extends Controller
                 }
             }
 
-            $preservedVariationImagePaths = null;
-            if ($type->slug === 'variable') {
-                $preservedVariationImagePaths = $product->variations()
-                    ->with('image')
-                    ->orderBy('sort_order')
-                    ->get()
-                    ->map(fn (ProductVariation $v) => $v->image?->image)
-                    ->all();
-            }
-
             $product->attributeItems()->delete();
 
             if ($type->slug === 'variable') {
-                $this->replaceProductVariationsFromRequest($request, $product, $normalizedVariationRows, $preservedVariationImagePaths);
+                $this->replaceProductVariationsFromRequest(
+                    $request,
+                    $product,
+                    $normalizedVariationRows,
+                    $preservedVariationImagePaths,
+                    $rowImageUploads,
+                    $variationAttributes
+                );
             } else {
-                $this->replaceProductVariationsFromRequest($request, $product, [], null);
+                $this->replaceProductVariationsFromRequest(
+                    $request,
+                    $product,
+                    [],
+                    null,
+                    [],
+                    $variationAttributes
+                );
             }
 
             $this->normalizeProductImagesOrder($product->fresh());
@@ -363,14 +398,91 @@ class ProductController extends Controller
     }
 
     /**
-     * @return list<array{price: float, options: array<int, string>}>
+     * @return array{0: list<array{price: float, options: array<int, string>}>, 1: list<UploadedFile|null>}
      */
-    private function validatedVariationRows(Request $request, ProductType $type, Collection $variationAttributes): array
+    private function validatedVariableProductVariations(Request $request, ProductType $type, Collection $variationAttributes): array
     {
         if ($type->slug !== 'variable') {
-            return [];
+            return [[], []];
         }
 
+        if ($this->requestUsesWooAttributeBlocks($request)) {
+            return $this->validatedWooAttributeBlocks($request, $variationAttributes);
+        }
+
+        return $this->validatedVariationRowsFlat($request, $variationAttributes);
+    }
+
+    private function requestUsesWooAttributeBlocks(Request $request): bool
+    {
+        $blocks = $request->input('attr_blocks');
+
+        return is_array($blocks) && count($blocks) > 0;
+    }
+
+    /**
+     * @return array{0: list<array{price: float, options: array<int, string>}>, 1: list<UploadedFile|null>}
+     */
+    private function validatedWooAttributeBlocks(Request $request, Collection $variationAttributes): array
+    {
+        $colorAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Color') === 0);
+        $sizeAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Size') === 0);
+        if (! $colorAttr || ! $sizeAttr) {
+            throw ValidationException::withMessages([
+                'attr_blocks' => __('Color and Size attributes are required for variable products.'),
+            ]);
+        }
+
+        $request->validate([
+            'attr_blocks' => ['required', 'array', 'min:1'],
+            'attr_blocks.*.color' => ['required', 'string', 'max:255'],
+            'attr_blocks.*.rows' => ['required', 'array', 'min:1'],
+            'attr_blocks.*.rows.*.size' => ['required', 'string', 'max:255'],
+            'attr_blocks.*.rows.*.price' => ['required', 'numeric', 'min:0'],
+            'attr_blocks.*.rows.*.image' => $this->permissiveProductImageRules(),
+        ]);
+
+        $blocks = $request->input('attr_blocks', []);
+        $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
+        $normalized = [];
+        $uploads = [];
+        $signatures = [];
+
+        foreach ($blocks as $bi => $block) {
+            $color = trim((string) ($block['color'] ?? ''));
+            $rows = is_array($block['rows'] ?? null) ? $block['rows'] : [];
+            foreach ($rows as $ri => $row) {
+                $size = trim((string) ($row['size'] ?? ''));
+                $price = (float) ($row['price'] ?? 0);
+                $flat = [
+                    (int) $colorAttr->id => $color,
+                    (int) $sizeAttr->id => $size,
+                ];
+                $sig = collect($attributeIds)->map(fn (int $id) => mb_strtolower(trim((string) ($flat[$id] ?? ''))))->join('|');
+                if (isset($signatures[$sig])) {
+                    throw ValidationException::withMessages([
+                        "attr_blocks.{$bi}.rows.{$ri}.size" => __('Duplicate row: the same combination of :attrs already exists.', ['attrs' => $variationAttributes->pluck('name')->join(', ')]),
+                    ]);
+                }
+                $signatures[$sig] = true;
+
+                $normalized[] = [
+                    'price' => $price,
+                    'options' => $flat,
+                ];
+                $file = $request->file("attr_blocks.{$bi}.rows.{$ri}.image");
+                $uploads[] = ($file instanceof UploadedFile && $file->isValid()) ? $file : null;
+            }
+        }
+
+        return [$normalized, $uploads];
+    }
+
+    /**
+     * @return array{0: list<array{price: float, options: array<int, string>}>, 1: list<UploadedFile|null>}
+     */
+    private function validatedVariationRowsFlat(Request $request, Collection $variationAttributes): array
+    {
         $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
 
         $request->validate([
@@ -383,6 +495,7 @@ class ProductController extends Controller
         $rows = $request->input('variation_rows', []);
         $signatures = [];
         $normalized = [];
+        $uploads = [];
 
         foreach ($rows as $idx => $row) {
             $opts = $row['options'] ?? [];
@@ -412,31 +525,162 @@ class ProductController extends Controller
                 'price' => (float) $row['price'],
                 'options' => $flat,
             ];
+            $file = $request->file("variation_rows.{$idx}.image");
+            $uploads[] = ($file instanceof UploadedFile && $file->isValid()) ? $file : null;
         }
 
-        return $normalized;
+        return [$normalized, $uploads];
     }
 
     /**
      * @param  list<array{price: float, options: array<int, string>}>  $normalizedRows
-     * @param  list<string|null>|null  $preservedImagePaths  Indexed by row, relative paths for existing images
+     * @return list<string|null>
      */
-    private function replaceProductVariationsFromRequest(Request $request, Product $product, array $normalizedRows, ?array $preservedImagePaths): void
+    private function matchPreservedVariationPathsByOptions(Product $product, array $normalizedRows, Collection $variationAttributes): array
     {
+        $product->loadMissing(['variations.values', 'variations.image']);
+        $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
+
+        $lookup = [];
+        foreach ($product->variations as $v) {
+            $flat = [];
+            foreach ($attributeIds as $aid) {
+                $flat[$aid] = $v->values->firstWhere('product_attribute_id', $aid)?->value ?? '';
+            }
+            $sig = collect($attributeIds)->map(fn (int $id) => mb_strtolower(trim((string) ($flat[$id] ?? ''))))->join('|');
+            if (trim(str_replace('|', '', $sig)) === '') {
+                continue;
+            }
+            if (! isset($lookup[$sig])) {
+                $raw = trim((string) ($v->image?->image ?? ''));
+                $lookup[$sig] = $raw !== '' ? $raw : null;
+            }
+        }
+
+        $out = [];
+        foreach ($normalizedRows as $row) {
+            $flat = $row['options'];
+            $sig = collect($attributeIds)->map(fn (int $id) => mb_strtolower(trim((string) ($flat[$id] ?? ''))))->join('|');
+            $out[] = $lookup[$sig] ?? null;
+        }
+
+        return $out;
+    }
+
+    private function findMatchingNewRowIndexForOldVariation(
+        ProductVariation $existing,
+        array $normalizedRows,
+        Collection $variationAttributes
+    ): ?int {
+        $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
+        $oldSig = collect($attributeIds)->map(function (int $id) use ($existing) {
+            return mb_strtolower(trim((string) ($existing->values->firstWhere('product_attribute_id', $id)?->value ?? '')));
+        })->join('|');
+
+        foreach ($normalizedRows as $ni => $row) {
+            $flat = $row['options'];
+            $newSig = collect($attributeIds)->map(fn (int $id) => mb_strtolower(trim((string) ($flat[$id] ?? ''))))->join('|');
+            if ($newSig === $oldSig) {
+                return $ni;
+            }
+        }
+
+        return null;
+    }
+
+    private function resolveRowImageUpload(Request $request, array $rowImageUploads, int $idx): ?UploadedFile
+    {
+        if (array_key_exists($idx, $rowImageUploads)) {
+            $f = $rowImageUploads[$idx];
+
+            return ($f instanceof UploadedFile && $f->isValid()) ? $f : null;
+        }
+        $legacy = $request->file("variation_rows.{$idx}.image");
+
+        return ($legacy instanceof UploadedFile && $legacy->isValid()) ? $legacy : null;
+    }
+
+    /**
+     * @return list<array{color: string, rows: list<array{size: string, price: float|string, image_url: string, image_path: string|null}>}>
+     */
+    private function buildWooInitialBlocksFromProduct(Product $product, Collection $variationAttributes): array
+    {
+        $colorAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Color') === 0);
+        $sizeAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Size') === 0);
+        if (! $colorAttr || ! $sizeAttr) {
+            return [
+                [
+                    'color' => '',
+                    'rows' => [
+                        ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
+                    ],
+                ],
+            ];
+        }
+
+        $product->loadMissing(['variations.values', 'variations.image']);
+        /** @var array<string, list<array{size: string, price: float|string, image_url: string, image_path: string|null}>> $byColor */
+        $byColor = [];
+        foreach ($product->variations->sortBy('sort_order') as $v) {
+            $color = trim((string) $v->values->firstWhere('product_attribute_id', $colorAttr->id)?->value);
+            if ($color === '') {
+                $color = (string) __('Uncategorized');
+            }
+            $size = trim((string) $v->values->firstWhere('product_attribute_id', $sizeAttr->id)?->value);
+            if (! isset($byColor[$color])) {
+                $byColor[$color] = [];
+            }
+            $byColor[$color][] = [
+                'size' => $size,
+                'price' => $v->price,
+                'image_url' => $v->image?->publicUrl() ?? '',
+                'image_path' => $v->image?->image,
+            ];
+        }
+
+        $blocks = [];
+        foreach ($byColor as $color => $rows) {
+            $blocks[] = ['color' => $color, 'rows' => $rows];
+        }
+
+        if ($blocks === []) {
+            $blocks[] = [
+                'color' => '',
+                'rows' => [
+                    ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
+                ],
+            ];
+        }
+
+        return $blocks;
+    }
+
+    /**
+     * @param  list<array{price: float, options: array<int, string>}>  $normalizedRows
+     * @param  list<string|null>|null  $preservedImagePaths
+     * @param  list<UploadedFile|null>  $rowImageUploads
+     */
+    private function replaceProductVariationsFromRequest(
+        Request $request,
+        Product $product,
+        array $normalizedRows,
+        ?array $preservedImagePaths,
+        array $rowImageUploads,
+        Collection $variationAttributes,
+    ): void {
         $oldVariants = $product->variations()->with('image')->orderBy('sort_order')->get()->values();
 
         foreach ($oldVariants as $idx => $existing) {
             if ($existing->image) {
-                $upload = $request->file("variation_rows.{$idx}.image");
+                $newIdx = $this->findMatchingNewRowIndexForOldVariation($existing, $normalizedRows, $variationAttributes);
+                $upload = $newIdx !== null ? $this->resolveRowImageUpload($request, $rowImageUploads, $newIdx) : null;
                 $hasNewValidImage = $upload instanceof UploadedFile && $upload->isValid();
-                $preservedPath = is_array($preservedImagePaths) && array_key_exists($idx, $preservedImagePaths)
-                    ? $preservedImagePaths[$idx]
+                $preservedPath = $newIdx !== null && is_array($preservedImagePaths) && array_key_exists($newIdx, $preservedImagePaths)
+                    ? $preservedImagePaths[$newIdx]
                     : null;
                 $preservedPath = is_string($preservedPath) ? trim($preservedPath) : '';
                 $oldPath = trim((string) $existing->image->image);
 
-                // Re-creating the same row with the same file path: only remove the DB row so the
-                // `ProductImage` deleting observer does not unlink a file we still need.
                 $reuseSameFileOnDisk = ! $hasNewValidImage
                     && $preservedPath !== ''
                     && $oldPath !== ''
@@ -468,11 +712,12 @@ class ProductController extends Controller
             }
 
             $path = null;
-            $file = $request->file("variation_rows.{$idx}.image");
-            if ($file && $file->isValid()) {
+            $file = $this->resolveRowImageUpload($request, $rowImageUploads, $idx);
+            if ($file instanceof UploadedFile && $file->isValid()) {
                 $path = ProductPublicImage::store($file);
             } elseif (is_array($preservedImagePaths) && array_key_exists($idx, $preservedImagePaths)) {
-                $path = $preservedImagePaths[$idx];
+                $p = $preservedImagePaths[$idx];
+                $path = is_string($p) && trim($p) !== '' ? trim($p) : null;
             }
 
             if ($path) {
