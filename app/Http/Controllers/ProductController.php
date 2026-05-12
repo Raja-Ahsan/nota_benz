@@ -435,10 +435,9 @@ class ProductController extends Controller
 
         $request->validate([
             'attr_blocks' => ['required', 'array', 'min:1'],
-            'attr_blocks.*.color' => ['required', 'string', 'max:255'],
+            'attr_blocks.*.color' => ['nullable', 'string', 'max:255'],
             'attr_blocks.*.rows' => ['required', 'array', 'min:1'],
-            'attr_blocks.*.rows.*.size' => ['required', 'string', 'max:255'],
-            'attr_blocks.*.rows.*.price' => ['required', 'numeric', 'min:0'],
+            'attr_blocks.*.rows.*.size' => ['nullable', 'string', 'max:255'],
             'attr_blocks.*.rows.*.image' => $this->permissiveProductImageRules(),
         ]);
 
@@ -449,11 +448,39 @@ class ProductController extends Controller
         $signatures = [];
 
         foreach ($blocks as $bi => $block) {
+            if (! is_array($block)) {
+                continue;
+            }
             $color = trim((string) ($block['color'] ?? ''));
             $rows = is_array($block['rows'] ?? null) ? $block['rows'] : [];
             foreach ($rows as $ri => $row) {
+                if (! is_array($row)) {
+                    continue;
+                }
                 $size = trim((string) ($row['size'] ?? ''));
-                $price = (float) ($row['price'] ?? 0);
+                $priceRaw = $row['price'] ?? null;
+                if ($priceRaw === '' || $priceRaw === null) {
+                    $price = 0.0;
+                } elseif (is_numeric($priceRaw)) {
+                    $price = (float) $priceRaw;
+                    if ($price < 0) {
+                        throw ValidationException::withMessages([
+                            "attr_blocks.{$bi}.rows.{$ri}.price" => __('Price must be at least zero.'),
+                        ]);
+                    }
+                } else {
+                    throw ValidationException::withMessages([
+                        "attr_blocks.{$bi}.rows.{$ri}.price" => __('Enter a valid price.'),
+                    ]);
+                }
+
+                $file = $request->file("attr_blocks.{$bi}.rows.{$ri}.image");
+                $hasFile = $file instanceof UploadedFile && $file->isValid();
+
+                if ($size === '' && $price <= 0 && ! $hasFile) {
+                    continue;
+                }
+
                 $flat = [
                     (int) $colorAttr->id => $color,
                     (int) $sizeAttr->id => $size,
@@ -470,9 +497,14 @@ class ProductController extends Controller
                     'price' => $price,
                     'options' => $flat,
                 ];
-                $file = $request->file("attr_blocks.{$bi}.rows.{$ri}.image");
-                $uploads[] = ($file instanceof UploadedFile && $file->isValid()) ? $file : null;
+                $uploads[] = $hasFile ? $file : null;
             }
+        }
+
+        if ($normalized === []) {
+            throw ValidationException::withMessages([
+                'attr_blocks' => __('Add at least one variation row with a size, a price greater than zero, or a variant image.'),
+            ]);
         }
 
         return [$normalized, $uploads];
