@@ -28,7 +28,7 @@
                         @if ($product->productType?->slug === 'variable')
                             <div class="col-12">
                                 <hr class="border-secondary">
-                                <label class="form-label mb-3 d-block">{{ __('SKU variations') }}</label>
+                                <label class="form-label mb-3 d-block">{{ __('Variations') }}</label>
                                 @if ($product->variations->isEmpty())
                                     <p class="text-muted">{{ __('No variation rows.') }}</p>
                                 @else

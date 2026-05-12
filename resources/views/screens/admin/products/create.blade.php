@@ -27,20 +27,13 @@
                         <hr class="border-secondary">
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                             <div>
-                                <label class="form-label mb-0">{{ __('SKU variations') }}</label>
-                                <p class="text-muted small mb-0">{{ __('Each row = one sellable variant: fill every attribute (e.g. Size + Color), price, and optional image.') }}</p>
+                                <label class="form-label mb-0">{{ __('Variations') }}</label>
+                                <p class="text-muted small mb-0">{{ __('One row per variant: Color, Size, price, and optional image. Add as many rows as you need.') }}</p>
                             </div>
                             <button type="button" class="btn btn-outline-primary btn-sm" id="btn-add-variation-row">
                                 <i class="fa-solid fa-plus pe-1"></i> Add row
                             </button>
                         </div>
-                        @if ($variationAttributes->isEmpty())
-                            <div class="alert alert-warning">
-                                No variation definitions yet. Create them under
-                                <a href="{{ route('product-variations.create') }}">Products → Create variation</a>
-                                first.
-                            </div>
-                        @endif
                         <div id="variation-rows-container"></div>
                     </div>
                 </div>
@@ -73,7 +66,7 @@
             VARIATION_DEFINITIONS.forEach(function(v) {
                 fields += '<div class="col-xl-2 col-md-6 mb-3">' +
                     '<label class="form-label">' + escapeHtml(v.name) + ' <span class="text-danger">*</span></label>' +
-                    '<input type="text" class="form-control" name="variation_rows[' + index + '][options][' + String(v.id) + ']" placeholder="" required />' +
+                    '<input type="text" class="form-control" name="variation_rows[' + index + '][options][' + String(v.id) + ']" placeholder="' + (v.name === 'Color' ? 'e.g. Red' : 'e.g. M') + '" required />' +
                     '</div>';
             });
             return (
