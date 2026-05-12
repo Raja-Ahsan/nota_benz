@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\ProductVariation;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CartItemController extends Controller
 {
@@ -14,12 +16,27 @@ class CartItemController extends Controller
         $data = $request->validate([
             'product_id' => 'required|integer|exists:products,id',
             'qty' => 'nullable|integer|min:1|max:999',
+            'product_variation_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('product_variations', 'id')->where(fn ($q) => $q->where('product_id', (int) $request->input('product_id'))),
+            ],
         ]);
 
         $qty = isset($data['qty']) ? (int) $data['qty'] : 1;
         $qty = max(1, min(999, $qty));
 
         $product = Product::findOrFail($data['product_id']);
+
+        $variation = null;
+        if (! empty($data['product_variation_id'])) {
+            $variation = ProductVariation::query()
+                ->where('id', (int) $data['product_variation_id'])
+                ->where('product_id', $product->id)
+                ->first();
+        }
+
+        $unitPrice = $this->resolveLineUnitPrice($product, $variation);
 
         // 1️⃣ identify user / session
         if (auth()->check()) {
@@ -42,7 +59,7 @@ class CartItemController extends Controller
             $cart->items()->create([
                 'product_id' => $product->id,
                 'qty' => $qty,
-                'price' => $product->price,
+                'price' => $unitPrice,
             ]);
         }
 
@@ -88,5 +105,36 @@ class CartItemController extends Controller
             'cartTotal' => $cart ? $cart->total() : 0,
             'cartCount' => $cart ? $cart->items->sum('qty') : 0,
         ]);
+    }
+
+    /**
+     * Variable products store base price as 0; use the chosen variation or a safe fallback.
+     */
+    private function resolveLineUnitPrice(Product $product, ?ProductVariation $variation): float
+    {
+        if ($variation) {
+            $p = (float) $variation->price;
+            if ($p > 0) {
+                return $p;
+            }
+        }
+
+        $base = (float) $product->price;
+        if ($base > 0) {
+            return $base;
+        }
+
+        if ($product->isVariable()) {
+            $from = (float) ($product->from_price ?? 0);
+            if ($from > 0) {
+                return $from;
+            }
+            $minVar = (float) ($product->variations()->min('price') ?? 0);
+            if ($minVar > 0) {
+                return $minVar;
+            }
+        }
+
+        return max(0.0, $base);
     }
 }
