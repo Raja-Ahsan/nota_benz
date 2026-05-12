@@ -44,6 +44,14 @@
                     imgInp.setAttribute('name', 'attr_blocks[' + bi + '][rows][' + ri + '][image]');
                 }
             });
+
+            var cgInput = block.querySelector('.js-color-gallery-input');
+            if (cgInput) {
+                cgInput.setAttribute('name', 'attr_blocks[' + bi + '][color_gallery][]');
+            }
+            block.querySelectorAll('.js-color-gallery-keep').forEach(function (keepInp) {
+                keepInp.setAttribute('name', 'attr_blocks[' + bi + '][color_gallery_keep][]');
+            });
         });
     }
 
@@ -144,6 +152,9 @@
             if (c) {
                 appendEmptyBlock(c);
                 reindexWooAttrBlocks(form);
+                if (typeof window.initWooColorGalleryBlocksForForm === 'function') {
+                    window.initWooColorGalleryBlocksForForm(form);
+                }
             }
             return;
         }

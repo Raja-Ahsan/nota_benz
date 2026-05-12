@@ -40,6 +40,7 @@
 </div>
 @push('scripts')
 <script src="{{ asset('assets/js/admin-product-woo-attributes.js') }}"></script>
+<script src="{{ asset('assets/js/admin-product-color-gallery.js') }}"></script>
 <script>
     (function() {
         function toggleSimpleVariable() {
@@ -57,8 +58,20 @@
             }
         }
 
-        $('#product_type_id').on('change', toggleSimpleVariable);
+        function initColorGalleriesIfVariable() {
+            const slug = $('#product_type_id').find(':selected').data('slug');
+            const cf = document.getElementById('createProductForm');
+            if (slug === 'variable' && cf && typeof window.initWooColorGalleryBlocksForForm === 'function') {
+                window.initWooColorGalleryBlocksForForm(cf);
+            }
+        }
+
+        $('#product_type_id').on('change', function () {
+            toggleSimpleVariable();
+            initColorGalleriesIfVariable();
+        });
         toggleSimpleVariable();
+        initColorGalleriesIfVariable();
 
         ajaxCreate("{{ route('products.index') }}");
     })();

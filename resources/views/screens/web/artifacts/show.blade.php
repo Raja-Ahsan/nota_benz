@@ -37,11 +37,44 @@
                                 alt="{{ $product->name }}"
                             >
                         </div>
-                        @include('screens.web.artifacts.partials.gallery-thumbs-slider', [
-                            'urls' => $galleryThumbUrls,
-                            'mode' => 'alpine',
-                            'defaultUrl' => $defaultMainImage,
-                        ])
+                        <div x-show="activeGalleryUrls.length > 1" x-cloak class="product-gallery-thumbs-slider" data-thumbs-slider>
+                            <button
+                                type="button"
+                                class="product-gallery-thumbs-slider__nav product-gallery-thumbs-slider__nav--prev"
+                                data-thumbs-scroll="prev"
+                                aria-label="{{ __('Previous images') }}"
+                            >
+                                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                            </button>
+                            <div class="product-gallery-thumbs-slider__viewport">
+                                <ul
+                                    class="product-gallery__thumbs product-gallery-thumbs-slider__track flex list-none flex-nowrap gap-2 p-0 pb-1"
+                                    data-thumbs-track
+                                    role="list"
+                                >
+                                    <template x-for="url in activeGalleryUrls" :key="url">
+                                        <li class="shrink-0">
+                                            <button
+                                                type="button"
+                                                class="product-gallery__thumb"
+                                                :class="{ 'is-active': url === displayMainImage }"
+                                                @click="pickGallery(url)"
+                                            >
+                                                <img :src="url" alt="" class="h-full w-full object-cover" width="96" height="96" loading="lazy">
+                                            </button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <button
+                                type="button"
+                                class="product-gallery-thumbs-slider__nav product-gallery-thumbs-slider__nav--next"
+                                data-thumbs-scroll="next"
+                                aria-label="{{ __('Next images') }}"
+                            >
+                                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="product-buy-box flex flex-col gap-6">
@@ -70,6 +103,7 @@
                                         :value="selections[k(d.id)]"
                                         @change="selectValue(d.id, $event.target.value)"
                                     >
+                                        <option value="">{{ __('Choose') }}…</option>
                                         <template x-for="val in optionsForDimension(d.id)" :key="String(d.id) + ':' + val">
                                             <option :value="val" x-text="val"></option>
                                         </template>
