@@ -96,12 +96,12 @@
         role="dialog"
         aria-label="{{ __('Mobile navigation') }}">
         <nav class="main-container px-4 py-4 sm:px-6 lg:px-8 manrope-font">
-            <a href="{{ route('about') }}" class="mobile-nav-link">About</a>
+            <a href="{{ route('about') }}" class="mobile-nav-link">Identity</a>
             <a href="{{ route('journey') }}" class="mobile-nav-link">Journey</a>
-            <a href="{{ route('blog.index') }}" class="mobile-nav-link">{{ __('Blogs') }}</a>
-            <a href="#" class="mobile-nav-link">Stories</a>
+            <a href="#" class="mobile-nav-link">Glitches</a>
+            <a href="{{ route('carpediem') }}" class="mobile-nav-link">Carpe Diem</a>
             <a href="{{ route('artifacts.index') }}" class="mobile-nav-link">Artifacts</a>
-
+            <a href="{{ route('blog.index') }}" class="mobile-nav-link">{{ __('Jumps') }}</a>
             @guest
             <a
                 href="{{ route('login') }}"

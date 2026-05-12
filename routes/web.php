@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 // web routes
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/blogs', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blogs/posts', [BlogController::class, 'posts'])->name('blog.posts');
-Route::get('/blogs/{slug}', [BlogController::class, 'show'])
+Route::get('/jumps', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/jumps/posts', [BlogController::class, 'posts'])->name('blog.posts');
+Route::get('/jumps/{slug}', [BlogController::class, 'show'])
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
     ->name('blog.show');
 
