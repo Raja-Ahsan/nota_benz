@@ -128,7 +128,7 @@ class StoreController extends Controller
         ]);
 
         $galleryImages = $product->images
-            ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null)
+            ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null && $img->color_key === null)
             ->sortBy('sort_order')
             ->values();
 
@@ -190,11 +190,22 @@ class StoreController extends Controller
             ->values()
             ->all();
 
+        $colorGalleries = $product->images
+            ->filter(fn ($img) => $img->color_key !== null && trim((string) $img->color_key) !== '')
+            ->groupBy('color_key')
+            ->map(fn ($group) => $group->sortBy('sort_order')
+                ->map(fn ($img) => $img->publicUrl())
+                ->filter(fn ($u) => trim((string) $u) !== '')
+                ->values()
+                ->all())
+            ->all();
+
         $matrixPayload = [
             'dimensions' => $dimensions,
             'variations' => $variationsPayload,
             'defaultMain' => $defaultMainImage,
             'galleryUrls' => $galleryImageUrls,
+            'colorGalleries' => $colorGalleries,
             'fromPrice' => $product->from_price !== null ? (float) $product->from_price : null,
             'toPrice' => $product->to_price !== null ? (float) $product->to_price : null,
         ];

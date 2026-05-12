@@ -721,6 +721,13 @@ body {
       .mi-camino-sec {
         background-image: url('../../public/assets/images/carpedeim/banner-03.avif');
       }
+      .blog-banner-sec {
+        background-image: url('../../public/assets/images/img-01.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 100px 0;
+      }
 
 /* responsive */
 @media (max-width: 500px) {
