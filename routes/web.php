@@ -24,7 +24,7 @@ Route::get('/blogs/{slug}', [BlogController::class, 'show'])
     ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
     ->name('blog.show');
 
-Route::get('/about', function () {
+Route::get('/identity', function () {
     return view('screens.web.about.index');
 })->name('about');
 

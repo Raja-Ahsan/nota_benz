@@ -561,15 +561,167 @@ body {
       .swiper-slide img {
         display: block;
         width: 100%;
-        height: 100%;
+        height: 370px;
         object-fit: cover;
       }
       .animated-slider .swiper-slide {
         max-width: 570px;
       }
       .carpe-diem-banner {
-        
+        min-height: min(70svh, 520px);
+        overflow: hidden;
       }
+      .carpe-diem-banner video {
+        width: 100%;
+        height: min(70svh, 520px);
+        object-fit: cover;
+      }
+      @media (min-width: 768px) {
+        .carpe-diem-banner {
+          min-height: 0;
+        }
+        .carpe-diem-banner video {
+          height: 700px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .parallax-reveal-section .js-parallax-reveal-frame {
+          width: 100% !important;
+          border-radius: 0.75rem;
+        }
+      }
+      .scenes-sec {
+        background-image: url('../../public/assets/images/carpedeim/banner-02.avif');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 150px 0;
+      }
+
+      /* Carpe Diem: triple image row (no gaps, autoplay slide animation) */
+      .carpe-triple-slider-sec .cd-triple-swiper {
+        width: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper .swiper-wrapper {
+        align-items: stretch;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper .swiper-slide {
+        width: auto;
+        height: auto;
+        margin: 0;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-img {
+        display: block;
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        vertical-align: middle;
+        transform: scale(1);
+        transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.85s ease;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper .swiper-slide:not(.swiper-slide-visible) .cd-triple-swiper-img {
+        opacity: 0.92;
+        transform: scale(1.02);
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper .swiper-slide-visible .cd-triple-swiper-img {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .carpe-triple-slider-sec .cd-triple-swiper-img {
+          transition: none;
+        }
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin-top: 0;
+        padding: 0;
+        border: none;
+        border-radius: 9999px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.45);
+        cursor: pointer;
+        transform: translateY(-50%);
+        transition: background 0.2s ease, opacity 0.2s ease;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav:hover {
+        background: rgba(0, 0, 0, 0.65);
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav::after {
+        display: none;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav--prev {
+        left: 12px;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav--next {
+        right: 12px;
+      }
+
+      .carpe-triple-slider-sec .cd-triple-swiper-nav.swiper-button-disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      @media (max-width: 639px) {
+        .carpe-triple-slider-sec .cd-triple-swiper-nav {
+          width: 38px;
+          height: 38px;
+        }
+
+        .carpe-triple-slider-sec .cd-triple-swiper-nav--prev {
+          left: 8px;
+        }
+
+        .carpe-triple-slider-sec .cd-triple-swiper-nav--next {
+          right: 8px;
+        }
+      }
+      .cd-triple-swiper-nav .swiper-navigation-icon {
+        width: 16px;
+        height: 16px;
+      }
+      .gallery-img-wrapper {
+        @apply overflow-hidden rounded-[20px];
+      }
+      .gallery-img-wrapper img {
+        @apply w-full max-h-[500px] object-cover rounded-[20px]
+      }
+      .gallery-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      .gallery-img-wrapper:hover img {
+        transform: scale(1.12);
+      }
+      .mi-camino-sec {
+        background-image: url('../../public/assets/images/carpedeim/banner-03.avif');
+      }
+
 /* responsive */
 @media (max-width: 500px) {
     .btn {
