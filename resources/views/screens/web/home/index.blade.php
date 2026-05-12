@@ -17,6 +17,7 @@
             </video>
             <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/35" aria-hidden="true"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            
         </div>
 
         {{-- LIVE badge (top-right of hero) --}}
@@ -162,7 +163,7 @@
     'progress' => __('SCENE II') . ' — ' . __('Take III of IV'),
     ],
     [
-        'kicker_line' => '— ' . __('Take IV') ,
+    'kicker_line' => '— ' . __('Take IV') ,
     'kicker_title' => ' — ' . __('The Philosophy'),
     'line1' => __('Identity is not'),
     'em' => __(' given'),
@@ -373,44 +374,43 @@
 
             <div class="identity-artifacts__grid" role="list">
                 @php
-                    $galleryPlaceholder = asset('assets/images/placeholders/img-not-available.png');
+                $galleryPlaceholder = asset('assets/images/placeholders/img-not-available.png');
                 @endphp
                 @forelse (($galleryProducts ?? collect()) as $product)
-                    @php
-                        $primaryImg = $product->images->where('is_primary', 1)->first()
-                            ?? $product->images->first();
-                        $imgSrc = $primaryImg?->publicUrl() ?: $galleryPlaceholder;
-                        $cardVariant = min($loop->iteration, 4);
-                    @endphp
-                    <article class="identity-artifacts__card identity-artifacts__card--{{ $cardVariant }}" role="listitem">
-                        <a href="{{ route('artifacts.show', $product) }}" class="block text-inherit no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg">
-                            <div class="identity-artifacts__media">
-                                <img
-                                    class="identity-artifacts__img"
-                                    src="{{ $imgSrc }}"
-                                    width="480"
-                                    height="640"
-                                    alt="{{ $product->name }}"
-                                    loading="lazy"
-                                >
-                            </div>
-                            <div class="identity-artifacts__body">
-                                <p class="identity-artifacts__category manrope-font">{{ $product->category?->name ?? __('Artifacts') }}</p>
-                                <h3 class="identity-artifacts__name plarfair-font">{{ $product->name }}</h3>
-                                <p class="identity-artifacts__price manrope-font">
-                                    @if ($product->isVariable() && $product->from_price !== null && $product->to_price !== null)
-                                        <span class="identity-artifacts__price-current">{{ $product->listingPriceLabel() }}</span>
-                                    @else
-                                        <span class="identity-artifacts__price-current">${{ number_format((float) $product->price, 2) }}</span>
-                                    @endif
-                                </p>
-                            </div>
-                        </a>
-                    </article>
+                @php
+                $primaryImg = $product->images->where('is_primary', 1)->first()
+                ?? $product->images->first();
+                $imgSrc = $primaryImg?->publicUrl() ?: $galleryPlaceholder;
+                $cardVariant = min($loop->iteration, 4);
+                @endphp
+                <article class="identity-artifacts__card identity-artifacts__card--{{ $cardVariant }}" role="listitem">
+                    <a href="{{ route('artifacts.show', $product) }}" class="block text-inherit no-underline focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary-color)] rounded-lg">
+                        <div class="identity-artifacts__media">
+                            <img
+                                class="identity-artifacts__img"
+                                src="{{ $imgSrc }}"
+                                width="480"
+                                height="640"
+                                alt="{{ $product->name }}"
+                                loading="lazy">
+                        </div>
+                        <div class="identity-artifacts__body">
+                            <p class="identity-artifacts__category manrope-font">{{ $product->category?->name ?? __('Artifacts') }}</p>
+                            <h3 class="identity-artifacts__name plarfair-font">{{ $product->name }}</h3>
+                            <p class="identity-artifacts__price manrope-font">
+                                @if ($product->isVariable() && $product->from_price !== null && $product->to_price !== null)
+                                <span class="identity-artifacts__price-current">{{ $product->listingPriceLabel() }}</span>
+                                @else
+                                <span class="identity-artifacts__price-current">${{ number_format((float) $product->price, 2) }}</span>
+                                @endif
+                            </p>
+                        </div>
+                    </a>
+                </article>
                 @empty
-                    <p class="identity-artifacts__sub col-span-full text-center text-neutral-500">
-                        {{ __('Artifacts coming soon.') }}
-                    </p>
+                <p class="identity-artifacts__sub col-span-full text-center text-neutral-500">
+                    {{ __('Artifacts coming soon.') }}
+                </p>
                 @endforelse
             </div>
         </div>
@@ -419,36 +419,36 @@
 
 
     @php
-        $instaTopImages = [
-            'assets/images/slider-img-01.png',
-            'assets/images/slider-img-02.png',
-            'assets/images/slider-images/01.png',
-            'assets/images/slider-images/02.png',
-            'assets/images/slider-images/03.png',
-            'assets/images/slider-images/04.png',
-            'assets/images/slider-images/05.png',
-            'assets/images/slider-images/06.png',
-            'assets/images/stories-img-01.png',
-            'assets/images/image-02.png',
-            'assets/images/image-03.png',
-            'assets/images/image-04.png',
-        ];
-        $instaBottomImages = [
-            'assets/images/slider-images/07.png',
-            'assets/images/slider-images/08.png',
-            'assets/images/slider-images/09.png',
-            'assets/images/slider-images/10.png',
-            'assets/images/slider-images/11.png',
-            'assets/images/slider-img-03.png',
-            'assets/images/slider-img-04.png',
-            'assets/images/stories-img-02.png',
-            'assets/images/stories-img-03.png',
-            'assets/images/pen.png',
-            'assets/images/image-05.png',
-            'assets/images/image-06.png',
-            'assets/images/image-07.png',
-            'assets/images/image-08.png',
-        ];
+    $instaTopImages = [
+    'assets/images/slider-img-01.png',
+    'assets/images/slider-img-02.png',
+    'assets/images/slider-images/01.png',
+    'assets/images/slider-images/02.png',
+    'assets/images/slider-images/03.png',
+    'assets/images/slider-images/04.png',
+    'assets/images/slider-images/05.png',
+    'assets/images/slider-images/06.png',
+    'assets/images/stories-img-01.png',
+    'assets/images/image-02.png',
+    'assets/images/image-03.png',
+    'assets/images/image-04.png',
+    ];
+    $instaBottomImages = [
+    'assets/images/slider-images/07.png',
+    'assets/images/slider-images/08.png',
+    'assets/images/slider-images/09.png',
+    'assets/images/slider-images/10.png',
+    'assets/images/slider-images/11.png',
+    'assets/images/slider-img-03.png',
+    'assets/images/slider-img-04.png',
+    'assets/images/stories-img-02.png',
+    'assets/images/stories-img-03.png',
+    'assets/images/pen.png',
+    'assets/images/image-05.png',
+    'assets/images/image-06.png',
+    'assets/images/image-07.png',
+    'assets/images/image-08.png',
+    ];
     @endphp
 
     {{-- Instagram gallery marquee (Slick; styles: `.insta-gallery*`) --}}
@@ -474,11 +474,11 @@
             <div class="insta-gallery__axis insta-gallery__axis--flip">
                 <div class="insta-gallery__slider js-insta-slider-top">
                     @foreach ($instaTopImages as $src)
-                        <div class="insta-gallery__slide">
-                            <div class="insta-gallery__slide-inner">
-                                <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
-                            </div>
+                    <div class="insta-gallery__slide">
+                        <div class="insta-gallery__slide-inner">
+                            <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
                         </div>
+                    </div>
                     @endforeach
                 </div>
             </div>
@@ -487,11 +487,11 @@
         <div class="insta-gallery__rail insta-gallery__rail--bottom">
             <div class="insta-gallery__slider js-insta-slider-bottom">
                 @foreach ($instaBottomImages as $src)
-                    <div class="insta-gallery__slide">
-                        <div class="insta-gallery__slide-inner">
-                            <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
-                        </div>
+                <div class="insta-gallery__slide">
+                    <div class="insta-gallery__slide-inner">
+                        <img class="insta-gallery__thumb" src="{{ asset($src) }}" width="160" height="160" loading="lazy" alt="">
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -500,9 +500,8 @@
     {{-- Newsletter / inner circle (bg: public/images/new-letter-bg.png) --}}
     <section
         class="newsletter-section relative isolate overflow-hidden"
-        aria-labelledby="newsletter-heading" 
-        style="background-image: url('{{ asset('assets/images/new-letter-bg.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"
-        >
+        aria-labelledby="newsletter-heading"
+        style="background-image: url('{{ asset('assets/images/new-letter-bg.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
 
         <div class="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-4 py-20 text-center sm:px-6 md:py-24 lg:px-8 lg:py-28">
@@ -554,7 +553,7 @@
         aria-labelledby="scene-v-heading">
 
 
-        
+
 
         <div class="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-4 text-center sm:px-6 lg:max-w-5xl lg:px-8">
             {{-- Scene label + glowing divider (center-line.png below copy) --}}
@@ -601,25 +600,24 @@
                 <a
                     href="#"
                     class="btn secondary-btn border-btn">
-                 Send a message
+                    Send a message
                 </a>
             </div>
 
             <ul class="mt-14 flex list-none flex-wrap items-center justify-center gap-5 sm:mt-16 md:gap-7" role="list">
                 @foreach (['01', '02', '03', '04', '05'] as $socialNum)
-                    <li>
-                        <a
-                            href="#"
-                            class="social-icon"
-                            aria-label="{{ __('Social profile :num', ['num' => $socialNum]) }}">
-                            <img
-                                src="{{ asset('assets/images/social-icon-' . $socialNum . '.png') }}"
-                                alt="social-icon-{{ $socialNum }}"
-                              
-                                class="h-[13px] w-[13px] object-contain "
-                                />
-                        </a>
-                    </li>
+                <li>
+                    <a
+                        href="#"
+                        class="social-icon"
+                        aria-label="{{ __('Social profile :num', ['num' => $socialNum]) }}">
+                        <img
+                            src="{{ asset('assets/images/social-icon-' . $socialNum . '.png') }}"
+                            alt="social-icon-{{ $socialNum }}"
+
+                            class="h-[13px] w-[13px] object-contain " />
+                    </a>
+                </li>
                 @endforeach
             </ul>
         </div>
@@ -687,52 +685,52 @@
 @endsection
 
 @push('styles')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
 @endpush
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script>
-        (function() {
-            if (typeof jQuery === 'undefined' || !jQuery.fn.slick) {
-                return;
-            }
-            var $ = jQuery;
-            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+    (function() {
+        if (typeof jQuery === 'undefined' || !jQuery.fn.slick) {
+            return;
+        }
+        var $ = jQuery;
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            function instaMarqueeOptions() {
-                return {
-                    infinite: true,
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                    variableWidth: true,
-                    arrows: false,
-                    dots: false,
-                    autoplay: !reduceMotion,
-                    autoplaySpeed: 1,
-                    speed: 26000,
-                    cssEase: 'linear',
-                    pauseOnHover: false,
-                    pauseOnFocus: false,
-                    waitForAnimate: false,
-                    swipe: false,
-                    touchMove: false,
-                    accessibility: false,
-                    draggable: false,
-                };
-            }
+        function instaMarqueeOptions() {
+            return {
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                variableWidth: true,
+                arrows: false,
+                dots: false,
+                autoplay: !reduceMotion,
+                autoplaySpeed: 1,
+                speed: 26000,
+                cssEase: 'linear',
+                pauseOnHover: false,
+                pauseOnFocus: false,
+                waitForAnimate: false,
+                swipe: false,
+                touchMove: false,
+                accessibility: false,
+                draggable: false,
+            };
+        }
 
-            $(function() {
-                var $top = $('.js-insta-slider-top');
-                var $bottom = $('.js-insta-slider-bottom');
-                if ($top.length) {
-                    $top.slick(instaMarqueeOptions());
-                }
-                if ($bottom.length) {
-                    $bottom.slick(instaMarqueeOptions());
-                }
-            });
-        })();
-    </script>
+        $(function() {
+            var $top = $('.js-insta-slider-top');
+            var $bottom = $('.js-insta-slider-bottom');
+            if ($top.length) {
+                $top.slick(instaMarqueeOptions());
+            }
+            if ($bottom.length) {
+                $bottom.slick(instaMarqueeOptions());
+            }
+        });
+    })();
+</script>
 @endpush
