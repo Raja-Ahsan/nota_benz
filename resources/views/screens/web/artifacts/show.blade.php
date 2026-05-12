@@ -80,7 +80,7 @@
 
                         <div class="product-price-row flex flex-wrap items-baseline gap-2 border-t border-neutral-200 pt-6">
                             <span class="text-sm font-medium uppercase tracking-wide text-neutral-600">{{ __('Price') }}</span>
-                            <span class="product-price text-2xl font-bold text-primary md:text-[24px]" x-text="'$' + totalPrice.toFixed(2)" aria-live="polite"></span>
+                            <span class="product-price text-2xl font-bold text-primary md:text-[24px]" x-text="priceLine" aria-live="polite"></span>
                         </div>
 
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">

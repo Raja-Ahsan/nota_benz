@@ -6,6 +6,8 @@ document.addEventListener('alpine:init', () => {
         variations: payload.variations ?? [],
         defaultMain: payload.defaultMain ?? '',
         galleryUrls: payload.galleryUrls ?? [],
+        fromPrice: payload.fromPrice ?? null,
+        toPrice: payload.toPrice ?? null,
         mainImageOverride: null,
         selections: {},
 
@@ -51,10 +53,8 @@ document.addEventListener('alpine:init', () => {
                 if (! this.matchesPartial(v, partial)) {
                     return;
                 }
-                const val = v.options[key] ?? v.options[attrId];
-                if (val) {
-                    values.add(val);
-                }
+                const val = v.options[key] ?? v.options[attrId] ?? '';
+                values.add(val);
             });
             const arr = [...values];
             const dim = this.dimensions.find((d) => this.k(d.id) === key);
@@ -130,13 +130,38 @@ document.addEventListener('alpine:init', () => {
                 const key = this.k(d.id);
                 const need = this.selections[key];
                 const got = v.options[key] ?? v.options[d.id];
-                return need && got === need;
+                return String(need ?? '') === String(got ?? '');
             }));
         },
 
         get totalPrice() {
             const m = this.matchingVariation;
             return m ? Number(m.price) : 0;
+        },
+
+        /** Shown price: SKU price when > 0, else product from/to range when set. */
+        get priceLine() {
+            const m = this.matchingVariation;
+            const from = this.fromPrice;
+            const to = this.toPrice;
+            if (m && Number(m.price) > 0) {
+                return '$' + Number(m.price).toFixed(2);
+            }
+            if (m && from != null && to != null && (from > 0 || to > 0)) {
+                return from === to
+                    ? '$' + Number(from).toFixed(2)
+                    : '$' + Number(from).toFixed(2) + ' – $' + Number(to).toFixed(2);
+            }
+            if (from != null && to != null && (from > 0 || to > 0)) {
+                return from === to
+                    ? '$' + Number(from).toFixed(2)
+                    : '$' + Number(from).toFixed(2) + ' – $' + Number(to).toFixed(2);
+            }
+            if (m) {
+                return '$' + Number(m.price).toFixed(2);
+            }
+
+            return '$0.00';
         },
 
         get displayMainImage() {

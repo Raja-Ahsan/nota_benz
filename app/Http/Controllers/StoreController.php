@@ -150,10 +150,21 @@ class StoreController extends Controller
             ->orderBy('name')
             ->get();
 
-        $dimensions = $dimensionModels->map(fn ($a) => [
-            'id' => (int) $a->id,
-            'name' => $a->name,
-        ])->values()->all();
+        // Omit attributes every variation leaves blank (e.g. unused Color → no empty dropdown).
+        $dimensions = $dimensionModels
+            ->filter(function (ProductAttribute $a) use ($product): bool {
+                return ! $product->variations->every(function ($v) use ($a) {
+                    $raw = $v->values->firstWhere('product_attribute_id', $a->id)?->value;
+
+                    return $raw === null || trim((string) $raw) === '';
+                });
+            })
+            ->map(fn (ProductAttribute $a) => [
+                'id' => (int) $a->id,
+                'name' => $a->name,
+            ])
+            ->values()
+            ->all();
 
         $variationsPayload = $product->variations
             ->sortBy('sort_order')
@@ -184,6 +195,8 @@ class StoreController extends Controller
             'variations' => $variationsPayload,
             'defaultMain' => $defaultMainImage,
             'galleryUrls' => $galleryImageUrls,
+            'fromPrice' => $product->from_price !== null ? (float) $product->from_price : null,
+            'toPrice' => $product->to_price !== null ? (float) $product->to_price : null,
         ];
 
         return view('screens.web.artifacts.show', compact(
