@@ -32,6 +32,24 @@
                         />
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">{{ __('Color group images') }}</label>
+                        <p class="text-muted small mb-2">{{ __('Upload images specific to this color. These will show on the product detail page when this color is selected.') }}</p>
+                        <div class="js-color-gallery-dz dropzone"></div>
+                        <input type="file" class="d-none js-color-gallery-input" multiple accept="image/*" />
+                        <div class="d-flex flex-wrap gap-2 mt-2 js-color-gallery-existing-list">
+                            @foreach ($block['color_gallery'] ?? [] as $cg)
+                                @if (! empty($cg['url']))
+                                    <div class="js-color-gallery-existing position-relative image-preview-wrapper" data-image-id="{{ (int) ($cg['id'] ?? 0) }}">
+                                        <img src="{{ $cg['url'] }}" alt="" class="img-thumbnail rounded" style="width: 100px; height: 100px; object-fit: cover; display: block;">
+                                        <input type="hidden" class="js-color-gallery-keep" name="attr_blocks[{{ $bi }}][color_gallery_keep][]" value="{{ (int) ($cg['id'] ?? 0) }}" />
+                                        <button type="button" class="btn btn-danger btn-sm js-color-gallery-delete-existing p-0 position-absolute" style="top: 2px; right: 2px; width: 22px; line-height: 1;" title="{{ __('Remove') }}">&times;</button>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+
                     <label class="form-label small text-muted mb-2 d-block">{{ __('Sizes') }}</label>
                     <div class="table-responsive">
                         <table class="table table-borderless align-middle mb-0">
@@ -117,6 +135,13 @@
             <div class="mb-3">
                 <label class="form-label">{{ __('Color') }} <span class="text-muted small">({{ __('optional') }})</span></label>
                 <input type="text" class="form-control js-woo-color" placeholder="{{ __('e.g. Black') }}" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">{{ __('Color group images') }}</label>
+                <p class="text-muted small mb-2">{{ __('Upload images specific to this color. These will show on the product detail page when this color is selected.') }}</p>
+                <div class="js-color-gallery-dz dropzone"></div>
+                <input type="file" class="d-none js-color-gallery-input" multiple accept="image/*" />
+                <div class="d-flex flex-wrap gap-2 mt-2 js-color-gallery-existing-list"></div>
             </div>
             <label class="form-label small text-muted mb-2 d-block">{{ __('Sizes') }}</label>
             <div class="table-responsive">

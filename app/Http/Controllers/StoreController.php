@@ -128,7 +128,7 @@ class StoreController extends Controller
         ]);
 
         $galleryImages = $product->images
-            ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null)
+            ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null && trim((string) ($img->color_key ?? '')) === '')
             ->sortBy('sort_order')
             ->values();
 
@@ -190,11 +190,59 @@ class StoreController extends Controller
             ->values()
             ->all();
 
+        $colorGalleries = $product->images
+            ->filter(fn ($img) => trim((string) ($img->color_key ?? '')) !== '')
+            ->groupBy('color_key')
+            ->map(fn ($group) => $group->sortBy('sort_order')
+                ->map(fn ($img) => $img->publicUrl())
+                ->filter(fn ($u) => trim((string) $u) !== '')
+                ->values()
+                ->all())
+            ->all();
+
+        $colorAttrId = null;
+        $sizeAttrId = null;
+        foreach ($dimensions as $d) {
+            if (strcasecmp($d['name'], 'Color') === 0) {
+                $colorAttrId = (int) $d['id'];
+            }
+            if (strcasecmp($d['name'], 'Size') === 0) {
+                $sizeAttrId = (int) $d['id'];
+            }
+        }
+
+        $colorsStructured = [];
+        if ($colorAttrId !== null && $sizeAttrId !== null) {
+            foreach ($product->variations->sortBy('sort_order') as $v) {
+                $c = trim((string) $v->values->firstWhere('product_attribute_id', $colorAttrId)?->value);
+                if ($c === '') {
+                    continue;
+                }
+                if (! isset($colorsStructured[$c])) {
+                    $colorsStructured[$c] = [
+                        'color' => $c,
+                        'images' => $colorGalleries[$c] ?? [],
+                        'sizes' => [],
+                    ];
+                }
+                $colorsStructured[$c]['sizes'][] = [
+                    'id' => $v->id,
+                    'size' => trim((string) $v->values->firstWhere('product_attribute_id', $sizeAttrId)?->value),
+                    'price' => (float) $v->price,
+                ];
+            }
+            $colorsStructured = array_values($colorsStructured);
+        }
+
         $matrixPayload = [
             'dimensions' => $dimensions,
             'variations' => $variationsPayload,
             'defaultMain' => $defaultMainImage,
             'galleryUrls' => $galleryImageUrls,
+            'defaultGallery' => $galleryImageUrls,
+            'colorGalleries' => $colorGalleries,
+            'colorAttrId' => $colorAttrId,
+            'colors' => $colorsStructured,
             'fromPrice' => $product->from_price !== null ? (float) $product->from_price : null,
             'toPrice' => $product->to_price !== null ? (float) $product->to_price : null,
         ];

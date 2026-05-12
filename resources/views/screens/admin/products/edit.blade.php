@@ -26,7 +26,9 @@
                     @include('screens.admin.products.partials.gallery', [
                         'readonly' => false,
                         'galleryImages' => $product->images
-                            ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null)
+                            ->filter(fn ($img) => $img->product_attribute_item_id === null
+                                && $img->product_variation_id === null
+                                && trim((string) ($img->color_key ?? '')) === '')
                             ->values(),
                     ])
                     <div class="col-12 js-variable-only" style="display: none;">
@@ -48,12 +50,16 @@
 @push('scripts')
 @php
     $galleryCount = $product->images
-        ->filter(fn ($img) => $img->product_attribute_item_id === null && $img->product_variation_id === null)
+        ->filter(fn ($img) => $img->product_attribute_item_id === null
+            && $img->product_variation_id === null
+            && trim((string) ($img->color_key ?? '')) === '')
         ->count();
     $galleryDeleteBase = url('/admin/products/'.$product->slug.'/gallery-image');
 @endphp
 <script src="{{ asset('assets/js/admin-product-woo-attributes.js') }}"></script>
+<script src="{{ asset('assets/js/admin-product-color-gallery.js') }}"></script>
 <script>
+    window.adminProductGalleryDeleteBase = @json($galleryDeleteBase);
     (function() {
         function toggleSimpleVariable() {
             const slug = $('#product_type_id').find(':selected').data('slug');
@@ -123,6 +129,11 @@
                 });
             }
         });
+
+        var editForm = document.getElementById('editProductForm');
+        if (editForm && typeof window.initWooColorGalleryBlocksForForm === 'function') {
+            window.initWooColorGalleryBlocksForForm(editForm);
+        }
     });
 
     $(document).on('click', '.delete-gallery-image', function() {

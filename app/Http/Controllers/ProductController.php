@@ -112,6 +112,7 @@ class ProductController extends Controller
         $wooInitialBlocks = [
             [
                 'color' => '',
+                'color_gallery' => [],
                 'rows' => [
                     ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
                 ],
@@ -159,7 +160,7 @@ class ProductController extends Controller
         }
 
         $variationAttributes = $this->fixedVariationAttributes();
-        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes);
+        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes, null);
 
         $slugSource = $request->filled('slug') ? $request->input('slug') : $request->input('name');
         $slug = $this->uniqueProductSlug((string) $slugSource);
@@ -190,6 +191,7 @@ class ProductController extends Controller
                     $rowImageUploads,
                     $variationAttributes
                 );
+                $this->syncWooColorGalleryFromRequest($request, $product->fresh(), $variationAttributes);
             }
             $this->normalizeProductImagesOrder($product->fresh());
         });
@@ -235,7 +237,7 @@ class ProductController extends Controller
         }
 
         $variationAttributes = $this->fixedVariationAttributes();
-        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes);
+        [$normalizedVariationRows, $rowImageUploads] = $this->validatedVariableProductVariations($request, $type, $variationAttributes, $product);
 
         $slug = $slugRaw !== ''
             ? $this->uniqueProductSlug($slugRaw, $product->id)
@@ -283,6 +285,9 @@ class ProductController extends Controller
                 $sortOrder = (int) ($product->images()
                     ->whereNull('product_attribute_item_id')
                     ->whereNull('product_variation_id')
+                    ->where(function ($q) {
+                        $q->whereNull('color_key')->orWhere('color_key', '');
+                    })
                     ->max('sort_order') ?? -1);
                 foreach ($newGalleryFiles as $file) {
                     $path = ProductPublicImage::store($file);
@@ -291,6 +296,7 @@ class ProductController extends Controller
                         'product_id' => $product->id,
                         'product_attribute_item_id' => null,
                         'product_variation_id' => null,
+                        'color_key' => null,
                         'image' => $path,
                         'is_primary' => false,
                         'sort_order' => $sortOrder,
@@ -310,6 +316,7 @@ class ProductController extends Controller
                     $rowImageUploads,
                     $variationAttributes
                 );
+                $this->syncWooColorGalleryFromRequest($request, $product->fresh(), $variationAttributes);
             } else {
                 $this->replaceProductVariationsFromRequest(
                     $request,
@@ -372,7 +379,16 @@ class ProductController extends Controller
 
     private function isGalleryImage(ProductImage $img): bool
     {
-        return $img->product_attribute_item_id === null && $img->product_variation_id === null;
+        return $img->product_attribute_item_id === null
+            && $img->product_variation_id === null
+            && trim((string) ($img->color_key ?? '')) === '';
+    }
+
+    private function isColorGroupGalleryImage(ProductImage $img): bool
+    {
+        return $img->product_attribute_item_id === null
+            && $img->product_variation_id === null
+            && trim((string) ($img->color_key ?? '')) !== '';
     }
 
     /**
@@ -400,14 +416,14 @@ class ProductController extends Controller
     /**
      * @return array{0: list<array{price: float, options: array<int, string>}>, 1: list<UploadedFile|null>}
      */
-    private function validatedVariableProductVariations(Request $request, ProductType $type, Collection $variationAttributes): array
+    private function validatedVariableProductVariations(Request $request, ProductType $type, Collection $variationAttributes, ?Product $productForGalleryKeeps): array
     {
         if ($type->slug !== 'variable') {
             return [[], []];
         }
 
         if ($this->requestUsesWooAttributeBlocks($request)) {
-            return $this->validatedWooAttributeBlocks($request, $variationAttributes);
+            return $this->validatedWooAttributeBlocks($request, $variationAttributes, $productForGalleryKeeps);
         }
 
         return $this->validatedVariationRowsFlat($request, $variationAttributes);
@@ -423,7 +439,7 @@ class ProductController extends Controller
     /**
      * @return array{0: list<array{price: float, options: array<int, string>}>, 1: list<UploadedFile|null>}
      */
-    private function validatedWooAttributeBlocks(Request $request, Collection $variationAttributes): array
+    private function validatedWooAttributeBlocks(Request $request, Collection $variationAttributes, ?Product $productForGalleryKeeps): array
     {
         $colorAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Color') === 0);
         $sizeAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Size') === 0);
@@ -433,13 +449,33 @@ class ProductController extends Controller
             ]);
         }
 
-        $request->validate([
+        $rules = [
             'attr_blocks' => ['required', 'array', 'min:1'],
             'attr_blocks.*.color' => ['nullable', 'string', 'max:255'],
             'attr_blocks.*.rows' => ['required', 'array', 'min:1'],
             'attr_blocks.*.rows.*.size' => ['nullable', 'string', 'max:255'],
             'attr_blocks.*.rows.*.image' => $this->permissiveProductImageRules(),
-        ]);
+            'attr_blocks.*.color_gallery' => ['nullable', 'array'],
+            'attr_blocks.*.color_gallery.*' => $this->permissiveProductImageRules(),
+            'attr_blocks.*.color_gallery_keep' => ['nullable', 'array'],
+        ];
+        if ($productForGalleryKeeps !== null) {
+            $pid = (int) $productForGalleryKeeps->id;
+            $rules['attr_blocks.*.color_gallery_keep.*'] = [
+                'integer',
+                Rule::exists('product_images', 'id')->where(function ($q) use ($pid) {
+                    $q->where('product_id', $pid)
+                        ->whereNull('product_variation_id')
+                        ->whereNull('product_attribute_item_id')
+                        ->whereNotNull('color_key')
+                        ->where('color_key', '!=', '');
+                }),
+            ];
+        } else {
+            $rules['attr_blocks.*.color_gallery_keep.*'] = ['nullable', 'integer'];
+        }
+
+        $request->validate($rules);
 
         $blocks = $request->input('attr_blocks', []);
         $attributeIds = $variationAttributes->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
@@ -508,6 +544,139 @@ class ProductController extends Controller
         }
 
         return [$normalized, $uploads];
+    }
+
+    /**
+     * @return array<string, array{keep: list<int>, files: list<UploadedFile>}>
+     */
+    private function mergedWooColorGalleryPayloadsFromRequest(Request $request): array
+    {
+        $blocks = $request->input('attr_blocks', []);
+        if (! is_array($blocks)) {
+            return [];
+        }
+        $merged = [];
+        foreach ($blocks as $bi => $block) {
+            if (! is_array($block)) {
+                continue;
+            }
+            $c = trim((string) ($block['color'] ?? ''));
+            if ($c === '') {
+                continue;
+            }
+            if (! isset($merged[$c])) {
+                $merged[$c] = ['keep' => [], 'files' => []];
+            }
+            foreach ($block['color_gallery_keep'] ?? [] as $raw) {
+                $id = (int) $raw;
+                if ($id > 0) {
+                    $merged[$c]['keep'][] = $id;
+                }
+            }
+            $files = $request->file("attr_blocks.{$bi}.color_gallery");
+            if ($files instanceof UploadedFile) {
+                $files = [$files];
+            }
+            if (! is_array($files)) {
+                $files = [];
+            }
+            foreach ($files as $f) {
+                if ($f instanceof UploadedFile && $f->isValid()) {
+                    $merged[$c]['files'][] = $f;
+                }
+            }
+        }
+        foreach ($merged as $k => $payload) {
+            $merged[$k]['keep'] = array_values(array_unique($payload['keep']));
+        }
+
+        return $merged;
+    }
+
+    private function isValidColorGalleryKeepTarget(ProductImage $img): bool
+    {
+        return $this->isColorGroupGalleryImage($img);
+    }
+
+    private function syncWooColorGalleryFromRequest(Request $request, Product $product, Collection $variationAttributes): void
+    {
+        if (! $this->requestUsesWooAttributeBlocks($request)) {
+            return;
+        }
+
+        $colorAttr = $variationAttributes->first(fn (ProductAttribute $a) => strcasecmp($a->name, 'Color') === 0);
+        if (! $colorAttr) {
+            return;
+        }
+
+        $merged = $this->mergedWooColorGalleryPayloadsFromRequest($request);
+
+        foreach ($merged as $colorKey => $payload) {
+            $keepIds = array_values(array_unique(array_map('intval', $payload['keep'])));
+            $keepIds = array_values(array_filter($keepIds, fn (int $id) => $id > 0));
+
+            foreach ($keepIds as $kid) {
+                $img = ProductImage::query()->where('id', $kid)->where('product_id', $product->id)->first();
+                if ($img instanceof ProductImage && $this->isValidColorGalleryKeepTarget($img)) {
+                    $img->update(['color_key' => $colorKey]);
+                }
+            }
+
+            ProductImage::query()
+                ->where('product_id', $product->id)
+                ->where('color_key', $colorKey)
+                ->whereNull('product_variation_id')
+                ->whereNull('product_attribute_item_id')
+                ->whereNotIn('id', $keepIds)
+                ->get()
+                ->each(fn (ProductImage $img) => $img->delete());
+
+            $maxOrder = (int) (ProductImage::query()
+                ->where('product_id', $product->id)
+                ->where('color_key', $colorKey)
+                ->whereNull('product_variation_id')
+                ->whereNull('product_attribute_item_id')
+                ->max('sort_order') ?? -1);
+
+            foreach ($payload['files'] as $file) {
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    continue;
+                }
+                $maxOrder++;
+                $path = ProductPublicImage::store($file);
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'product_attribute_item_id' => null,
+                    'product_variation_id' => null,
+                    'color_key' => $colorKey,
+                    'image' => $path,
+                    'is_primary' => false,
+                    'sort_order' => $maxOrder,
+                    'created_by' => auth()->id(),
+                ]);
+            }
+        }
+
+        $product->loadMissing('variations.values');
+        $activeColorKeys = $product->variations
+            ->map(fn (ProductVariation $v) => trim((string) $v->values->firstWhere('product_attribute_id', $colorAttr->id)?->value))
+            ->filter(fn ($c) => $c !== '')
+            ->unique()
+            ->values()
+            ->all();
+
+        $orphanQuery = ProductImage::query()
+            ->where('product_id', $product->id)
+            ->whereNull('product_variation_id')
+            ->whereNull('product_attribute_item_id')
+            ->whereNotNull('color_key')
+            ->where('color_key', '!=', '');
+
+        if ($activeColorKeys !== []) {
+            $orphanQuery->whereNotIn('color_key', $activeColorKeys);
+        }
+
+        $orphanQuery->get()->each(fn (ProductImage $img) => $img->delete());
     }
 
     /**
@@ -643,6 +812,7 @@ class ProductController extends Controller
             return [
                 [
                     'color' => '',
+                    'color_gallery' => [],
                     'rows' => [
                         ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
                     ],
@@ -650,7 +820,11 @@ class ProductController extends Controller
             ];
         }
 
-        $product->loadMissing(['variations.values', 'variations.image']);
+        $product->loadMissing(['variations.values', 'variations.image', 'images']);
+        $colorImagesByKey = $product->images
+            ->filter(fn (ProductImage $i) => $this->isColorGroupGalleryImage($i))
+            ->groupBy(fn (ProductImage $i) => (string) $i->color_key)
+            ->map(fn ($group) => $group->sortBy('sort_order')->values());
         /** @var array<string, list<array{size: string, price: float|string, image_url: string, image_path: string|null}>> $byColor */
         $byColor = [];
         foreach ($product->variations->sortBy('sort_order') as $v) {
@@ -672,12 +846,21 @@ class ProductController extends Controller
 
         $blocks = [];
         foreach ($byColor as $color => $rows) {
-            $blocks[] = ['color' => $color, 'rows' => $rows];
+            $cg = $colorImagesByKey->get($color, collect());
+            if ($cg->isEmpty() && $color === (string) __('Uncategorized')) {
+                $cg = $colorImagesByKey->get('', collect());
+            }
+            $cg = $cg->map(fn (ProductImage $img) => [
+                'id' => $img->id,
+                'url' => $img->publicUrl(),
+            ])->values()->all();
+            $blocks[] = ['color' => $color, 'color_gallery' => $cg, 'rows' => $rows];
         }
 
         if ($blocks === []) {
             $blocks[] = [
                 'color' => '',
+                'color_gallery' => [],
                 'rows' => [
                     ['size' => '', 'price' => '', 'image_url' => '', 'image_path' => null],
                 ],
@@ -757,6 +940,7 @@ class ProductController extends Controller
                     'product_id' => $product->id,
                     'product_attribute_item_id' => null,
                     'product_variation_id' => $variation->id,
+                    'color_key' => null,
                     'image' => $path,
                     'is_primary' => false,
                     'sort_order' => 0,
@@ -787,6 +971,7 @@ class ProductController extends Controller
                 'product_id' => $product->id,
                 'product_attribute_item_id' => null,
                 'product_variation_id' => null,
+                'color_key' => null,
                 'image' => $path,
                 'is_primary' => ! $primarySet,
                 'sort_order' => $sortOrder,

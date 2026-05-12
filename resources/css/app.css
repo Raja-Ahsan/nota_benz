@@ -721,6 +721,10 @@ body {
       .mi-camino-sec {
         background-image: url('../../public/assets/images/carpedeim/banner-03.avif');
       }
+      .blog-banner-sec {
+        background: linear-gradient(180deg, rgba(26, 26, 26, 0.8) 0%, rgba(26, 26, 26, 0.6) 48.49%, rgba(26, 26, 26, 0.8) 100%), url('../../public/assets/images/image-08.png') no-repeat center center/cover;
+        padding: 100px 0;
+       }
 
 /* responsive */
 @media (max-width: 500px) {
@@ -1664,4 +1668,8 @@ input.auth-input:focus {
     background: color-mix(in srgb, var(--text-color) 6%, transparent);
     font-size: 0.92em;
     margin: 1em 0;
+}
+
+[x-cloak] {
+    display: none !important;
 }

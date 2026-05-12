@@ -6,18 +6,31 @@ document.addEventListener('alpine:init', () => {
         variations: payload.variations ?? [],
         defaultMain: payload.defaultMain ?? '',
         galleryUrls: payload.galleryUrls ?? [],
+        defaultGallery: payload.defaultGallery ?? payload.galleryUrls ?? [],
+        colorGalleries: payload.colorGalleries ?? {},
+        colors: payload.colors ?? [],
+        colorAttrId: payload.colorAttrId ?? null,
         fromPrice: payload.fromPrice ?? null,
         toPrice: payload.toPrice ?? null,
         mainImageOverride: null,
         selections: {},
 
         init() {
-            const first = this.variations[0];
-            if (first && first.options) {
-                Object.keys(first.options).forEach((k) => {
-                    this.selections[k] = first.options[k];
-                });
-            }
+            this.dimensions.forEach((d) => {
+                this.selections[this.k(d.id)] = '';
+            });
+            this.$watch(
+                () => JSON.stringify(this.activeGalleryUrls),
+                () => {
+                    this.$nextTick(() => {
+                        const root = this.$root?.querySelector?.('[data-thumbs-track]');
+                        if (root) {
+                            root.scrollLeft = 0;
+                            root.dispatchEvent(new Event('scroll'));
+                        }
+                    });
+                },
+            );
         },
 
         k(attrId) {
@@ -62,11 +75,9 @@ document.addEventListener('alpine:init', () => {
             if (label === 'size') {
                 arr.sort((a, b) => this.compareSizeOption(a, b));
             }
-            // Color and other dims: keep first-seen order (variation list / admin order), not A–Z.
             return arr;
         },
 
-        /** Sort clothing-style sizes: S, M, L, XL… (not alphabetical M before S). */
         compareSizeOption(a, b) {
             const ra = this.sizeRank(a);
             const rb = this.sizeRank(b);
@@ -84,8 +95,8 @@ document.addEventListener('alpine:init', () => {
                 m: 'm', medium: 'm',
                 l: 'l', large: 'l',
                 xl: 'xl', extralarge: 'xl', 'x-large': 'xl',
-                xxl: 'xxl', '2xl': '2xl', '2xlarge': '2xl', doublexl: 'xxl',
-                xxxl: 'xxxl', '3xl': '3xl', '3xlarge': '3xl', triplexl: 'xxxl',
+                xxl: 'xxl', '2xl': '2xl', '2xlarge': 'xxl', doublexl: 'xxl',
+                xxxl: 'xxxl', '3xl': '3xl', '3xlarge': 'xxxl', triplexl: 'xxxl',
                 '4xl': '4xl', '5xl': '5xl', '6xl': '6xl', '7xl': '7xl', '8xl': '8xl',
             };
             const normalized = alias[s] ?? s;
@@ -102,8 +113,10 @@ document.addEventListener('alpine:init', () => {
         },
 
         selectValue(attrId, value) {
-            this.mainImageOverride = null;
             const key = this.k(attrId);
+            if (this.colorAttrId != null && key === this.k(this.colorAttrId)) {
+                this.mainImageOverride = null;
+            }
             this.selections[key] = value;
             const idx = this.dimensions.findIndex((d) => this.k(d.id) === key);
             for (let i = idx + 1; i < this.dimensions.length; i++) {
@@ -125,7 +138,21 @@ document.addEventListener('alpine:init', () => {
             this.mainImageOverride = url;
         },
 
+        get activeGalleryUrls() {
+            const cid = this.colorAttrId != null ? this.k(this.colorAttrId) : null;
+            const c = cid ? String(this.selections[cid] ?? '').trim() : '';
+            if (c !== '' && this.colorGalleries[c] && this.colorGalleries[c].length) {
+                return this.colorGalleries[c];
+            }
+            const g = this.galleryUrls && this.galleryUrls.length ? this.galleryUrls : (this.defaultMain ? [this.defaultMain] : []);
+            return g;
+        },
+
         get matchingVariation() {
+            const incomplete = this.dimensions.some((d) => ! String(this.selections[this.k(d.id)] ?? '').trim());
+            if (incomplete) {
+                return null;
+            }
             return this.variations.find((v) => this.dimensions.every((d) => {
                 const key = this.k(d.id);
                 const need = this.selections[key];
@@ -139,7 +166,6 @@ document.addEventListener('alpine:init', () => {
             return m ? Number(m.price) : 0;
         },
 
-        /** Shown price: SKU price when > 0, else product from/to range when set. */
         get priceLine() {
             const m = this.matchingVariation;
             const from = this.fromPrice;
@@ -168,9 +194,9 @@ document.addEventListener('alpine:init', () => {
             if (this.mainImageOverride) {
                 return this.mainImageOverride;
             }
-            const m = this.matchingVariation;
-            if (m && m.imageUrl) {
-                return m.imageUrl;
+            const urls = this.activeGalleryUrls;
+            if (urls.length) {
+                return urls[0];
             }
             return this.defaultMain;
         },
