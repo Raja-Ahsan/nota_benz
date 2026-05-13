@@ -25,11 +25,11 @@ inner-site
 
             <div class="container relative z-10 py-24 sm:py-28 lg:py-32">
                 <div class="max-w-3xl space-y-6 pt-12 sm:pt-16 lg:pt-10">
-                    <p class="manrope-font text-[10px] font-semibold uppercase tracking-[0.28em] text-white/60">
+                    <!-- <p class="manrope-font text-[10px] font-semibold uppercase tracking-[0.28em] text-white/60">
                         <a href="{{ route('home') }}" class="text-white/70 transition-colors hover:text-primary-color">{{ __('Home') }}</a>
                         <span class="mx-2 text-white/35" aria-hidden="true">/</span>
                         <span class="text-white/90">Jumps</span>
-                    </p>
+                    </p> -->
                     <h1 class="syne-font text-[34px] font-extrabold uppercase leading-[1.05] tracking-tight text-white sm:text-[48px] md:text-[56px]">
                         Jumps
                     </h1>

@@ -22,11 +22,11 @@ inner-site
 
         <div class="container relative z-10 flex min-h-[58svh] flex-col justify-center py-20 sm:min-h-[64svh] sm:px-6 sm:py-24 md:py-28 lg:min-h-[70svh] lg:px-8 lg:py-36">
             <div class="max-w-4xl space-y-8 pt-16 sm:pt-20 lg:pt-8">
-                <p class="manrope-font text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50">
+                <!-- <p class="manrope-font text-[10px] font-semibold uppercase tracking-[0.28em] text-white/50">
                     <a href="{{ route('home') }}" class="text-white/60 transition-colors hover:text-primary">Home</a>
                     <span class="mx-2 text-white/30" aria-hidden="true">/</span>
                     <span class="text-white/90">Journey</span>
-                </p>
+                </p> -->
 
                 <div class="flex items-center gap-3">
                     <span class="h-px w-8 shrink-0 bg-[var(--primary-color)]" aria-hidden="true"></span>
