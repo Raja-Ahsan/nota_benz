@@ -119,7 +119,7 @@
     'kicker_title' => ' — ' . __('The Origin'),
     'line1' => __('Born from a '),
     'em' => __('single Mother'),
-    'line2' => __(' — on a Broken Home'),
+    'line2' => __(' — on a Carnival Day'),
     'body' => [
     __('Dominican roots. World-wandering spirit. A name that
     refuses the ordinary. NOTaBENZ did not arrive as a brand
