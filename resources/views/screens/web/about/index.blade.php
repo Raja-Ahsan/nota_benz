@@ -1,6 +1,6 @@
 @extends('layouts.web.master')
 
-@section('title', __('About') . ' — NOTaBENZ')
+@section('title', 'Identity')
 
 @push('body-class')
 inner-site
