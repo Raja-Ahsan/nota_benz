@@ -17,7 +17,7 @@
             </video>
             <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/35" aria-hidden="true"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-            
+
         </div>
 
         {{-- LIVE badge (top-right of hero) --}}
@@ -121,12 +121,12 @@
     'em' => __('single Mother'),
     'line2' => __(' — on a Carnival Day'),
     'body' => [
-    __('Dominican roots. World-wandering spirit. A name that
-    refuses the ordinary. NOTaBENZ did not arrive as a brand
-    — it arrived as a reckoning.'),
-    __('Mercedes A. Villamán began writing long before she knew
-    she was a writer. Between continents and contradictions, she
-    found her voice — precise, poetic, and uncompromising.'),
+    __('A Dominican born Dominiquena turned Dominirrican by the New
+    York City Winters,'),
+    __('Mercedes A. Villaman tried not to be a Writer but could not. In spite
+    of that, she tried to be a writer. And she always was. Mercedes tried
+    to be an artist, jumping from spot to spot she took notes, pictures,
+    sounds and memories.'),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take I of IV'),
     ],

@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 @font-face {
     font-family: "Manrope";
     src: url("../../public/fonts/manrope/MANROPE-EXTRALIGHT.TTF") format("truetype");
