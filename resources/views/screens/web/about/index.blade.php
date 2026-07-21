@@ -178,8 +178,17 @@ inner-site
             <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
                 <div class="relative order-2 lg:order-1">
                     <div class="aspect-[4/5] overflow-hidden rounded-2xl border border-dim-black/10 shadow-xl shadow-black/10 sm:aspect-[3/4]">
-                        <img
+                        <!-- <img
                             src="{{ asset('assets/images/stories-img-01.png') }}"
+                            alt="{{ __('Portrait and creative work collage for NOTaBENZ story section') }}"
+                            class="h-full w-full object-cover"
+                            width="800"
+                            height="1000"
+                            loading="lazy"
+                            decoding="async"
+                        /> -->
+                        <img
+                            src="{{ asset('assets/images/client-gif.gif') }}"
                             alt="{{ __('Portrait and creative work collage for NOTaBENZ story section') }}"
                             class="h-full w-full object-cover"
                             width="800"

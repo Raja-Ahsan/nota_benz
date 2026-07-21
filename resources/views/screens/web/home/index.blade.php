@@ -122,19 +122,19 @@
     'line2' => __(' — on a Carnival Day'),
     'body' => [
     __('A Dominican born Dominiquena turned Dominirrican by the New
-    York City Winters,'),
-    __('Mercedes A. Villaman tried not to be a Writer but could not. In spite
+    York City Winters, Mercedes A. Villaman tried not to be a Writer but could not. In spite
     of that, she tried to be a writer. And she always was. Mercedes tried
     to be an artist, jumping from spot to spot she took notes, pictures,
     sounds and memories.'),
+    __(''),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take I of IV'),
     ],
     [
     'kicker_line' => '— ' . __('Take II') ,
     'kicker_title' => ' — ' . __('The Road'),
-    'line1' => __(' 32 countries. One'),
-    'em' => __(' relentless question.'),
+    'line1' => __(' Whera in the world'),
+    'em' => __(' is Mercedes NOTABENZ.'),
     'line2' => __(),
     'body' => [
     __('The Camino de Santiago. The streets of Havana. A notebook
@@ -197,7 +197,7 @@
                         role="img"
                         aria-label="{{ __('Story image') }} 1"
                         class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none"
-                        style="background-image: url('{{ asset('assets/images/slider-img-01.png') }}'); will-change: opacity; opacity: 1;"></div>
+                        style="background-image: url('{{ asset('assets/images/client-image.png') }}'); will-change: opacity; opacity: 1;"></div>
                     <div
                         data-story-img
                         data-index="1"
