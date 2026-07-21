@@ -7,8 +7,8 @@
     content="web app" />
 <meta name="author" content="pixelstrap" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="icon" href="{{ asset('assets/web/images/logo.png') }}" type="image/x-icon" />
-<link rel="shortcut icon" href="{{ asset('assets/web/images/logo.png') }}" type="image/x-icon" />
+<link rel="icon" href="{{ asset('assets/images/fav-icon.png') }}" type="image/png" />
+<link rel="shortcut icon" href="{{ asset('assets/images/fav-icon.png') }}" type="image/png" />
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700&display=swap" rel="stylesheet" />

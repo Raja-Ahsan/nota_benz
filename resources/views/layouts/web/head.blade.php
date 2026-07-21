@@ -7,6 +7,9 @@
 
         <title>@yield('title') | {{config('app.name', 'Nota Benz')}}</title>
 
+        <link rel="icon" href="{{ asset('assets/images/fav-icon.png') }}" type="image/png" />
+        <link rel="shortcut icon" href="{{ asset('assets/images/fav-icon.png') }}" type="image/png" />
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
