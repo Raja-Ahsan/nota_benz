@@ -49,8 +49,8 @@
 
                 {{-- Subcopy --}}
                 <div class="space-y-1 font-sans text-[11px] text-white/50  md:text-[20px]">
-                    <p class="font-medium uppercase text-[14px] text-primary manrope-font tracking-[3.7px]">
-                        NOTABENZ - A PERSPECTIVE.
+                    <p class="font-medium  text-[14px] text-primary manrope-font tracking-[3.7px]">
+                        NOTaBENZ - A PERSPECTIVE.
                     </p>
                     <p class="font-medium italic tracking-wide cormorant-font tracking-[1.25px]">Not Because, But inSpite of</p>
                 </div>
@@ -135,7 +135,7 @@
     'kicker_title' => ' — ' . __('The Road'),
     'line1' => __(' Whera in the world'),
     'em' => __(' is Mercedes '),
-    'em_accent' => 'NOTABENZ',
+    'em_accent' => 'NOTaBENZ',
     'line2' => __('.'),
     'body' => [
     __('The Camino de Santiago. The streets of Havana. A notebook
