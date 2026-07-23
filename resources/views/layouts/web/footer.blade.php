@@ -60,11 +60,11 @@
                     Navigate
                 </h2>
                 <ul class="footer-ul manrope-font tracking-[2.78px]">
-                    <li><a href="#" class="footer-link">Identity</a></li>
-                    <li><a href="#" class="footer-link">Journey</a></li>
-                    <li><a href="#" class="footer-link">Stories</a></li>
-                    <li><a href="#" class="footer-link">Artifacts</a></li>
-                    <li><a href="#" class="footer-link">Connect</a></li>
+                    <li><a href="{{ route('about') }}" class="footer-link">Identity</a></li>
+                    <li><a href="{{ route('journey') }}" class="footer-link">Journey</a></li>
+                    <li><a href="#" class="footer-link">Glitches</a></li>
+                    <li><a href="{{ route('artifacts.index') }}" class="footer-link">Artifacts</a></li>
+                    <a href="{{ route('blog.index') }}" class="footer-link">Jumps</a>
                 </ul>
             </div>
 
@@ -77,7 +77,7 @@
                     <li><a href="#" class="footer-link">All Stories</a></li>
                     <li><a href="#" class="footer-link">Travel Blog</a></li>
                     <li><a href="#" class="footer-link">Writers Showcase</a></li>
-                    <li><a href="#" class="footer-link">Carpe Diem</a></li>
+                    <li><a href="{{ route('carpediem') }}" class="footer-link">Carpe Diem</a></li>
                 </ul>
             </div>
 

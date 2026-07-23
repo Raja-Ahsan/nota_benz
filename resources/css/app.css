@@ -243,6 +243,38 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "JMH Typewriter";
+    src: url("../../public/fonts/jmh_typewriter/JMH Typewriter-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JMH Typewriter";
+    src: url("../../public/fonts/jmh_typewriter/JMH Typewriter.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JMH Typewriter";
+    src: url("../../public/fonts/jmh_typewriter/JMH Typewriter-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JMH Typewriter";
+    src: url("../../public/fonts/jmh_typewriter/JMH Typewriter-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --primary-color: #10e0ff;
     --secondary-color: #28a4ba;
@@ -254,6 +286,7 @@
     --manrope: "Manrope", ui-sans-serif, system-ui, sans-serif;
     --cormorant-garamond: "Cormorant Garamond", Georgia, "Times New Roman", serif;
     --syne: "Syne", ui-sans-serif, system-ui, sans-serif;
+    --jmh-typewriter: "JMH Typewriter", "Courier New", Courier, monospace;
 }
 
 @theme {
@@ -265,6 +298,7 @@
     --font-manrope: var(--manrope);
     --font-cormorant: var(--cormorant-garamond);
     --font-syne: var(--syne);
+    --font-jmh-typewriter: var(--jmh-typewriter);
 }
 
 
@@ -287,6 +321,10 @@ body {
 
 .cormorant-font {
     font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+}
+
+.jmh-typewriter-font {
+    font-family: "JMH Typewriter", "Courier New", Courier, monospace;
 }
 
 .container {

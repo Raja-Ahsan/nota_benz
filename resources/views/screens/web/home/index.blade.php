@@ -122,11 +122,11 @@
     'line2' => __(' — on a Carnival Day'),
     'body' => [
     __('A Dominican born Dominiquena turned Dominirrican by the New
-    York City Winters, Mercedes A. Villaman tried not to be a Writer but could not. In spite
+    York City Winters.'),
+    __('Mercedes A. Villaman tried not to be a Writer but could not. In spite
     of that, she tried to be a writer. And she always was. Mercedes tried
     to be an artist, jumping from spot to spot she took notes, pictures,
     sounds and memories.'),
-    __(''),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take I of IV'),
     ],
@@ -134,8 +134,9 @@
     'kicker_line' => '— ' . __('Take II') ,
     'kicker_title' => ' — ' . __('The Road'),
     'line1' => __(' Whera in the world'),
-    'em' => __(' is Mercedes NOTABENZ.'),
-    'line2' => __(),
+    'em' => __(' is Mercedes '),
+    'em_accent' => 'NOTABENZ',
+    'line2' => __('.'),
     'body' => [
     __('The Camino de Santiago. The streets of Havana. A notebook
     in Lisbon. Every road walked is a sentence written — not in
@@ -242,7 +243,7 @@
                             <span class="cormorant-font mt-0.5 block pl-0.5  text-[16px]  italic normal-case tracking-wide text-[#333333] font-normal sm:mt-0 sm:ml-2 sm:inline sm:pl-0 md:text-lg">{{ $slide['kicker_title'] }}</span>
                         </p>
                         <h2 class="mt-2 max-w-[400px]  text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px] plarfair-font">
-                            {{ $slide['line1'] }}<em class=" font-normal italic text-secondary">{{ $slide['em'] }}</em>{{ $slide['line2'] }}
+                            {{ $slide['line1'] }}<em class=" font-normal italic text-secondary">{{ $slide['em'] }}@if (!empty($slide['em_accent']))<span class="jmh-typewriter-font not-italic">{{ $slide['em_accent'] }}</span>@endif</em>{{ $slide['line2'] }}
                         </h2>
                         <div class="mt-6 max-w-[400px] space-y-4 font-normal text-[16px] leading-[35.52pz] text-[var(--text-color)]/ cormorant-font tracking-[0%]">
                             @foreach ($slide['body'] as $para)
