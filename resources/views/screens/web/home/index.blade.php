@@ -133,7 +133,7 @@
     [
     'kicker_line' => '— ' . __('Take II') ,
     'kicker_title' => ' — ' . __('The Road'),
-    'line1' => __(' Whera in the world'),
+    'line1' => __(' Where in the world'),
     'em' => __(' is Mercedes '),
     'em_accent' => 'NOTaBENZ',
     'line2' => __('.'),
