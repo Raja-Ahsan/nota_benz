@@ -298,7 +298,7 @@ inner-site
         <div class="quote-banner__inner">
             <blockquote class="quote-banner__quote">
                 <p class="quote-banner__text">Travel was never tourism. It was research. Evidence-gathering. A study in how different people hold the same desire to be fully alive.</p>
-                <footer class="quote-banner__attribution tracking-[2.98px]">— NOTaBENZ</footer>
+                <p class="quote-banner__attribution tracking-[2.98px]">— NOTaBENZ</p>
             </blockquote>
         </div>
     </section>
@@ -321,9 +321,9 @@ inner-site
                         Enter the journey
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>
                     </a>
-                    <a href="#" class="btn secondary-btn !text-dim-black border-btn">
+                    <!-- <a href="#" class="btn secondary-btn !text-dim-black border-btn">
                         About NOTaBENZ
-                    </a>
+                    </a> -->
                 </div>
             </div>
         </div>

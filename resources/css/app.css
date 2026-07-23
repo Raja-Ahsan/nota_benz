@@ -828,7 +828,7 @@ body {
 }
 
 .quote-banner__attribution {
-    @apply  text-[16px] font-bold uppercase tracking-widest text-primary;
+    @apply  text-[16px] font-bold  tracking-widest text-primary;
 }
 
 /* Stories from the Field — featured posts grid (reusable block) */

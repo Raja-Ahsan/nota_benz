@@ -341,7 +341,7 @@ inner-site
                     <li class="relative pb-12 last:pb-0">
                         <span class="absolute -left-[21px] top-1.5 flex h-3 w-3 -translate-x-1/2 rounded-full border-2 border-[var(--text-color)] bg-primary sm:-left-[25px] sm:top-2" aria-hidden="true"></span>
                         <p class="manrope-font text-[10px] font-bold uppercase tracking-[0.28em] text-primary/90">{{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}</p>
-                        <h3 class="mt-2 syne-font text-lg font-extrabold uppercase tracking-tight sm:text-xl">{{ $item['t'] }}</h3>
+                        <h3 class="mt-2 syne-font text-lg font-extrabold  tracking-tight sm:text-xl">{{ $item['t'] }}</h3>
                         <p class="mt-2 max-w-prose text-sm leading-relaxed text-white/78 cormorant-font sm:text-[15px]">{{ $item['d'] }}</p>
                     </li>
                 @endforeach
@@ -373,7 +373,7 @@ inner-site
                     ['q' => __('Where should a new reader start?'), 'a' => __('Begin with the scroll story on the home page, then follow the medium that pulls you — prose, field notes, or image.')],
                 ] as $faq)
                     <details class="group py-5 sm:py-6" name="about-faq">
-                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left manrope-font text-sm font-bold uppercase tracking-wide text-[var(--text-color)] marker:content-none [&::-webkit-details-marker]:hidden">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left manrope-font text-sm font-bold  tracking-wide text-[var(--text-color)] marker:content-none [&::-webkit-details-marker]:hidden">
                             <span>{{ $faq['q'] }}</span>
                             <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--text-color)_15%,transparent)] text-lg text-primary transition group-open:rotate-45" aria-hidden="true">+</span>
                         </summary>
