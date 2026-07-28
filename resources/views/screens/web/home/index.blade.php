@@ -75,7 +75,7 @@
     <!-- slider section -->
     @php
     $tickerWords = [
-    __('Writer'),
+    __('Walker'),
     __('Traveler'),
     __('Artist'),
     __('Pilgrim'),
@@ -88,7 +88,7 @@
     __('Artist'),
     __('Pilgrim'),
     __('Storyteller'),
-    __('Explorer'),
+    __('Sun Dancer'),
     __('Creator'),
     __('Dreamer'),
     ];
@@ -150,16 +150,13 @@
     [
     'kicker_line' => '— ' . __('Take III') ,
     'kicker_title' => ' — ' . __('The Art'),
-    'line1' => __('Street art.
-    Conceptual work. '),
-    'em' => __('Language as canvas.'),
+    'line1' => __('Graffiti.
+    Urban Art. '),
+    'em' => __('The Sound of Silence.'),
     'line2' => __(''),
     'body' => [
-    __('Not all art lives in galleries. Some lives on walls, in margins,
-    in the gap between what is said and what is meant. This is
-    the territory NOTaBENZ claims.'),
-    __('From urban murals to written essays, the creative philosophy
-    is constant: '),
+    __('Indifferent to galleries, some art lives on walls, in margins, in the gap between what is said and what is not. With eyes wide open NOTaBENZ listens.'),
+    __('"I tell you, if these were silent, the very stones would cry out." (Luke 19:37-40)'),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take III of IV'),
     ],

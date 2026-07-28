@@ -249,7 +249,7 @@ inner-site
             <div class="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
                 <div class="relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--text-color)_10%,transparent)] shadow-xl">
                     <img
-                        src="{{ asset('assets/images/scene-v-bg-image.png') }}"
+                        src="{{ asset('assets/images/nota-a-benz-profile-01.jpg') }}"
                         alt="{{ __('Atmospheric scene from the NOTaBENZ journey') }}"
                         class="aspect-[4/3] w-full object-cover sm:aspect-[5/4] lg:min-h-[420px]"
                         loading="lazy"
