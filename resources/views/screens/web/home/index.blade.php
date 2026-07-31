@@ -82,7 +82,7 @@
     __('Storyteller'),
     __('Explorer'),
     __('Creator'),
-    __('Dreamer'),
+    __('Dream'),
     __('Writer'),
     __('Traveler'),
     __('Artist'),
@@ -90,7 +90,7 @@
     __('Storyteller'),
     __('Sun Dancer'),
     __('Creator'),
-    __('Dreamer'),
+    __('Dream'),
     ];
     @endphp
     <section
@@ -138,12 +138,8 @@
     'em_accent' => 'NOTaBENZ',
     'line2' => __('.'),
     'body' => [
-    __('The Camino de Santiago. The streets of Havana. A notebook
-    in Lisbon. Every road walked is a sentence written — not in
-    metaphor, but in method.'),
-    __('Travel was never tourism. It was research. Evidence-
-    gathering. A study in how different people hold the same
-    desire to be fully alive.'),
+    __('The Camino de Santiago. The streets of Havana. Shikoku 88 Temples. Hopscotching through the world, Mercedes is always her own map.'),
+    __('Traveling is a journey toward Herself, A jump into the Mush Pit. Her odyssey toward the Multitude.'),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take II of IV'),
     ],
