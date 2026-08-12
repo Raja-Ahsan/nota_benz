@@ -61,10 +61,11 @@
                 </h2>
                 <ul class="footer-ul manrope-font tracking-[2.78px]">
                     <li><a href="{{ route('about') }}" class="footer-link">Identity</a></li>
-                    <li><a href="{{ route('journey') }}" class="footer-link">Journey</a></li>
+                    {{-- <li><a href="{{ route('journey') }}" class="footer-link">Journey</a></li> --}}
                     <li><a href="#" class="footer-link">Glitches</a></li>
                     <li><a href="{{ route('artifacts.index') }}" class="footer-link">Artifacts</a></li>
-                    <a href="{{ route('blog.index') }}" class="footer-link">Jumps</a>
+                    <li><a href="{{ route('blog.index') }}" class="footer-link">Jumps</a></li>
+                    <li><a href="{{ route('hello') }}" class="footer-link">Hello</a></li>
                 </ul>
             </div>
 

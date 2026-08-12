@@ -520,9 +520,11 @@
             </p>
 
             <form
+                id="newsletter-form"
                 class="mt-8 pb-[120px] flex w-full max-w-md flex-col shadow-[0_12px_40px_rgba(0,0,0,0.35)] sm:mt-10 sm:flex-row sm:shadow-none"
-                action="#"
-                method="post">
+                action="{{ route('newsletter.store') }}"
+                method="post"
+                novalidate>
                 @csrf
                 <label for="newsletter-email" class="sr-only">Email address</label>
                 <input
@@ -536,6 +538,7 @@
                     class="min-h-[52px] w-full min-w-0 flex-1 border-0 bg-white px-4 py-3.5 manrope-font text-base text-neutral-900 placeholder:text-neutral-400 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-primary sm:min-h-[56px] sm:py-4" />
                 <button
                     type="submit"
+                    id="newsletter-submit-btn"
                     class="min-h-[52px] w-full shrink-0 bg-primary px-6 py-3.5 manrope-font text-[11px] font-bold uppercase tracking-[0.22em] text-black transition-opacity hover:opacity-90 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-[56px] sm:w-auto sm:px-8">
                     Subscribe
                 </button>
@@ -727,6 +730,75 @@
             }
             if ($bottom.length) {
                 $bottom.slick(instaMarqueeOptions());
+            }
+        });
+    })();
+
+    (function () {
+        const form = document.getElementById('newsletter-form');
+        if (!form) return;
+
+        const submitBtn = document.getElementById('newsletter-submit-btn');
+        const btnOriginalHtml = submitBtn ? submitBtn.innerHTML : '';
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = @json(__('Sending…'));
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    body: new FormData(form),
+                });
+
+                const data = await response.json().catch(() => ({}));
+
+                if (response.ok && data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: data.message || @json(__('You\'re in — welcome to the Inner Circle.')),
+                        showConfirmButton: false,
+                        timer: 2200,
+                    });
+                    form.reset();
+                    return;
+                }
+
+                if (response.status === 422 && data.errors) {
+                    const firstError = Object.values(data.errors)[0];
+                    Swal.fire({
+                        icon: 'warning',
+                        title: @json(__('Please check your email')),
+                        text: Array.isArray(firstError) ? firstError[0] : (data.message || ''),
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: @json(__('Something went wrong')),
+                    text: data.message || @json(__('Please try again in a moment.')),
+                });
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: @json(__('Network error')),
+                    text: @json(__('Check your connection and try again.')),
+                });
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = btnOriginalHtml;
+                }
             }
         });
     })();

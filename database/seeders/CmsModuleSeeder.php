@@ -118,6 +118,28 @@ class CmsModuleSeeder extends Seeder
             ]
         );
 
+        CmsModule::updateOrCreate(
+            ['route_name' => 'enquiries.index'],
+            [
+                'name' => 'Enquiries',
+                'icon' => 'fa-solid fa-envelope-open-text',
+                'sort_order' => 6,
+                'status' => 'active',
+                'parent_id' => 0,
+            ]
+        );
+
+        CmsModule::updateOrCreate(
+            ['route_name' => 'newsletter-subscribers.index'],
+            [
+                'name' => 'Newsletter',
+                'icon' => 'fa-solid fa-paper-plane',
+                'sort_order' => 7,
+                'status' => 'active',
+                'parent_id' => 0,
+            ]
+        );
+
         $allowed = [
             'admin.dashboard',
             'users.index',
@@ -128,6 +150,8 @@ class CmsModuleSeeder extends Seeder
             'blogs-module',
             'blog-categories.index',
             'blogs.index',
+            'enquiries.index',
+            'newsletter-subscribers.index',
         ];
 
         CmsModule::query()

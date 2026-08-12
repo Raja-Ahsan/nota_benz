@@ -24,11 +24,12 @@
             {{-- Desktop nav --}}
             <nav class="hidden items-center gap-6 lg:flex xl:gap-10 manrope-font" aria-label="{{ __('Primary') }}">
                 <a href="{{ route('about') }}" class="desktop-nav-link">Identity</a>
-                <a href="{{ route('journey') }}" class="desktop-nav-link">Journey</a>
+                {{-- <a href="{{ route('journey') }}" class="desktop-nav-link">Journey</a> --}}
                 <a href="#" class="desktop-nav-link">Glitches</a>
                 <a href="{{ route('carpediem') }}" class="desktop-nav-link">Carpe Diem</a>
                 <a href="{{ route('artifacts.index') }}" class="desktop-nav-link">Artifacts</a>
                 <a href="{{ route('blog.index') }}" class="desktop-nav-link">Jumps</a>
+                <a href="{{ route('hello') }}" class="desktop-nav-link">Hello</a>
             </nav>
             <a href="{{ route('cart.index') }}" class="cart-icon-wrapper inline-block no-underline" aria-label="{{ __('Shopping cart') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" viewBox="0 0 105.5 126.1" preserveAspectRatio="xMinYMax meet" data-hook="svg-icon-1">
@@ -99,11 +100,12 @@
         aria-label="{{ __('Mobile navigation') }}">
         <nav class="main-container px-4 py-4 sm:px-6 lg:px-8 manrope-font">
             <a href="{{ route('about') }}" class="mobile-nav-link">Identity</a>
-            <a href="{{ route('journey') }}" class="mobile-nav-link">Journey</a>
+            {{-- <a href="{{ route('journey') }}" class="mobile-nav-link">Journey</a> --}}
             <a href="#" class="mobile-nav-link">Glitches</a>
             <a href="{{ route('carpediem') }}" class="mobile-nav-link">Carpe Diem</a>
             <a href="{{ route('artifacts.index') }}" class="mobile-nav-link">Artifacts</a>
             <a href="{{ route('blog.index') }}" class="mobile-nav-link">{{ __('Jumps') }}</a>
+            <a href="{{ route('hello') }}" class="mobile-nav-link">Hello</a>
             @guest
             <a
                 href="{{ route('login') }}"
