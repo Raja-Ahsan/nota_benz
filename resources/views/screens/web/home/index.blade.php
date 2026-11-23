@@ -82,7 +82,6 @@
     __('Storyteller'),
     __('Explorer'),
     __('Creator'),
-    __('Dream'),
     __('Writer'),
     __('Traveler'),
     __('Artist'),
@@ -90,7 +89,6 @@
     __('Storyteller'),
     __('Sun Dancer'),
     __('Creator'),
-    __('Dream'),
     ];
     @endphp
     <section
@@ -125,7 +123,7 @@
     York City Winters.'),
     __('Mercedes A. Villaman tried not to be a Writer but could not. In spite
     of that, she tried to be a writer. And she always was. Mercedes tried
-    to be an artist, jumping from spot to spot she took notes, pictures,
+    to be an artist, hopscotching her way thru and through, she took notes, pictures,
     sounds and memories.'),
     ],
     'progress' => __('SCENE II') . ' — ' . __('Take I of IV'),
@@ -164,9 +162,7 @@
     'line2' => __('. It is built —
     word by deliberate word.'),
     'body' => [
-    __('The name says it all. NOTaBENZ is a refusal. A declaration.
-    A signal that your worth was never determined by what you
-    drove, wore, or inherited.'),
+    __("What's in a name? NOTaBENZ is a refusal. A manifest. A signal. A code undefined by brands, labels or DNA"),
     __('This is the world we are building, one story at a time. You
     are either in it, or you are still deciding. Both are fine. The
     door is always open.'),
@@ -261,9 +257,10 @@
         <div class="quote-banner__inner">
             <blockquote class="quote-banner__quote">
                 <p class="quote-banner__text">
-                    "Every road walked is a sentence written. Every city crossed is a paragraph earned."
+                    <!-- "Every road walked is a sentence written. Every city crossed is a paragraph earned." -->
+                    "Yo misma fui mi ruta. I was my own route." 
                 </p>
-                <footer class="quote-banner__attribution tracking-[2.98px]">— Mercedes A. Villamán</footer>
+                <footer class="quote-banner__attribution tracking-[2.98px]">— Julia de Burgos</footer>
             </blockquote>
         </div>
     </section>

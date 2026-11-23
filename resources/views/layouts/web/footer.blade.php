@@ -13,7 +13,7 @@
                     />
                 </a>
                 <p class="max-w-[250px] leading-[1.5] italic text-dim-black text-[16px] cormorant-font">
-                    Not a brand. A perspective. Stories, art, and the life that shaped them — by Mercedes A. Villamín.
+                    Not a brand. A perspective. Stories, art, and the life that shaped them — by Mercedes A. Villamán.
                 </p>
                 <ul class="mt-6 flex flex-wrap items-center gap-3" role="list">
                     <li>
@@ -111,7 +111,7 @@
     <div class="max-w-5xl mx-auto h-[1px] bg-[var(--text-color)]/10 manrope-font"></div>
         <div class="container mx-auto max-w-7xl flex flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
             <p class="text-center text-[11px] text-[var(--text-color)] sm:text-left font-normal manrope-font tracking-[0%]">
-                &copy; {{ date('Y') }} NOTaBENZ — Mercedes A. Villamín. All rights reserved.
+                &copy; {{ date('Y') }} NOTaBENZ — Mercedes A. Villamán. All rights reserved.
             </p>
             <nav class="flex flex-wrap items-center justify-center gap-4 sm:justify-end sm:gap-6">
                 <a href="#" class="footer-bottom-link manrope-font">Privacy</a>
