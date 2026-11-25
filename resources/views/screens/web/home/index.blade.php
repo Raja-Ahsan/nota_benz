@@ -64,9 +64,9 @@
                         <span class="pl-[20px] text-[15px]" aria-hidden="true">→</span>
                     </a>
                     <a
-                        href="#"
+                        href="{{ route('artifacts.index') }}"
                         class="btn border-btn secondary-btn">
-                        Explore artifacts
+                        Explore to Discover
                     </a>
                 </div>
             </div>
@@ -75,20 +75,20 @@
     <!-- slider section -->
     @php
     $tickerWords = [
-    __('Walker'),
+    __('Tail Hiker'),
     __('Traveler'),
     __('Artist'),
     __('Pilgrim'),
     __('Storyteller'),
     __('Explorer'),
-    __('Creator'),
+    __('Tail Hiker'),
     __('Writer'),
     __('Traveler'),
     __('Artist'),
     __('Pilgrim'),
     __('Storyteller'),
     __('Sun Dancer'),
-    __('Creator'),
+    __('Tail Hiker'),
     ];
     @endphp
     <section
@@ -194,14 +194,14 @@
                         role="img"
                         aria-label="{{ __('Story image') }} 2"
                         class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none"
-                        style="background-image: url('{{ asset('assets/images/slider-img-02.png') }}'); will-change: opacity; opacity: 0;"></div>
+                        style="background-image: url('{{ asset('assets/images/new-slider-img-04.jpg') }}'); will-change: opacity; opacity: 0;"></div>
                     <div
                         data-story-img
                         data-index="2"
                         role="img"
                         aria-label="{{ __('Story image') }} 3"
                         class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none"
-                        style="background-image: url('{{ asset('assets/images/slider-img-03.png') }}'); will-change: opacity; opacity: 0;"></div>
+                        style="background-image: url('{{ asset('assets/images/new-slider-img-03.jpg') }}'); will-change: opacity; opacity: 0;"></div>
                     <div
                         data-story-img
                         data-index="3"
@@ -212,39 +212,41 @@
                 </div>
             </div>
 
-            {{-- Readability: white fade on the left; stronger on small screens (text below) --}}
+            {{-- Mobile readability scrim so copy stays readable over full-bleed art --}}
+            <div class="scroll-story__scrim pointer-events-none absolute inset-0 z-10 lg:hidden" aria-hidden="true"></div>
 
-
-            {{-- Left: copy (editorial) over background --}}
+            {{-- Left: copy (editorial) over background — pointer-events-none so page scroll drives slides --}}
             <div
-                class="relative z-20 flex w-full max-w-2xl flex-1 flex-col self-start pl-4 pr-5 pt-20 sm:pl-6 sm:pr-8 sm:pt-24 md:max-w-[min(100%,32rem)] lg:min-h-svh lg:max-w-[min(100%,40rem)] lg:justify-center lg:pl-8 lg:pt-20 xl:max-w-[40rem] xl:pl-14 2xl:pl-20">
-                <div class="relative min-h-[50svh] w-full sm:min-h-[58svh] lg:min-h-svh">
+                class="scroll-story__copy pointer-events-none relative z-20 flex h-svh w-full max-w-2xl flex-col self-start px-4 pb-6 pt-24 sm:px-6 sm:pt-28 md:max-w-[min(100%,32rem)] lg:h-auto lg:min-h-svh lg:max-w-[min(100%,40rem)] lg:justify-center lg:px-8 lg:pb-0 lg:pt-20 xl:max-w-[40rem] xl:pl-14 2xl:pl-20">
+                <div class="scroll-story__panels relative min-h-0 w-full flex-1 lg:min-h-svh">
                     @foreach ($storySlides as $index => $slide)
                     <div
-                        class="scroll-story__panel @if ($index > 0) pointer-events-none opacity-0 @else pointer-events-auto opacity-100 @endif absolute inset-0 flex flex-col justify-center overflow-y-auto transition-opacity duration-700 ease-out"
+                        class="scroll-story__panel @if ($index > 0) opacity-0 @else opacity-100 @endif absolute inset-0 flex flex-col justify-start overflow-hidden transition-opacity duration-700 ease-out lg:justify-center"
                         data-story-panel
                         data-index="{{ $index }}"
                         @if ($index> 0) inert @endif
                         @if ($index > 0) aria-hidden="true" @endif
                         >
-                        <p class=" manrope-font text-[16px] font-bold text-secondary">
-                            <span class="uppercase tracking-widest">{{ $slide['kicker_line'] }}</span>
-                            <span class="cormorant-font mt-0.5 block pl-0.5  text-[16px]  italic normal-case tracking-wide text-[#333333] font-normal sm:mt-0 sm:ml-2 sm:inline sm:pl-0 md:text-lg">{{ $slide['kicker_title'] }}</span>
-                        </p>
-                        <h2 class="mt-2 max-w-[400px]  text-[20px] font-bold leading-[1.2] text-[var(--text-color)] md:text-[40px] plarfair-font">
-                            {{ $slide['line1'] }}<em class=" font-normal italic text-secondary">{{ $slide['em'] }}@if (!empty($slide['em_accent']))<span class="jmh-typewriter-font not-italic">{{ $slide['em_accent'] }}</span>@endif</em>{{ $slide['line2'] }}
-                        </h2>
-                        <div class="mt-6 max-w-[400px] space-y-4 font-normal text-[16px] leading-[35.52pz] text-[var(--text-color)]/ cormorant-font tracking-[0%]">
-                            @foreach ($slide['body'] as $para)
-                            <p>{{ $para }}</p>
-                            @endforeach
+                        <div class="scroll-story__panel-inner">
+                            <p class="manrope-font text-[12px] font-bold text-secondary sm:text-[16px]">
+                                <span class="uppercase tracking-widest">{{ $slide['kicker_line'] }}</span>
+                                <span class="cormorant-font mt-0.5 block pl-0.5 text-[14px] italic normal-case tracking-wide text-[#333333] font-normal sm:mt-0 sm:ml-2 sm:inline sm:pl-0 sm:text-[16px] md:text-lg">{{ $slide['kicker_title'] }}</span>
+                            </p>
+                            <h2 class="mt-2 max-w-[400px] text-[18px] font-bold leading-[1.2] text-[var(--text-color)] sm:text-[20px] md:text-[40px] plarfair-font">
+                                {{ $slide['line1'] }}<em class="font-normal italic text-secondary">{{ $slide['em'] }}@if (!empty($slide['em_accent']))<span class="jmh-typewriter-font not-italic">{{ $slide['em_accent'] }}</span>@endif</em>{{ $slide['line2'] }}
+                            </h2>
+                            <div class="scroll-story__body mt-4 max-w-[400px] space-y-3 font-normal text-[14px] leading-[1.6] text-[var(--text-color)] cormorant-font tracking-[0%] sm:mt-6 sm:space-y-4 sm:text-[16px] sm:leading-[35.52px]">
+                                @foreach ($slide['body'] as $para)
+                                <p>{{ $para }}</p>
+                                @endforeach
+                            </div>
+                            <p
+                                class="mt-5 flex flex-wrap items-center gap-x-2 text-[12px] font-medium uppercase text-secondary manrope-font tracking-[2.4px] sm:mt-8 sm:text-[16px]"
+                                data-story-step>
+                                <span class="shrink-0 text-[22px] leading-none text-primary sm:text-[28px]" aria-hidden="true">•</span>
+                                <span>{{ $slide['progress'] }}</span>
+                            </p>
                         </div>
-                        <p
-                            class="mt-8 flex flex-wrap items-center gap-x-2 text-[16px] font-medium uppercase text-secondary manrope-font tracking-[2.4px]"
-                            data-story-step>
-                            <span class="shrink-0 text-[28px] leading-none text-primary" aria-hidden="true">•</span>
-                            <span>{{ $slide['progress'] }}</span>
-                        </p>
                     </div>
                     @endforeach
                 </div>
@@ -351,11 +353,11 @@
                         <span class="identity-artifacts__kicker-rest cormorant-font">— Identity Artifacts</span>
                     </p>
                     <h2 id="identity-artifacts-heading" class="identity-artifacts__title plarfair-font">
-                        <span class="identity-artifacts__title-line">Not a store.</span>
-                        <span class="identity-artifacts__title-line identity-artifacts__title-line--accent">A Gallery.</span>
+                        <span class="identity-artifacts__title-line">OBJECTS OF</span>
+                        <span class="identity-artifacts__title-line identity-artifacts__title-line--accent"> DESIRE</span>
                     </h2>
                     <p class="identity-artifacts__sub cormorant-font">
-                        Each piece is a story fragment. A personal artifact. A signal.
+                    Look and Shop - Get or Give
                     </p>
                 </div>
                 <a href="{{ route('artifacts.index') }}" class="identity-artifacts__browse manrope-font">
@@ -504,12 +506,12 @@
             <h2
                 id="newsletter-heading"
                 class="mt-5 max-w-lg plarfair-font text-[30px] font-bold leading-[1.2] tracking-tight text-white sm:max-w-2xl md:mt-6 md:text-[40px] md:leading-[1.15]">
-                <span class="block">The story continues</span>
-                <span class="block">in your inbox.</span>
+                <span class="block">Getting Word </span>
+                <!-- <span class="block">in your inbox.</span> -->
             </h2>
 
             <p class="mt-3 max-w-md plarfair-font text-[16px] italic leading-relaxed text-secondary sm:mt-4 md:text-[18px]">
-                No noise. Only art, words, and the chapters worth reading.
+            No Noise. From Time to time, you’ll get word to stay in touch
             </p>
 
             <form
@@ -533,7 +535,7 @@
                     type="submit"
                     id="newsletter-submit-btn"
                     class="min-h-[52px] w-full shrink-0 bg-primary px-6 py-3.5 manrope-font text-[11px] font-bold uppercase tracking-[0.22em] text-black transition-opacity hover:opacity-90 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:min-h-[56px] sm:w-auto sm:px-8">
-                    Subscribe
+                    GET WORD
                 </button>
             </form>
             <div class="w-full max-w-[367px] mx-auto border-t border-2 border-white/10"></div>
@@ -647,7 +649,6 @@
 
             panels.forEach((panel, j) => {
                 const on = j === i;
-                panel.classList.toggle('pointer-events-none', !on);
                 panel.classList.toggle('opacity-0', !on);
                 panel.classList.toggle('opacity-100', on);
                 if (on) {

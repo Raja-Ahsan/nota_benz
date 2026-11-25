@@ -775,6 +775,33 @@ body {
     }
 }
 
+/* Home scroll-story: mobile text must stay fully readable over sticky art */
+.scroll-story__scrim {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.94) 0%,
+        rgba(255, 255, 255, 0.9) 42%,
+        rgba(255, 255, 255, 0.72) 68%,
+        rgba(255, 255, 255, 0.28) 100%
+    );
+}
+
+.scroll-story__panel-inner {
+    width: 100%;
+    max-width: 26rem;
+    padding-bottom: 0.5rem;
+}
+
+@media (max-width: 1023px) {
+    .scroll-story__copy {
+        max-width: min(100%, 22rem);
+    }
+
+    .scroll-story__body {
+        max-width: 18.5rem;
+    }
+}
+
 /* Home: infinite horizontal ticker (duplicate track = 50% translate loop) */
 @keyframes home-ticker-scroll {
     0% {
